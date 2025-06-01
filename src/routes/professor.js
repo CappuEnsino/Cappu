@@ -31,8 +31,8 @@ router.get("/p-config", (req, res) => {
   });
 });
 
-router.get("/p-minharotina", (req, res) => {
-  res.render("dashboard/professor/p-minharotina", {
+router.get("/p-minha-rotina", (req, res) => {
+  res.render("dashboard/professor/p-minha-rotina", {
     user: req.user,
     title: "Minha Rotina",
   });
@@ -46,7 +46,7 @@ router.get("/p_gere_curso", (req, res) => {
 });
 
 router.get("/p-curso_prof", (req, res) => {
-  res.render("dashboard/professor/p_curso_prof", {
+  res.render("dashboard/professor/p-curso_prof", {
     user: req.user,
     title: "Curso Professor",
   });
@@ -66,8 +66,8 @@ router.get("/p-criar_exer", (req, res) => {
   });
 });
 
-router.get("/p-criar_curso", (req, res) => {
-  res.render("dashboard/professor/p-criar_curso", {
+router.get("/p_criar_curso", (req, res) => {
+  res.render("dashboard/professor/p_criar_curso", {
     user: req.user,
     title: "Criar Curso",
   });

@@ -22,21 +22,5 @@ class Curso {
         this.OBJETIVOS = OBJETIVOS;
     }
 }
-    allowNull: false,
-    defaultValue: "ativo",
-  },
-  duracao: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  professor_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "Users",
-      key: "id",
-    },
-  },
-});
 
 module.exports = Curso;

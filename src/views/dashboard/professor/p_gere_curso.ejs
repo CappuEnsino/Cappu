@@ -14,12 +14,12 @@
   </head>
   <body>
     <header>
-      <a href="/dashboard/professor"
+      <a href="./p-curso_prof"
         ><img src="/images/voltar.svg" alt=""
       /></a>
       <p>GERENCIAR CURSO</p>
       <div>
-        <p><%= user.name %></p>
+        <p>user name</p>
         <button
           class="user-icon"
           id="userIcon"
@@ -28,8 +28,8 @@
           <img src="/images/perfil.svg" alt="imagem do perfil" />
           <div class="user-config" id="userConfig">
             <ul>
-              <li><a href="/dashboard/professor">MENU</a></li>
-              <li><a href="/dashboard/professor/config">CONFIGURAÇÕES</a></li>
+              <li><a href="./p-professor">MENU</a></li>
+              <li><a href="/professor/config">CONFIGURAÇÕES</a></li>
               <li><a href="/">SAIR</a></li>
             </ul>
           </div>
@@ -38,92 +38,7 @@
     </header>
 
     <div class="container">
-      <form action="/dashboard/professor/curso/save" method="POST">
-        <input type="hidden" name="curso_id" value="<%= curso.id %>">
-        
-        <div class="left">
-          <h1>DETALHES DO CURSO</h1>
-
-          <div class="form-group">
-            <label for="nome">NOME DO CURSO</label>
-            <input
-              type="text"
-              id="nome"
-              name="nome"
-              value="<%= curso.nome %>"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="descricao">DESCRIÇÃO</label>
-            <textarea id="descricao" name="descricao" required>
-<%= curso.descricao %></textarea
-            >
-          </div>
-
-          <div class="form-group">
-            <label for="categoria">CATEGORIA</label>
-            <select id="categoria" name="categoria" required>
-              <option value="">Selecione...</option>
-              <option value="exatas" <%= curso.categoria === 'exatas' ? 'selected' : '' %>>Exatas</option>
-              <option value="humanas" <%= curso.categoria === 'humanas' ? 'selected' : '' %>>Humanas</option>
-              <option value="biologicas" <%= curso.categoria === 'biologicas' ? 'selected' : '' %>>Biológicas</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="nivel">NÍVEL</label>
-            <select id="nivel" name="nivel" required>
-              <option value="">Selecione...</option>
-              <option value="basico" <%= curso.nivel === 'basico' ? 'selected' : '' %>>Básico</option>
-              <option value="intermediario" <%= curso.nivel === 'intermediario' ? 'selected' : '' %>>Intermediário</option>
-              <option value="avancado" <%= curso.nivel === 'avancado' ? 'selected' : '' %>>Avançado</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="preco">PREÇO (R$)</label>
-            <input
-              type="number"
-              id="preco"
-              name="preco"
-              value="<%= curso.preco %>"
-              step="0.01"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="right">
-          <h1>AULAS</h1>
-          <div class="aulas">
-            <% curso.aulas.forEach(function(aula) { %>
-            <div class="aula">
-              <h3><%= aula.titulo %></h3>
-              <p><%= aula.descricao %></p>
-              <div class="acoes">
-                <a href="/dashboard/professor/aula/<%= aula.id %>/edit">
-                  <img src="/images/icon_edit.png" alt="Editar" />
-                </a>
-                <a href="/dashboard/professor/aula/<%= aula.id %>/delete">
-                  <img src="/images/icon_delete.png" alt="Excluir" />
-                </a>
-              </div>
-            </div>
-            <% }); %>
-          </div>
-          <div class="add-aula">
-            <a href="/dashboard/professor/aula/new">
-              <img src="/images/icon_mais.png" alt="Adicionar aula" />
-            </a>
-          </div>
-        </div>
-
-        <button type="submit" class="salvar">
-          SALVAR <img src="/images/save_gere.png" alt="Salvar" />
-        </button>
-      </form>
+      
     </div>
 
     <script src="/js/icon-menu.js"></script>
