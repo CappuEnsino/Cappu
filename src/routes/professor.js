@@ -45,12 +45,12 @@ router.get("/p_gere_curso", (req, res) => {
   });
 });
 
-router.get("/p-curso_prof", (req, res) => {
-  res.render("dashboard/professor/p-curso_prof", {
-    user: req.user,
-    title: "Curso Professor",
-  });
-});
+const professorController = require('../controller/professorController');
+// Rota para editar curso pelo ID
+router.get("/p_gere_curso/:id", professorController.getCursoById);
+// Rota para atualizar curso pelo ID
+router.post("/p_gere_curso/:id", professorController.updateCursoById);
+router.get("/p-curso_prof", professorController.listarCursosProfessor);
 
 router.get("/p-criar_aula", (req, res) => {
   res.render("dashboard/professor/p-criar_aula", {
@@ -66,12 +66,7 @@ router.get("/p_criar_exer", (req, res) => {
   });
 });
 
-router.get("/p_criar_curso", (req, res) => {
-  res.render("dashboard/professor/p_criar_curso", {
-    user: req.user,
-    title: "Criar Curso",
-  });
-});
+router.get('/p_criar_curso', professorController.getCriarCursoPage);
 
 router.get("/p_criar_mat", (req, res) => {
   res.render("dashboard/professor/p_criar_mat", {
@@ -85,5 +80,12 @@ router.get("/p-modulo", (req, res) => {
     title: "Criar Modulo",
   });
 });
+
+router.post('/p_criar_curso', professorController.criarCurso);
+router.post('/p-modulo', professorController.criarModulo);
+router.post('/p-criar_aula', professorController.criarAula);
+
+// Rota para exclusão de curso
+router.post('/excluir_curso/:id', professorController.excluirCurso);
 
 module.exports = router;

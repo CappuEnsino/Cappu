@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GERENCIAR CURSO</title>
-    <link rel="stylesheet" href="/css/p_gerenciar_curso.css" />
+    <link rel="stylesheet" href="/css/p_gere_curso.css" />
     <link rel="stylesheet" href="/css/header2.css" />
     <link
       rel="shortcut icon"
@@ -14,12 +14,12 @@
   </head>
   <body>
     <header>
-      <a href="./p-professor"
-        ><img src="/images/voltar.svg" alt=""
-      /></a>
+      <a href="./p-curso_prof">
+        <img src="/images/voltar.svg" alt="Voltar"/>
+      </a>
       <p>GERENCIAR CURSO</p>
       <div>
-        <p><%= user.name %></p>
+        <p><%= user.NOME_USU || 'Professor' %></p>
         <button
           class="user-icon"
           id="userIcon"
@@ -30,7 +30,7 @@
             <ul>
               <li><a href="./p-professor">MENU</a></li>
               <li><a href="./p-config">CONFIGURAÇÕES</a></li>
-              <li><a href="/aluno/logout">SAIR</a></li>
+              <li><a href="/auth/logout">SAIR</a></li>
             </ul>
           </div>
         </button>
@@ -38,42 +38,44 @@
     </header>
 
     <div class="container">
-      <form action="/dashboard/professor/curso">
-        <input type="hidden" name="curso_id">
+      <form action="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>" method="POST">
+        <input type="hidden" name="curso_id" value="<%= curso.ID_CURSO %>">
         
         <div class="left">
           <h1>DETALHES DO CURSO</h1>
 
           <div class="form-group">
-            <label for="nome">NOME DO CURSO</label>
+            <label for="titulo">NOME DO CURSO</label>
             <input
               type="text"
-              id="nome"
-              name="nome"
+              id="titulo"
+              name="titulo"
               required
+              placeholder="Adicione um nome..."
+              value="<%= curso.TITULO %>"
+              disabled
             />
           </div>
 
+
           <div class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
-            <textarea id="descricao" name="descricao" required></textarea
-            >
+            <textarea 
+              id="descricao" 
+              name="descricao" 
+              required
+              placeholder="Adicione uma descrição..."
+              disabled
+            ><%= curso.DESCRICAO %></textarea>
           </div>
 
           <div class="form-group">
             <label for="categoria">CATEGORIA</label>
-            <select id="categoria" name="categoria" required>
-              <option value="">Selecione...</option>
-              <option value="">Selecione...</option>
-
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="nivel">NÍVEL</label>
-            <select id="nivel" name="nivel" required>
-              <option value="">Selecione...</option>
-              <option value="">Selecione...</option>
+            <select id="categoria" name="categoria" required disabled>
+              <option value="">Selecione uma categoria...</option>
+              <option value="1" <%= curso.ID_CATEGORIA == 1 ? 'selected' : '' %>>Programação</option>
+              <option value="2" <%= curso.ID_CATEGORIA == 2 ? 'selected' : '' %>>Design</option>
+              <option value="3" <%= curso.ID_CATEGORIA == 3 ? 'selected' : '' %>>Fotografia</option>
             </select>
           </div>
 
@@ -84,41 +86,118 @@
               id="preco"
               name="preco"
               step="0.01"
+              min="0"
+              placeholder="Ex: 99.90"
               required
+              value="<%= curso.PRECO %>"
+              disabled
             />
           </div>
+
+          <div class="form-group">
+            <label for="duracao_total">DURAÇÃO TOTAL (horas)</label>
+            <input
+              type="number"
+              id="duracao_total"
+              name="duracao_total"
+              step="0.1"
+              min="0"
+              placeholder="Ex: 10.5"
+              required
+              value="<%= curso.DURACAO_TOTAL %>"
+              disabled
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="objetivos">OBJETIVOS</label>
+            <textarea 
+              id="objetivos" 
+              name="objetivos" 
+              required
+              placeholder="Descreva os objetivos do curso..."
+              disabled
+            ><%= curso.OBJETIVOS %></textarea>
+          </div>
         </div>
 
-        <div class="right">
-          <h1>AULAS</h1>
-          <div class="aulas">
-            <div class="aula">
-              <h3>aula titulo</h3>
-              <p>aula descricao</p>
-              <div class="acoes">
-                <a href="/dashboard/professor/aula/edit">
-                  <img src="/images/icon_edit.png" alt="Editar" />
-                </a>
-                <a href="/dashboard/professor/aula/delete">
-                  <img src="/images/icon_delete.png" alt="Excluir" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="add-aula">
-            <a href="/dashboard/professor/aula/new">
-              <img src="/images/icon_mais.png" alt="Adicionar aula" />
-            </a>
+        <div class="botoes-edicao">
+          <button type="button" id="btnEditar">Editar</button>
+          <button type="submit" id="btnSalvar" style="display:none;">Salvar</button>
+          <button type="button" id="btnExcluirCurso" style="background:#e74c3c;color:#fff;">Excluir Curso</button>
+        </div>
+
+        <!-- Modal de confirmação -->
+        <div id="modalConfirm" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;">
+          <div style="background:#fff;padding:2em;border-radius:8px;max-width:90vw;box-shadow:0 2px 16px #0002;text-align:center;">
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.</p>
+            <form id="formExcluirCurso" method="POST" action="/dashboard/professor/excluir_curso/<%= curso.ID_CURSO %>" style="margin-top:1em;">
+              <button type="submit" style="background:#e74c3c;color:#fff;padding:0.5em 1.5em;margin-right:1em;">Excluir</button>
+              <button type="button" id="btnCancelarExclusao" style="background:#bbb;padding:0.5em 1.5em;">Cancelar</button>
+            </form>
           </div>
         </div>
 
-        <button type="submit" class="salvar">
-          SALVAR <img src="/images/save_gere.png" alt="Salvar" />
-        </button>
+        <script>
+          const btnEditar = document.getElementById('btnEditar');
+          const btnSalvar = document.getElementById('btnSalvar');
+          const form = document.querySelector('form');
+          btnEditar.addEventListener('click', function() {
+            form.querySelectorAll('input, textarea, select').forEach(el => {
+              if (el.name !== 'curso_id') el.disabled = false;
+            });
+            btnSalvar.style.display = '';
+            btnEditar.style.display = 'none';
+          });
+        </script>
+
+        <section class="right">
+          <h1>MÓDULOS DO CURSO</h1>
+          <% if (modulos && modulos.length > 0) { %>
+            <% modulos.forEach(function(modulo) { %>
+              <section class="modulo">
+                <h3><%= modulo.TITULO %></h3>
+                <p><%= modulo.DESCRICAO %></p>
+                <section class="acoes">
+                  <a href="/dashboard/professor/modulo/visualizar/<%= modulo.ID_MODULO %>" title="Visualizar">
+                    <img src="/images/icon_view.png" alt="Visualizar" />
+                  </a>
+                  <a href="/dashboard/professor/modulo/editar/<%= modulo.ID_MODULO %>" title="Editar">
+                    <img src="/images/icon_edit.png" alt="Editar" />
+                  </a>
+                  <a href="/dashboard/professor/modulo/excluir/<%= modulo.ID_MODULO %>" onclick="return confirm('Tem certeza que deseja excluir este módulo?');" title="Excluir">
+                    <img src="/images/icon_delete.png" alt="Excluir" />
+                  </a>
+                  <a href="/dashboard/professor/modulo/novo?curso=<%= curso.ID_CURSO %>" title="Adicionar módulo">
+                    <img src="/images/icon_mais.png" alt="Adicionar módulo" />
+                  </a>
+                </section>
+              </section>
+            <% }); %>
+          <% } else { %>
+            <p>Nenhum módulo cadastrado.</p>
+            <section class="acoes">
+              <a href="/dashboard/professor/modulo/novo?curso=<%= curso.ID_CURSO %>" title="Adicionar módulo">
+                <img src="/images/icon_mais.png" alt="Adicionar módulo" />
+              </a>
+            </section>
+          <% } %>
+        </section>
       </form>
     </div>
 
     <script src="/js/icon-menu.js"></script>
     <script src="/js/curso.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <script>
+      // Modal exclusão
+      document.getElementById('btnExcluirCurso').onclick = function() {
+        document.getElementById('modalConfirm').style.display = 'flex';
+      };
+      document.getElementById('btnCancelarExclusao').onclick = function() {
+        document.getElementById('modalConfirm').style.display = 'none';
+      };
+    </script>
   </body>
 </html>

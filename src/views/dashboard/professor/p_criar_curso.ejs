@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="/css/criar_curso.css"/>
     <link rel="stylesheet" href="/css/header2.css"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.css" />
   </head>
   <body>
     <header>
       <a href="./p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
       <p>CRIAR CURSO</p>
       <div>
-        <p><%= user.name %></p>
+        <p><%= user.NOME_USU || 'Professor' %></p>
         <button
           class="user-icon"
           id="userIcon"
@@ -24,7 +25,7 @@
             <ul>
               <li><a href="./p-professor">MENU</a></li>
               <li><a href="./p-config">CONFIGURAÇÕES</a></li>
-              <li><a href="/aluno/logout">SAIR</a></li>
+              <li><a href="/auth/logout">SAIR</a></li>
             </ul>
           </div>
         </button>
@@ -32,49 +33,59 @@
     </header>
 
     <main class="container">
-      <form >
+      <form id="formCriarCurso" action="/dashboard/professor/p_criar_curso" method="POST">
         <div class="left">
           <h1>CRIAR CURSO</h1>
           
           <div class="form-group">
             <label for="titulo">NOME DO CURSO</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Adicione um nome...">
+            <input type="text" id="titulo" name="titulo" placeholder="Adicione um nome..." required>
           </div>
 
           <div class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
-            <textarea id="descricao" name="descricao" placeholder="Adicione uma descrição..."></textarea>
+            <textarea id="descricao" name="descricao" placeholder="Adicione uma descrição..." required></textarea>
           </div>
 
           <div class="form-group">
             <label for="categoria">CATEGORIA</label>
-            <select id="categoria" name="categoria" required placeholder="Adicione uma categoria...">
-              <option value="">Selecione uma categoria</option>
-              <option value="">Selecione uma categoria</option>
+            <select id="categoria" name="categoria" required>
+              <option value="" disabled selected>Selecione uma categoria</option>
+              <% if (categorias && categorias.length > 0) { %>
+                <% categorias.forEach(function(cat) { %>
+                  <option value="<%= cat.ID_CATEGORIA %>"><%= cat.NOME %></option>
+                <% }); %>
+              <% } else { %>
+                <option value="">Nenhuma categoria cadastrada</option>
+              <% } %>
             </select>
+          </div>
+
+
+          <div class="form-group">
+            <label for="preco">PREÇO</label>
+            <input type="number" id="preco" name="preco" step="0.01" min="0" placeholder="Ex: 99.90" required>
+          </div>
+
+          <div class="form-group">
+            <label for="duracao_total">DURAÇÃO TOTAL (horas)</label>
+            <input type="number" id="duracao_total" name="duracao_total" step="0.1" min="0" placeholder="Ex: 10.5" required>
+          </div>
+
+          <div class="form-group">
+            <label for="objetivos">OBJETIVOS</label>
+            <textarea id="objetivos" name="objetivos" placeholder="Descreva os objetivos do curso..." required></textarea>
           </div>
         </div>
 
+
         <section class="right">
           <h1>ADICIONAR MÓDULOS</h1>
-          <section class="modulo">
-                <h3>modulo 1</h3>
-                <p>modulo 1</p>
-                <section class="acoes">
-                  <a href="./p-modulo">
-                    adicionar
-                  </a>
-                  <a href="./p-modulo">
-                    <img src="/images/icon_delete.png" alt="Excluir">
-                  </a>
-                </section>
-          </section>
-          <section class="add-aula">
-            <a href="/dashboard/professor/aula">
-              <img src="/images/icon_mais.png" alt="Adicionar aula">
-            </a>
-          </section>
+          <div id="modulosContainer"></div>
+          <button type="button" id="addModuloBtn" style="margin-top:10px">Adicionar módulo</button>
         </section>
+        <input type="hidden" name="modulos" id="modulosInput" />
+
 
         <button type="submit" class="salvar">
           SALVAR <img src="../../images/save_gere.png" alt="Salvar">
@@ -82,7 +93,9 @@
       </form>
     </main>
 
+
     <script src="/js/icon-menu.js"></script>
     <script src="/js/curso.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
   </body>
 </html>

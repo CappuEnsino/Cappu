@@ -12,7 +12,7 @@
         <a href="./p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
         <p>CRIAR CURSO</p>
         <div>
-          <p><%= user.name %></p>
+          <p><%= user.NOME_USU || 'Professor' %></p>
           <button
             class="user-icon"
             id="userIcon"
@@ -32,74 +32,74 @@
     <main>
         <h1>Módulo</h1>
         <section class="conteudo">
-            <section class="montagem">
-                <label for="nome">Nome</label>
-                <input type="text" id="nome">
-                <label for="desc">Descrição</label>
-                <textarea name="desc" id="desc"></textarea>
-                <h2>Adicionar Aula</h2>
-                <section id="ad-aula">
-                    <section class="aula">
-                        <p>Aula 1</p>
-                        <section class="edit">
-                            <p>Editar</p>
-                            <img src="/images/edit.svg" alt="edit">
+            <form action="/dashboard/professor/p-modulo" method="POST">
+                <section class="montagem">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" name="titulo" required>
+                    <label for="desc">Descrição</label>
+                    <textarea name="descricao" id="desc" required></textarea>
+                    <h2>Adicionar Aula</h2>
+                    <section id="ad-aula">
+                        <section class="aula">
+                            <p>Aula 1</p>
+                            <section class="edit">
+                                <p>Editar</p>
+                                <img src="/images/edit.svg" alt="edit">
+                            </section>
+                            <img src="/images/delete.svg" alt="delete">
                         </section>
-                        <img src="/images/delete.svg" alt="delete">
-                    </section>
-                    <section class="aula">
-                        <p>Aula 2</p>
-                        <section class="edit">
-                            <p>Editar</p>
-                            <img src="/images/edit.svg" alt="edit">
+                        <section class="aula">
+                            <p>Aula 2</p>
+                            <section class="edit">
+                                <p>Editar</p>
+                                <img src="/images/edit.svg" alt="edit">
+                            </section>
+                            <img src="/images/delete.svg" alt="delete">
                         </section>
-                        <img src="/images/delete.svg" alt="delete">
-                    </section>
-                    <button class="add"><a href="./p-criar_aula"><img src="/images/add.svg" alt="add-img"></a></button>
-                    <h2>Atividade 1</h2>
-                    <section class="aula">
-                        <p>Atividade 1</p>
-                        <section class="edit">
-                            <p>Editar</p>
-                            <img src="/images/edit.svg" alt="edit">
+                        <button class="add"><a href="./p-criar_aula"><img src="/images/add.svg" alt="add-img"></a></button>
+                        <h2>Atividade 1</h2>
+                        <section class="aula">
+                            <p>Atividade 1</p>
+                            <section class="edit">
+                                <p>Editar</p>
+                                <img src="/images/edit.svg" alt="edit">
+                            </section>
+                            <img src="/images/delete.svg" alt="delete">
                         </section>
-                        <img src="/images/delete.svg" alt="delete">
-                    </section>
-                    <button class="add"><a href="./p-criar_aula"><img src="/images/add.svg" alt="add-img"></a></button>
-                </section>
-                
-            </section>
-
-            <section class="vizu">
-                <h2 id="vizu-m">Visualizar do Módulo</h2>
-                <section id="gray-box">
-                    <section id="pt-1">
-                        <img src="/images/seta.svg" alt="seta">
-                        <h2 id="mod">Módulo 1</h2>
-                    </section>
-                    <section id="line">
-                        <section class="pt-2">
-                            <img src="/images/livro.svg" alt="livro">
-                            <h3>Aula 1 - Introdução a ...</h3>
-                        </section>
-                        <section class="pt-2">
-                            <img src="/images/livro.svg" alt="livro">
-                            <h3>Aula 2 - Primeiro algo...</h3>
-                        </section>
-                        <section class="pt-2">
-                            <img src="/images/peso.svg" alt="peso">
-                            <h3>Atividade Avaliativa</h3>
-                        </section>
+                        <button class="add"><a href="./p-criar_aula"><img src="/images/add.svg" alt="add-img"></a></button>
                     </section>
                 </section>
-                <button id="save">Salvar
-                    <img src="/images/save.svg" alt="salvar">
-                </button>
-            </section>
+                <section class="vizu">
+                    <h2 id="vizu-m">Visualizar do Módulo</h2>
+                    <section id="gray-box">
+                        <section id="pt-1">
+                            <img src="/images/seta.svg" alt="seta">
+                            <h2 id="mod">Módulo 1</h2>
+                        </section>
+                        <section id="line">
+                            <section class="pt-2">
+                                <img src="/images/livro.svg" alt="livro">
+                                <h3>Aula 1 - Introdução a ...</h3>
+                            </section>
+                            <section class="pt-2">
+                                <img src="/images/livro.svg" alt="livro">
+                                <h3>Aula 2 - Primeiro algo...</h3>
+                            </section>
+                            <section class="pt-2">
+                                <img src="/images/peso.svg" alt="peso">
+                                <h3>Atividade Avaliativa</h3>
+                            </section>
+                        </section>
+                    </section>
+                    <button id="save" type="submit">Salvar
+                        <img src="/images/save.svg" alt="salvar">
+                    </button>
+                </section>
+            </form>
         </section>
     </main>
     <footer>
-        <h4>© 2024 Cappuensino. Todos os direitos reservados.</h4>
+        <h4> 2024 Cappuensino. Todos os direitos reservados.</h4>
     </footer>
 </body>
 </html>

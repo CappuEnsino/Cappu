@@ -15,7 +15,7 @@
       /></a>
       <p>CRIAR AULA</p>
       <div>
-        <p><%= user.name %></p>
+        <p><%= user.NOME_USU || 'Professor' %></p>
         <button
           class="user-icon"
           id="userIcon"
@@ -34,8 +34,8 @@
     </header>
 
     <div class="container">
-      <form action="/dashboard/professor/aula">
-        <input type="hidden" name="curso_id" />
+      <form action="/dashboard/professor/p-criar_aula" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="modulo_id" value="<%= moduloId %>" />
 
         <div class="left">
           <h1>DETALHES DA AULA</h1>
