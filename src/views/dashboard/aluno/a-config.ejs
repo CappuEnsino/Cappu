@@ -42,8 +42,6 @@
             <span class="info-value" id="email"><%= user.EMAIL %></span>
           </p>
         </section>
-          <a class="redefinir" href="#">REDEFINIR SENHA</a>
-          <a class="redefinir" href="#">REDEFINIR E-MAIL</a>
           <div class="profile-card">
             <div class="profile-preview-container">
                 <div id="current-profile-container" class="current-profile">
@@ -76,18 +74,6 @@
                 </div>
             </form>
           </div>
-      </section>
-      <h3>COOKIES</h3>
-      <section class="caixa-das-info">
-        <form id="meuFormulario">
-          <section class="form-group">
-            <label for="metas" class="info-key">UTILIZAÇÃO DE COOKIES </label>
-            <select class="info-value-form" id="cookies" name="cookies" required>
-              <option value="Permitir">Permitir</option>
-              <option value="Não Permitir">Não Permitir</option>
-            </select>
-          </section>
-        </form>
       </section>
       <form action="/aluno/excluir-conta" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.');" style="display: flex; justify-content: center; margin-top: 40px;">
         <button type="submit" class="excluir-conta">EXCLUIR CONTA</button>

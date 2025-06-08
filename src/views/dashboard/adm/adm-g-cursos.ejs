@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="../../../../public/css/adm.css"> <!--adicionar "../../css/" no href dessa linha-->
+    <link rel="stylesheet" href="/css/adm.css">
 
-    <link rel="shortcut icon" href="../../../../public/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -18,28 +18,32 @@
 </head>
 <body>
     <header>
-        <img src="../../../../public/images/logo.svg" alt="logo" id="logo">
+        <img src="/images/logo.svg" alt="logo" id="logo">
         <section id="user">
             <p id="name_user">Administrador1</p>
             <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
                 <section id="circle"></section>
                 <div class="user-config" id="userConfig">
                     <ul>
-                        <li><a href="../../pages/home/index.ejs">SAIR</a></li>
+<<<<<<< HEAD
+                        <li><a href="../../pages/home/index">SAIR</a></li>
+=======
+                        <li><a href="/auth/logout">SAIR</a></li>
+>>>>>>> upstream/master
                     </ul>
                 </div>
             </button>
     </header>
     <main>
         <nav>
-            <a href="adm-painel.ejs" title="Painel de Controle">painel de controle</a> 
+            <a href="adm-painel" title="Painel de Controle">painel de controle</a> 
             <section class="select">
-                <img src="../../../../public/images/book.svg" alt="Livro">
+                <img src="/images/book.svg" alt="Livro">
                 <p>gerenciamento de cursos</p>
             </section>
-            <a href="adm-g-usuarios.ejs" title="gerenciamento de usuários">gerenciamento de usuários</a>
-            <a href="adm-financeiro.ejs" title="financeiro">financeiro</a>
-            <a href="adm-suporte.ejs" title="suporte">suporte</a>
+            <a href="adm-g-usuarios" title="gerenciamento de usuários">gerenciamento de usuários</a>
+            <a href="adm-financeiro" title="financeiro">financeiro</a>
+            <a href="adm-suporte" title="suporte">suporte</a>
         </nav>
         <section class="conteudo">
             <h1>Gerenciamento de cursos</h1>
@@ -68,12 +72,12 @@
                             <td>DESIGN</td>
                             <td>
                                 <a href="https://docs.google.com/document/d/1ZiRFy86bQjbeSW5df45Kl34bRXQt6Cug_Hcmo-3LrRY/edit?usp=sharing" target="_blank">
-                                    <img src="../../../../public/images/find_in_page.svg" alt="Infos" >
+                                    <img src="/images/find_in_page.svg" alt="Infos" >
                                 </a>
                             </td>
                             <td>
-                                <img src="../../../../public/images/border color.svg" alt="Editar" >
-                                <img src="../../../../public/images/delete.svg" alt="Lixeira">
+                                <img src="/images/border color.svg" alt="Editar" >
+                                <img src="/images/delete.svg" alt="Lixeira">
                             </td>
                         </tr>
                         <tr>
@@ -82,12 +86,12 @@
                             <td>DEVELOPER</td>
                             <td>
                                 <a href="https://docs.google.com/document/d/1ZiRFy86bQjbeSW5df45Kl34bRXQt6Cug_Hcmo-3LrRY/edit?usp=sharing" target="_blank">
-                                    <img src="../../../../public/images/find_in_page.svg" alt="Infos" >
+                                    <img src="/images/find_in_page.svg" alt="Infos" >
                                 </a>
                             </td>
                             <td>
-                                <img src="../../../../public/images/border color.svg" alt="Editar" >
-                                <img src="../../../../public/images/delete.svg" alt="Lixeira">
+                                <img src="/images/border color.svg" alt="Editar" >
+                                <img src="/images/delete.svg" alt="Lixeira">
                             </td>
                         </tr>
                         <tr>
@@ -96,12 +100,12 @@
                             <td>MÚSICA</td>
                             <td>
                                 <a href="https://docs.google.com/document/d/1ZiRFy86bQjbeSW5df45Kl34bRXQt6Cug_Hcmo-3LrRY/edit?usp=sharing" target="_blank">
-                                    <img src="../../../../public/images/find_in_page.svg" alt="Infos" >
+                                    <img src="/images/find_in_page.svg" alt="Infos" >
                                 </a>
                             </td>
                             <td>
-                                <img src="../../../../public/images/border color.svg" alt="Editar" >
-                                <img src="../../../../public/images/delete.svg" alt="Lixeira">
+                                <img src="/images/border color.svg" alt="Editar" >
+                                <img src="/images/delete.svg" alt="Lixeira">
                             </td>
                         </tr>
                         <tr>
@@ -110,12 +114,12 @@
                             <td>DEVELOPER</td>
                             <td>
                                 <a href="https://docs.google.com/document/d/1ZiRFy86bQjbeSW5df45Kl34bRXQt6Cug_Hcmo-3LrRY/edit?usp=sharing" target="_blank">
-                                    <img src="../../../../public/images/find_in_page.svg" alt="Infos" >
+                                    <img src="/images/find_in_page.svg" alt="Infos" >
                                 </a>
                             </td>
                             <td>
-                                <img src="../../../../public/images/border color.svg" alt="Editar" >
-                                <img src="../../../../public/images/delete.svg" alt="Lixeira">
+                                <img src="/images/border color.svg" alt="Editar" >
+                                <img src="/images/delete.svg" alt="Lixeira">
                             </td>
                         </tr>
                         <tr>
@@ -124,12 +128,12 @@
                             <td>DEVELOPER</td>
                             <td>
                                 <a href="https://docs.google.com/document/d/1ZiRFy86bQjbeSW5df45Kl34bRXQt6Cug_Hcmo-3LrRY/edit?usp=sharing" target="_blank">
-                                    <img src="../../../../public/images/find_in_page.svg" alt="Infos" >
+                                    <img src="/images/find_in_page.svg" alt="Infos" >
                                 </a>
                             </td>
                             <td>
-                                <img src="../../../../public/images/border color.svg" alt="Editar" >
-                                <img src="../../../../public/images/delete.svg" alt="Lixeira">
+                                <img src="/images/border color.svg" alt="Editar" >
+                                <img src="/images/delete.svg" alt="Lixeira">
                             </td>
                         </tr>
                     </tbody>

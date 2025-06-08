@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <h1>Painel Administrativo</h1>
+  <p>Bem-vindo, <%= user ? user.NOME_USU : 'Administrador' %>!</p>
+  <ul>
+    <li><a href="/admin/adm-g-usuarios">Gerenciar Usuários</a></li>
+    <li><a href="/admin/adm-financeiro">Financeiro</a></li>
+    <li><a href="/admin/adm-g-cursos">Gerenciar Cursos</a></li>
+    <li><a href="/admin/adm-suporte">Suporte</a></li>
+  </ul>
+</body>
+</html>

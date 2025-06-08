@@ -202,75 +202,407 @@ label {
   background: #8b5d52;
 }
 
-/* Para tablets e telas médias */
-@media (max-width: 900px) {
-  main {
-    width: 90%;
-    margin-left: 5%;
-  }
+.salvar:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 93, 82, 0.5);
+}
 
+/* Estilos para os módulos */
+.modulo-bloco {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modulo-bloco h3 {
+  color: #684a43;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modulo-bloco input[type="text"],
+.modulo-bloco textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: "Fira Sans", serif;
+}
+
+.modulo-bloco textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modulo-bloco button {
+  background: #6c423a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.modulo-bloco button:hover {
+  background: #5a372f;
+  transform: translateY(-1px);
+}
+
+.modulo-bloco button:active {
+  transform: translateY(0);
+}
+
+/* Estilos para as aulas */
+.aula-bloco {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.aula-bloco:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.aula-bloco input[type="text"],
+.aula-bloco textarea {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: "Fira Sans", serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.aula-bloco input[type="text"]:focus,
+.aula-bloco textarea:focus {
+  border-color: #8b5d52;
+  box-shadow: 0 0 0 2px rgba(139, 93, 82, 0.2);
+  outline: none;
+}
+
+.aula-bloco textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Botão de adicionar módulo */
+#addModuloBtn {
+  background: #6c423a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 2rem auto;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+#addModuloBtn:hover {
+  background: #5a372f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#addModuloBtn:active {
+  transform: translateY(0);
+}
+
+/* Estilo para campos inválidos */
+.campo-invalido {
+  border-color: #ff4444 !important;
+  box-shadow: 0 0 0 1px #ff4444;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
   .form-section {
     flex-direction: column;
-    gap: 20px;
   }
-
-  .left, .right {
+  
+  .left,
+  .right {
     width: 100%;
   }
-
-  .perfil-professor {
-    flex-wrap: wrap;
-    gap: 1rem;
+  
+  .modulo-bloco {
+    padding: 1rem;
   }
-
-  header nav {
-    margin-left: 1rem;
-    margin-right: 1rem;
+  
+  #addModuloBtn {
+    max-width: 100%;
   }
 }
 
-/* Para smartphones e telas pequenas */
+/* Estilo para os botões de ação */
+.acoes-modulo {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.acoes-modulo button {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Estilo para o contêiner de módulos */
+#modulosContainer {
+  margin-top: 2rem;
+}
+
+/* Estilo para os títulos das seções */
+h2 {
+  color: #684a43;
+  margin: 2.5rem 0 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: #8b5d52;
+  border-radius: 3px;
+}
+
+/* Estilo para os botões de adicionar aula */
+.btn-adicionar-aula {
+  background: #5a8f7b !important;
+  margin-top: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-adicionar-aula:hover {
+  background: #4a7a68 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Estilo para os botões de remover */
+.btn-remover {
+  background: #d9534f !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-remover:hover {
+  background: #c9302c !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modulo-bloco {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Estilo para mensagens de erro */
+.mensagem-erro {
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Melhorias de acessibilidade */
+button:focus {
+  outline: 2px solid #8b5d52;
+  outline-offset: 2px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #8b5d52;
+  outline-offset: 2px;
+}
+
+/* Transições suaves */
+* {
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Melhorias para formulários */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Ajustes para telas pequenas */
 @media (max-width: 480px) {
-  header nav {
+  .acoes-modulo {
     flex-direction: column;
-    gap: 10px;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    gap: 0.5rem;
   }
-
-  header h2 {
-    font-size: 14px;
-  }
-
-  .txt-pag h1 {
-    font-size: 20px;
-  }
-
-  .perfil-professor {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.8rem;
-  }
-
-  h1, h2 {
-    font-size: 1.2rem;
-  }
-
-  label {
-    font-size: 1.2rem;
-  }
-
-  .aulas li {
-    font-size: 1rem;
-  }
-
-  .add {
-    font-size: 18px;
-  }
-
-  .salvar {
+  
+  .acoes-modulo button {
     width: 100%;
-    font-size: 14px;
-    padding: 12px 0;
   }
+}
+
+.modulo-bloco textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modulo-bloco button {
+  background: #6c423a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.modulo-bloco button:hover {
+  background: #5a372f;
+}
+
+/* Estilos para as aulas */
+.aula-bloco {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.aula-bloco input[type="text"],
+.aula-bloco textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: "Fira Sans", serif;
+}
+
+.aula-bloco textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Botão de adicionar módulo */
+#addModuloBtn {
+  background: #6c423a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#addModuloBtn:hover {
+  background: #5a372f;
+}
+
+/* Estilo para campos inválidos */
+.campo-invalido {
+  border-color: #ff4444 !important;
+  box-shadow: 0 0 0 1px #ff4444;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-section {
+    flex-direction: column;
+  }
+  
+  .left,
+  .right {
+    width: 100%;
+  }
+  
+  .modulo-bloco {
+    padding: 1rem;
+  }
+}
+
+/* Estilo para os botões de ação */
+.acoes-modulo {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.acoes-modulo button {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Estilo para o contêiner de módulos */
+#modulosContainer {
+  margin-top: 2rem;
+}
+
+/* Estilo para os títulos das seções */
+h2 {
+  color: #684a43;
+  margin: 2rem 0 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* Estilo para os botões de adicionar aula */
+.btn-adicionar-aula {
+  background: #5a8f7b !important;
+  margin-top: 1rem !important;
+}
+
+.btn-adicionar-aula:hover {
+  background: #4a7a68 !important;
+}
+
+/* Estilo para os botões de remover */
+.btn-remover {
+  background: #d9534f !important;
+}
+
+.btn-remover:hover {
+  background: #c9302c !important;
 }
