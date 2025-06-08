@@ -54,6 +54,7 @@ app.use("/", require("./src/routes/home"));
 app.use("/auth", require("./src/routes/auth"));
 app.use("/aluno", require("./src/routes/aluno"));
 app.use("/professor", require("./src/routes/professor"));
+app.use("/dashboard/professor", require("./src/routes/professor"));
 app.use("/admin", require("./src/routes/admin"));
 
 
