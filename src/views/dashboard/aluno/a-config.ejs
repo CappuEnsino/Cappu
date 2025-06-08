@@ -15,7 +15,9 @@
       <div>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-            <img id="header-profile-img" src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;" />
+            <img id="header-profile-img" src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
+            style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+            onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
             <div class="user-config" id="userConfig">
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
@@ -48,7 +50,8 @@
                     <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
                          alt="Foto atual" 
                          class="profile-current-img"
-                         onload="this.style.opacity=1">
+                         onload="this.style.opacity=1"
+                         onerror="this.onerror=null; this.src='/images/perfil.svg';">
                 </div>
                 <div class="image-preview">
                     <p class="preview-label">Nova foto</p>
@@ -87,7 +90,7 @@
         </form>
       </section>
       <form action="/aluno/excluir-conta" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.');" style="display: flex; justify-content: center; margin-top: 40px;">
-        <button type="submit" style="margin-top: 100px; background: #cc5555; color: #fff; border: none; border-radius: 20px; padding: 12px 48px; font-weight: bold; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: background 0.2s;">EXCLUIR CONTA</button>
+        <button type="submit" class="excluir-conta">EXCLUIR CONTA</button>
       </form>
     </section>
     </main>
