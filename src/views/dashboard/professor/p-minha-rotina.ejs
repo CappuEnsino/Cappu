@@ -5,23 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minha Rotina</title>
   <link rel="stylesheet" href="/css/p-minha-rotina.css">
+  <link rel="stylesheet" href="/css/header2.css">
   <link rel="shortcut icon" href="../../Images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
   <header>
-    <nav>
-      <section>
-        <a href="./p-professor"><img src="/images/voltar.png" alt=""></a>
-      </section>
-      <section class="txt-pag">
-        <h1>Minha Rotina</h1>
-      </section>
-      <section class="perfil-professor">
-        <h2><%= user.NOME_USU || 'Professor' %></h2>
-        <a href=""><img src="/images/perfil-professor-h.png" alt=""></a>
-      </section>
-    </nav>
+    <a href="/professor/p-professor"><img src="/images/voltar.svg" alt=""></a>
+    <p>MINHA ROTINA</p>
+    <div>
+      <p><%= user.NOME_USU || 'Professor' %></p>
+      <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+          <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
+          style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+          onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
+          <div class="user-config" id="userConfig">
+              <ul>
+                  <li><a href="/professor/p-professor">MENU</a></li>
+                  <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
+                  <li><a href="/professor/logout">SAIR</a></li>
+              </ul>
+          </div>
+      </button>
+  </div>
   </header>
 
   <main>
