@@ -139,6 +139,21 @@ main h1 {
   flex-direction: column;
 }
 
+.redefinir:hover {
+  background-color: #000000;
+  color: #ffffff;
+  transform: translateY(-5px);
+  border: 2px solid #000000;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.redefinir:active {
+  transform: scale(0.95);
+}
+
 .preferencias {
   margin-top: 5.5em;
   width: 100%;
@@ -377,6 +392,33 @@ footer p {
   font-weight: 500;
 }
 
+.excluir-conta {
+  margin-top: 100px;
+  background: #cc5555;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 12px 48px;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.excluir-conta:hover {
+  background-color: white;
+  color: #cc5555;
+  transform: translateY(-5px);
+  border: 2px solid #cc5555;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(145, 65, 47, 0.3);
+}
+
+.excluir-conta:active {
+  transform: scale(0.95);
+}
 
 @media (max-width: 1200px) {
   main h1 {

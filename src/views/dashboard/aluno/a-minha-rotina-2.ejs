@@ -15,7 +15,8 @@
         <div>
           <p><%= user.NOME_USU || 'Aluno' %></p>
           <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-            <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;" />
+            <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
+            onerror="this.onerror=null; this.src='/images/perfil.svg';" />
               <div class="user-config" id="userConfig">
                   <ul>
                       <li><a href="/aluno/a-perfil">MENU</a></li>
@@ -29,19 +30,12 @@
     <main>
         <section class="conteudo">
             <section class="calendário">
-                <h1 id="mes">Mes</h1>
-                <script>
-                    function atualizarMes() {
-                        const meses = [
-                            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-                        ];
-                        const mesAtual = new Date().getMonth();
-                        document.getElementById("mes").textContent = meses[mesAtual];
-                    }
-                    window.onload = atualizarMes;
-                </script>
                 <section class="tabela">
+                    <div class="calendario-header">
+                        <button id="prev">&lt;</button>
+                        <h2 id="mesAno"></h2>
+                        <button id="next">&gt;</button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -54,56 +48,12 @@
                                 <th>sáb</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>6</td>
-                            <td>7</td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>10</td>
-                            <td>11</td>
-                            <td>12</td>
-                            <td>13</td>
-                            <td>14</td>
-                        </tr>
-                        <tr>
-                            <td>15</td>
-                            <td>16</td>
-                            <td>17</td>
-                            <td>18</td>
-                            <td>19</td>
-                            <td>20</td>
-                            <td>21</td>
-                        </tr>
-                        <tr>
-                            <td>22</td>
-                            <td>23</td>
-                            <td>24</td>
-                            <td>25</td>
-                            <td>26</td>
-                            <td>27</td>
-                            <td>28</td>
-                        </tr>
-                        <tr>
-                            <td>29</td>
-                            <td>30</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        <tbody id="diasCalendario">
+                            <!-- Dias serão gerados dinamicamente aqui -->
                         </tbody>
                     </table>
+                    <button id="hoje">Hoje</button>
                 </section>
-                
             </section>
 
             <section class="line" id="secao1"></section>
@@ -115,7 +65,7 @@
                         <p class="desc-metodo" id="tooltip-target">descrição</p>
                         <span class="tooltip-box">Consiste em estudar durante 25 minutos focados, seguidos de uma pausa de 5 minutos. Após quatro ciclos, faz-se uma pausa mais longa de 15-30 minutos.</span>
                     </div>
-                    <img src="/images/line.svg" alt="linha" class="img">
+                    <img src="/images/line.svg" alt="linha" class="img-linha">
                     <a href="/aluno/a-pomodoro" class="button-go">
                         <img src="/images/button-go.svg" alt="Botão ir">
                     </a>
@@ -174,6 +124,74 @@
         </section>
     </main>
     <!-- não tem footer -->
-     <script src="/js/icon-menu.js"></script>
+    <script src="/js/icon-menu.js"></script>
+    <script>
+        const diasCalendario = document.getElementById("diasCalendario");
+        const mesAno = document.getElementById("mesAno");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("next");
+        const hoje = document.getElementById("hoje");
+
+        let dataAtual = new Date();
+        
+        function gerarCalendario(data) {
+          const ano = data.getFullYear();
+          const mes = data.getMonth();
+        
+          const primeiroDia = new Date(ano, mes, 1).getDay();
+          const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+        
+          const nomesMes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        
+          mesAno.textContent = `${nomesMes[mes]} ${ano}`;
+          diasCalendario.innerHTML = "";
+        
+          let dia = 1;
+          for (let i = 0; i < 6; i++) {
+            const linha = document.createElement("tr");
+            for (let j = 0; j < 7; j++) {
+              const celula = document.createElement("td");
+        
+              if (i === 0 && j < primeiroDia) {
+                celula.textContent = "";
+              } else if (dia > ultimoDia) {
+                celula.textContent = "";
+              } else {
+                celula.textContent = dia;
+                if (
+                  dia === new Date().getDate() &&
+                  mes === new Date().getMonth() &&
+                  ano === new Date().getFullYear()
+                ) {
+                  celula.style.backgroundColor = "black";
+                  celula.style.color = "white";
+                }
+                dia++;
+              }
+        
+              linha.appendChild(celula);
+            }
+            diasCalendario.appendChild(linha);
+          }
+        }
+        
+        prev.addEventListener("click", () => {
+          dataAtual.setMonth(dataAtual.getMonth() - 1);
+          gerarCalendario(dataAtual);
+        });
+        
+        next.addEventListener("click", () => {
+          dataAtual.setMonth(dataAtual.getMonth() + 1);
+          gerarCalendario(dataAtual);
+        });
+        
+        gerarCalendario(dataAtual);
+
+        hoje.addEventListener("click", () => {
+          dataAtual = new Date(); // volta para o mês atual
+          gerarCalendario(dataAtual);
+        });
+    </script>        
 </body>
 </html>

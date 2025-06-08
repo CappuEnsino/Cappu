@@ -21,12 +21,38 @@ h1 {
     font-weight: 800;
 }
 
+#hoje {
+    border-radius: 1.5em;
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-top: 2em;
+    font-size: 1rem;
+}
+
+#hoje:hover {
+    background-color: black;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+    color: white;
+}
+
 table {
     font-family: "Fira Sans", serif;
     font-weight: 400;
     font-style: normal;
     text-transform: uppercase;
     border-collapse: collapse;
+}
+
+table:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(104, 74, 67, 0.2);
 }
 
 th, td {
@@ -42,6 +68,12 @@ th, td {
   height: 50px;
 }
 
+td:hover {
+    background-color: #ccc;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(104, 74, 67, 0.2);
+}
+
 th {
   border: 2px solid black;
   font-style: italic;
@@ -52,6 +84,47 @@ th {
   padding: 0px 10px;
   width: 50px;
   height: 10px;
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5em;
+}
+
+.calendario-header h2 {
+    font-family: "Fira Sans", sans-serif;
+    font-weight: 900;
+    font-size: 1.5em;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.calendario-header button {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 0.5em 0.9em;
+    border-radius: 2em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+}
+
+.calendario-header button:hover {
+    background-color: black;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+    color: white;
+}
+
+.calendario-header button#hoje {
+    background-color: var(--primary-color);
+    color: white;
+    margin-left: 1em;
 }
 
 .conteudo {
@@ -66,10 +139,6 @@ th {
 .conteudo.modo-retraido {
     flex-direction: column;
     gap: 3rem;
-}
-
-#mes {
-    margin-bottom: 1em;
 }
 
 .line {
@@ -193,6 +262,19 @@ h2 {
     margin-top: 2em;
 }
 
+#start:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    box-shadow: 0px 0px 4px var(--primary-color);
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.1);
+}
+
+#start:active {
+    transform: scale(0.95);
+}
+
 h3 {
     font-size: 1.5rem;
     font-weight: 800;
@@ -240,7 +322,32 @@ h3 {
     cursor: pointer;
 }
 
+.button-go:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.button-go:active {
+    transform: scale(0.9);
+}
+
 .img {
+    width: 30px;
+    height: auto;
+}
+
+.img:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.img:active {
+    transform: scale(0.9);
+}
+
+.img-linha {
     width: 30px;
     height: auto;
 }
