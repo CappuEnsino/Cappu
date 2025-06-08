@@ -3,122 +3,298 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GERENCIAR CURSO</title>
-    <link rel="stylesheet" href="/css/p_gerenciar_curso.css" />
+    <title>EDITAR CURSO</title>
+    <link rel="stylesheet" href="/css/criar_curso.css" />
     <link rel="stylesheet" href="/css/header2.css" />
-    <link
-      rel="shortcut icon"
-      href="/images/favicon.ico"
-      type="image/x-icon"
-    />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.css" />
   </head>
   <body>
     <header>
-      <a href="./p-professor"
-        ><img src="/images/voltar.svg" alt=""
-      /></a>
-      <p>GERENCIAR CURSO</p>
+      <a href="./p-curso_prof"><img src="/images/voltar.svg" alt="" /></a>
+      <p>EDITAR CURSO</p>
       <div>
-        <p><%= user.name %></p>
-        <button
-          class="user-icon"
-          id="userIcon"
-          aria-label="Abrir menu do usuário"
-        >
+        <p><%= user.NOME_USU || 'Professor' %></p>
+        <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
           <img src="/images/perfil.svg" alt="imagem do perfil" />
           <div class="user-config" id="userConfig">
             <ul>
               <li><a href="./p-professor">MENU</a></li>
               <li><a href="./p-config">CONFIGURAÇÕES</a></li>
-              <li><a href="/aluno/logout">SAIR</a></li>
+              <li><a href="/auth/logout">SAIR</a></li>
             </ul>
           </div>
         </button>
       </div>
     </header>
 
-    <div class="container">
-      <form action="/dashboard/professor/curso">
-        <input type="hidden" name="curso_id">
-        
+    <main class="container">
+      <form
+        id="formEditarCurso"
+        action="/dashboard/professor/p_gere_curso_completo/<%= curso.ID_CURSO %>"
+        method="POST"
+      >
         <div class="left">
-          <h1>DETALHES DO CURSO</h1>
+          <h1>EDITAR CURSO</h1>
 
           <div class="form-group">
-            <label for="nome">NOME DO CURSO</label>
+            <label for="titulo">NOME DO CURSO</label>
             <input
               type="text"
-              id="nome"
-              name="nome"
+              id="titulo"
+              name="titulo"
+              value="<%= curso.TITULO %>"
               required
             />
           </div>
 
           <div class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
-            <textarea id="descricao" name="descricao" required></textarea
-            >
+            <textarea
+              id="descricao"
+              name="descricao"
+              required
+            ><%= curso.DESCRICAO %></textarea>
           </div>
 
           <div class="form-group">
             <label for="categoria">CATEGORIA</label>
             <select id="categoria" name="categoria" required>
-              <option value="">Selecione...</option>
-              <option value="">Selecione...</option>
-
+              <% if (categorias && categorias.length > 0) { %>
+                <% categorias.forEach(function(cat) { %>
+                  <option value="<%= cat.ID_CATEGORIA %>" <%= cat.ID_CATEGORIA == curso.ID_CATEGORIA ? 'selected' : '' %>><%= cat.NOME %></option>
+                <% }); %>
+              <% } else { %>
+                <option value="">Nenhuma categoria cadastrada</option>
+              <% } %>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="nivel">NÍVEL</label>
-            <select id="nivel" name="nivel" required>
-              <option value="">Selecione...</option>
-              <option value="">Selecione...</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="preco">PREÇO (R$)</label>
+            <label for="preco">PREÇO</label>
             <input
               type="number"
               id="preco"
               name="preco"
               step="0.01"
+              min="0"
+              value="<%= curso.PRECO %>"
               required
             />
           </div>
+
+          <div class="form-group">
+            <label for="duracao_total">DURAÇÃO TOTAL (horas)</label>
+            <input
+              type="number"
+              id="duracao_total"
+              name="duracao_total"
+              step="0.1"
+              min="0"
+              value="<%= curso.DURACAO_TOTAL %>"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="objetivos">OBJETIVOS</label>
+            <textarea
+              id="objetivos"
+              name="objetivos"
+              required
+            ><%= curso.OBJETIVOS %></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="imagem">IMAGEM DE CAPA</label>
+            <% if (curso.IMAGEM) { %>
+              <div class="current-image mb-2">
+                <img src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>" alt="Capa atual" style="max-width: 200px; max-height: 200px;" />
+                <p class="text-muted">Imagem atual</p>
+              </div>
+            <% } %>
+            <input
+              type="file"
+              id="imagem"
+              name="imagem"
+              accept="image/*"
+              class="form-control"
+            />
+            <small class="form-text text-muted">Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB</small>
+          </div>
         </div>
 
-        <div class="right">
-          <h1>AULAS</h1>
-          <div class="aulas">
-            <div class="aula">
-              <h3>aula titulo</h3>
-              <p>aula descricao</p>
-              <div class="acoes">
-                <a href="/dashboard/professor/aula/edit">
-                  <img src="/images/icon_edit.png" alt="Editar" />
-                </a>
-                <a href="/dashboard/professor/aula/delete">
-                  <img src="/images/icon_delete.png" alt="Excluir" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="add-aula">
-            <a href="/dashboard/professor/aula/new">
-              <img src="/images/icon_mais.png" alt="Adicionar aula" />
-            </a>
-          </div>
-        </div>
+        <section class="right">
+          <h1>MÓDULOS DO CURSO</h1>
+          <div id="modulosContainer"></div>
+          <button type="button" id="addModuloBtn" style="margin-top: 10px">
+            Adicionar módulo
+          </button>
+        </section>
+        <input type="hidden" name="modulos" id="modulosInput" />
 
         <button type="submit" class="salvar">
-          SALVAR <img src="/images/save_gere.png" alt="Salvar" />
+          SALVAR
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-left: 6px;"><path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4.414A2 2 0 0 0 15.414 3L13 0.586A2 2 0 0 0 11.586 0H2zm0 1h9.586A1 1 0 0 1 12 1.414L14.586 4A1 1 0 0 1 15 4.414V13a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3zm1 2h6v2H4V5zm0 3h6v2H4V8z"/></svg>
         </button>
       </form>
-    </div>
+    </main>
 
-    <script src="/js/icon-menu.js"></script>
+    <script>
+      let modulos = [];
+      try {
+      window.cursoModulos = <%- JSON.stringify(modulos || []) %>;
+      console.log("DEBUG - modulos recebidos no submit:", modulos);
+      } catch (error) {
+        console.error("Erro ao processar modulos:", error);
+      }
+    </script>
     <script src="/js/curso.js"></script>
+    <script src="/js/icon-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modal para adicionar/editar aula -->
+    <div
+      class="modal fade"
+      id="aulaModal"
+      tabindex="-1"
+      aria-labelledby="aulaModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aulaModalLabel">Nova Aula</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <form id="aulaForm" onsubmit="CursoManager.saveAulaFromModal(event);">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="titulo" class="form-label"
+                  >Título da Aula <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="titulo"
+                  name="titulo"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea
+                  class="form-control"
+                  id="descricao"
+                  name="descricao"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="tipo_conteudo" class="form-label"
+                  >Tipo de Conteúdo</label
+                >
+                <select
+                  class="form-select"
+                  id="tipo_conteudo"
+                  name="tipo_conteudo"
+                  onchange="CursoManager.toggleVideoFields()"
+                >
+                  <option value="video">Vídeo</option>
+                  <option value="texto">Texto</option>
+                </select>
+              </div>
+              <div id="videoUrlGroup">
+                <div class="mb-3">
+                  <label for="video_url" class="form-label"
+                    >URL do Vídeo (Youtube/Vimeo)</label
+                  >
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="video_url"
+                    name="video_url"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <div class="form-text">Insira a URL completa do vídeo</div>
+                </div>
+                <div class="mb-3">
+                  <label for="video_arquivo" class="form-label"
+                    >Ou envie um arquivo de vídeo</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="video_arquivo"
+                    name="video_arquivo"
+                    accept="video/*"
+                  />
+                  <div class="form-text">
+                    Formatos suportados: MP4, WebM, OGG (Máx. 500MB)
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="duracao" class="form-label"
+                      >Duração (HH:MM:SS)
+                      <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="duracao"
+                      name="duracao"
+                      pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+                      placeholder="00:10:00"
+                      required
+                    />
+                    <div class="form-text">
+                      Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30 segundos)
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="ordem" class="form-label"
+                      >Ordem no Módulo <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="ordem"
+                      name="ordem"
+                      min="1"
+                      required
+                    />
+                    <div class="form-text">
+                      A ordem em que esta aula aparecerá no módulo
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">Salvar Aula</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

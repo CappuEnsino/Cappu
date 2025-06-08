@@ -6,6 +6,7 @@
   <title>Meus Cursos</title>
   <link rel="stylesheet" href="/css/curso_prof.css">
   <link rel="shortcut icon" href="../../Images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.css" />
 </head>
 
 <body>
@@ -32,14 +33,32 @@
         <h2>CATEGORIA</h2>
         <h2>AVALIAÇÃO</h2>
       </section>
-      <section class="cursos">
-        <p>Phyton do Zero ao Pro</p>
-        <section class="download-section">
-          <span>Developer</span>
-          <span class="avaliacao">5 ★ ★ ★ ★ ★</span>
-          <a href="./p_gere_curso"><img class="editar-curso" src="/images/editar-curso.png" alt=""></a>
+
+      <% if (cursos && cursos.length > 0) { %>
+        <% cursos.forEach(function(curso) { %>
+          <% if (curso && curso.ID_CURSO && curso.TITULO) { %>
+            <section class="cursos">
+              <p><%= curso.TITULO %></p>
+              <section class="download-section">
+                <span><%= curso.CATEGORIA || '-' %></span>
+                <span class="avaliacao"><%= curso.AVALIACAO || '-' %></span>
+                <a href="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>" title="Editar">
+                  <button type="button" class="btn-editar">Editar</button>
+                </a>
+              </section>
+            </section>
+          <% } %>
+        <% }); %>
+        <% if (!cursos.some(function(curso) { return curso && curso.ID_CURSO && curso.TITULO; })) { %>
+          <section class="cursos">
+            <p>Nenhum curso cadastrado.</p>
+          </section>
+        <% } %>
+      <% } else { %>
+        <section class="cursos">
+          <p>Nenhum curso cadastrado.</p>
         </section>
-      </section>
+      <% } %>
       
       <section class="vermais">
         <a href="./p_criar_curso">ADICIONAR CURSO</a>
@@ -47,7 +66,11 @@
     </section>
   </main>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+  <script>
+    <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
+      new Notify({ status: 'success', title: 'Sucesso', text: '<%= success %>', position: 'left top' });
+    <% } %>
+  </script>
 </body>
-
 </html>
