@@ -17,7 +17,7 @@ body {
 }
 
 main {
-  margin-top: 2.5em;
+  margin-top: 10%;
 }
 
 header {
@@ -60,9 +60,6 @@ header h2 {
   align-items: center;
   gap: 2rem;
 }
-#mes {
-  font-size: 2.7em;
-}
 
 main h1 {
   font-family: "Fira Sans", serif;
@@ -75,46 +72,123 @@ main h1 {
   padding-bottom: 5%;
 }
 
+.calendario {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#hoje {
+  border-radius: 1.5em;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 2em;
+  font-size: 1rem;
+}
+
+#hoje:hover {
+  background-color: black;
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+  color: white;
+}
+
 table {
-    font-family: "Fira Sans", serif;
-    font-weight: 400;
-    font-style: normal;
-    text-transform: uppercase;
-    border-collapse: collapse;
-    width: 32em;
-    height: 25em;
+  font-family: "Fira Sans", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  border-collapse: collapse;
+}
+
+table:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 5px 15px rgba(104, 74, 67, 0.2);
 }
 
 th, td {
-  padding: 10px;
-  border: 2px solid black;
-  text-align: center;
-  margin: none;
-  font-family: "Fira Sans", serif;
-  font-weight: 900;
-  font-style: normal;
-  font-size: 2em;
-  width: 50px;
-  height: 50px;
+padding: 10px;
+border: 2px solid black;
+text-align: center;
+margin: none;
+font-family: "Fira Sans", serif;
+font-weight: 900;
+font-style: normal;
+font-size: 1.4em;
+width: 50px;
+height: 50px;
+}
+
+td:hover {
+  background-color: #ccc;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 5px 15px rgba(104, 74, 67, 0.2);
 }
 
 th {
-  border: 2px solid black;
-  font-style: italic;
-  font-family: "Fira Sans", serif;
-  font-weight: 500;
-  font-style: italic;
+border: 2px solid black;
+font-style: italic;
+font-family: "Fira Sans", serif;
+font-weight: 500;
+font-style: italic;
+font-size: 0.9em;
+padding: 0px 10px;
+width: 50px;
+height: 10px;
+}
+
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5em;
+}
+
+.calendario-header h2 {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 900;
   font-size: 1.5em;
-  padding: 0px 10px;
-  width: 50px;
-  height: 10px;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.calendario-header button {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 0.5em 0.9em;
+  border-radius: 2em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+}
+
+.calendario-header button:hover {
+  background-color: black;
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+  color: white;
+}
+
+.calendario-header button#hoje {
+  background-color: var(--primary-color);
+  color: white;
+  margin-left: 1em;
 }
 
 .container {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 50px;
+  gap: 10em;
 }
 
 .titulo-tarefas {
@@ -136,17 +210,54 @@ th {
   margin-top: 10%;
 }
 
-.check {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  margin: 8px 0px;
-}
-
 #check1, #check2, #check3, #check4, #check5 {
   width: 25px;
   height: 25px;
+}
+
+.tarefas button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.3s;
+}
+
+.tarefas button:hover {
+  background-color: #555;
+}
+
+.check {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.check input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+
+.check button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.check button:hover {
+  background-color: transparent;
+  transform: scale(1.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.check button:active {
+  transform: scale(0.95);
 }
 
 footer {

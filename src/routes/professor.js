@@ -3,20 +3,42 @@ const router = express.Router();
 const upload = require("../config/multer");
 const professorController = require("../controller/professorController");
 const db = require("../config/database");
+<<<<<<< HEAD
 const multer = require("multer");
+=======
+>>>>>>> 15a31233775f5e616585a6ce0c2aa976f59a6a41
 
 // Dashboard do professor
 router.get("/p-professor", (req, res) => {
   res.render("dashboard/professor/p-professor", {
     user: req.user,
     title: "Dashboard Professor",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
-router.get("/p-config", (req, res) => {
+router.get("/p-config", async (req, res) => {
+  let dadosBancarios = {};
+  try {
+    const [rows] = await db.query(
+      "SELECT CONTA_PAG, AGENCIA_PAG, CHAVE_PIX, BANCO_PAG FROM CONFIG_PROF WHERE ID_USUARIO = ?",
+      [req.user.ID_USUARIO]
+    );
+    if (rows.length > 0) {
+      dadosBancarios = rows[0];
+    }
+  } catch (err) {
+    console.error("Erro ao buscar dados bancários:", err);
+  }
   res.render("dashboard/professor/p-config", {
     user: req.user,
+    dadosBancarios,
     title: "Configurações",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -24,6 +46,9 @@ router.get("/p-minha-rotina", (req, res) => {
   res.render("dashboard/professor/p-minha-rotina", {
     user: req.user,
     title: "Minha Rotina",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -244,6 +269,7 @@ router.post(
   professorController.atualizarCursoCompleto
 );
 
+<<<<<<< HEAD
 // Rota para buscar o ID do módulo de uma aula
 router.get("/aula/:id/modulo", async (req, res) => {
   const aulaId = req.params.id;
@@ -456,5 +482,36 @@ router.post("/aula", upload.none(), async (req, res) => {
     });
   }
 });
+
+// --- CRUD de foto de perfil e conta do professor ---
+// Upload da foto do perfil
+router.post("/upload-foto", upload.single("foto_perfil"), professorController.uploadFoto);
+// Excluir foto do perfil
+router.post("/excluir-foto", professorController.excluirFoto);
+// Servir foto de perfil
+router.get("/foto-perfil/:id", professorController.fotoPerfil);
+// Excluir conta do professor
+router.post("/excluir-conta", professorController.excluirConta);
+
+// Rota de logout para professor
+router.get('/logout', (req, res, next) => {
+    req.logout(function(err) {
+        if (err) {
+            console.error('Erro no logout do professor:', err);
+            req.flash('error', 'Erro ao fazer logout: ' + err.message);
+            return res.redirect('/professor/p-professor');
+        }
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Erro ao destruir sessão no logout do professor:', err);
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+        });
+    });
+});
+
+router.post("/salvar-dados-bancarios", professorController.salvarDadosBancarios);
+
 
 module.exports = router;

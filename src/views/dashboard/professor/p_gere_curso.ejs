@@ -88,21 +88,23 @@
   </head>
   <body>
     <header>
-      <a href="./p-curso_prof"><img src="/images/voltar.svg" alt="" /></a>
-      <p>EDITAR CURSO</p>
+      <a href="/professor/p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
+      <p>CRIAR CURSO</p>
       <div>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-          <img src="/images/perfil.svg" alt="imagem do perfil" />
-          <div class="user-config" id="userConfig">
-            <ul>
-              <li><a href="./p-professor">MENU</a></li>
-              <li><a href="./p-config">CONFIGURAÇÕES</a></li>
-              <li><a href="/auth/logout">SAIR</a></li>
-            </ul>
-          </div>
+            <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
+            style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+            onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
+            <div class="user-config" id="userConfig">
+                <ul>
+                    <li><a href="/professor/p-professor">MENU</a></li>
+                    <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
+                    <li><a href="/professor/logout">SAIR</a></li>
+                </ul>
+            </div>
         </button>
-      </div>
+    </div>
     </header>
 
     <main class="container">

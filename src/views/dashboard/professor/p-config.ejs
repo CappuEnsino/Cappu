@@ -15,17 +15,20 @@
       <div>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-            <img  src="/images/perfil.svg" alt="imagem do perfil">
+            <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
+            style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+            onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
             <div class="user-config" id="userConfig">
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
-                    <li><a href="/auth/logout">SAIR</a></li>
+                    <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
             </div>
         </button>
     </div>
     </header>
+
     <main>
       <h1>INFORMAÇÕES PESSOAIS</h1>
       <section class="dados">
@@ -33,216 +36,83 @@
         <section>
           <p class="info-item">
             <strong class="info-key">NOME</strong>
-            <span class="info-value" id="nome">Aluno 1</span>
+            <span class="info-value" id="nome"><%= user.NOME_USU || 'Professor' %></span>
           </p>
           <p class="info-item">
             <strong class="info-key">EMAIL</strong>
-            <span class="info-value" id="email">Aluno1@gmail.com</span>
+            <span class="info-value" id="email"><%= user.EMAIL %></span>
           </p>
-          <p class="info-item">
-            <strong class="info-key">ESPECIALIZAÇÃO</strong>
-            <span class="info-value" id="especializacao">Matemática</span>
-          </p>
-          <div class="info-item">
-            <strong class="info-key">BIOGRAFIA</strong>
-            <textarea class="bio-value" id="biografia" placeholder="Escreva sobre você..."></textarea>
-          </div>
         </section>
-
-        <section class="flex">
-        <button class="salvar">SALVAR</button>
-        <a class="redefinir" href="#">REDEFINIR SENHA</a>
-        </section>
-        <img src="/images/perfil.svg" alt="" />
       </section>
+      
+      <div class="profile-card">
+        <div class="profile-preview-container">
+            <div id="current-profile-container" class="current-profile">
+                <img src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
+                     alt="Foto atual" 
+                     class="profile-current-img"
+                     onload="this.style.opacity=1"
+                     onerror="this.onerror=null; this.src='/images/perfil.svg';">
+            </div>
+            <div class="image-preview">
+                <p class="preview-label">Nova foto</p>
+                <img id="preview-img" src="#" alt="Pré-visualização" class="preview-img">
+            </div>
+        </div>
+    
+        <form action="/professor/upload-foto" method="POST" enctype="multipart/form-data" class="upload-form">
+            <label class="file-upload-box">
+                <input type="file" name="foto_perfil" id="foto_perfil_input" accept="image/*" required class="file-input">
+                <span class="upload-instruction">Clique para selecionar uma foto</span>
+                <span class="upload-icon">+</span>
+            </label>
+            
+            <div class="profile-actions">
+                <button type="submit" class="action-button upload-btn">
+                    <span>Salvar Foto</span>
+                </button>
+                <button type="submit" formaction="/professor/excluir-foto" class="action-button delete-btn" onclick="return confirm('Tem certeza?')">
+                    <span>Remover Foto</span>
+                </button>
+            </div>
+        </form>
+      </div>
+
+      
       <section class="preferencias">
-        <h3>PREFERÊNCIAS</h3>
+        <h3>MONETIZAÇÃO</h3>
         <section class="caixa-das-info">
-          <form action="" method="post" id="meuFormulario">
+          <form action="/professor/salvar-dados-bancarios" method="post" id="formDadosBancarios">
             <section class="form-group">
-              <label for="metas" class="info-key">METAS</label>
-              <select class="info-value-form" id="metas" name="metas" required>
-                <option value="Vestibular">Vestibular</option>
-                <option value="opcao1">Opção 1</option>
-                <option value="opcao2">Opção 2</option>
-                <option value="opcao3">Opção 3</option>
-                <option value="outra">Opção 4</option>
-              </select>
+              <label for="chave-pix" class="info-key">CHAVE PIX</label>
+              <input type="text" class="info-value-form" id="chave-pix" name="chave-pix" placeholder="Digite sua chave PIX" required value="<%= dadosBancarios.CHAVE_PIX || '' %>">
             </section>
-
+            
             <section class="form-group">
-              <label for="area-interesse" class="info-key"
-                >ÁREA DE INTERESSE</label
-              >
-              <select
-                class="info-value-form"
-                id="area-interesse"
-                name="area-interesse"
-                required
-              >
-                <option value="Medicina">Medicina</option>
-                <option value="opcao1">Opção 1</option>
-                <option value="opcao2">Opção 2</option>
-                <option value="opcao3">Opção 3</option>
-                <option value="opcao4">Opção 4</option>
-              </select>
+              <label for="agencia" class="info-key">AGÊNCIA</label>
+              <input type="number" class="info-value-form" id="agencia" name="agencia" placeholder="Digite sua agência" required value="<%= dadosBancarios.AGENCIA_PAG || '' %>">
             </section>
-
+            
             <section class="form-group">
-              <label for="horario-estudo" class="info-key"
-                >HORÁRIO DE ESTUDO</label
-              >
-              <select
-                class="info-value-form"
-                id="horario-estudo"
-                name="horario-estudo"
-                required
-              >
-                <option value="Seg à sex">Seg à sex</option>
-                <option value="opcao1">Opção 1</option>
-                <option value="opcao2">Opção 2</option>
-                <option value="opcao3">Opção 3</option>
-                <option value="outra">Opção 4</option>
-              </select>
+              <label for="banco" class="info-key">BANCO</label>
+              <input type="text" class="info-value-form" id="banco" name="banco" placeholder="Digite seu banco" required value="<%= dadosBancarios.BANCO_PAG || '' %>">
             </section>
-
+            
             <section class="form-group">
-              <label for="tempo-estimado" class="info-key"
-                >TEMPO ESTIMADO</label
-              >
-              <select
-                class="info-value-form"
-                id="tempo-estimado"
-                name="tempo-estimado"
-                required
-              >
-                <option value="20 Min">20 Min</option>
-                <option value="opcao1">Opção 1</option>
-                <option value="opcao2">Opção 2</option>
-                <option value="opcao3">Opção 3</option>
-                <option value="outra">Opção 4</option>
-              </select>
+              <label for="conta" class="info-key">CONTA</label>
+              <input type="number" class="info-value-form" id="conta" name="conta" placeholder="Digite sua conta" required value="<%= dadosBancarios.CONTA_PAG || '' %>">
+            </section>
+            
+            <section class="flex">
+              <button type="submit" class="salvar">SALVAR DADOS BANCÁRIOS</button>
             </section>
           </form>
         </section>
       </section>
-      <section class="preferencias">
-        <h3>NOTIFICAÇÕES</h3>
-        <section class="caixa-das-info">
-          <form id="meuFormulario">
-            <section class="form-group">
-              <label for="metas" class="info-key">ATUALIZAÇÕES</label>
-              <select class="info-value-form" id="metas" name="metas" required>
-                <option value="Vestibular">Não</option>
-                <option value="opcao1">Sim</option>
-                <option value="opcao2">Opção 2</option>
-                <option value="opcao3">Opção 3</option>
-                <option value="outra">Opção 4</option>
-              </select>
-            </section>
-
-            <section class="form-group">
-              <label for="area-interesse" class="info-key">PRAZOS</label>
-              <select
-                class="info-value-form"
-                id="PRAZOS"
-                name="PRAZOS"
-                required
-              >
-                <option value="Não">Não</option>
-                <option value="Sim">Sim</option>
-              </select>
-            </section>
-
-            <section class="form-group">
-              <label for="horario-estudo" class="info-key">PROGRESSO</label>
-              <select
-                class="info-value-form"
-                id="PROGRESSO"
-                name="PROGRESSO"
-                required
-              >
-                <option value="Sim">Sim</option>
-                <option value="Não">Não</option>
-              </select>
-            </section>
-
-            <section class="form-group">
-              <label for="tempo-estimado" class="info-key">FEEDBACK</label>
-              <select
-                class="info-value-form"
-                id="FEEDBACK"
-                name="FEEDBACK"
-                required
-              >
-                <option value="Sim">Sim</option>
-                <option value="Não">Não</option>
-              </select>
-            </section>
-            <section class="form-group">
-              <label for="tempo-estimado" class="info-key">CHATS</label>
-              <select class="info-value-form" id="CHATS" name="CHATS" required>
-                <option value="Sim">Sim</option>
-                <option value="Não">Não</option>
-              </select>
-            </section>
-          </form>
-        </section>
-      <section class="preferencias">
-        <h3>PRIVACIDADE</h3>
-        <section class="caixa-das-info">
-          <form id="meuFormulario">
-            <section class="form-group">
-              <label for="metas" class="info-key">VISIBILIDADE DO PERFIL</label>
-              <select class="info-value-form" id="visibilidade-perfil" name="visibilidade-perfil" required>
-                <option value="Público">Público</option>
-                <option value="Privado">Privado</option>
-              </select>
-            </section>
-
-            <section class="form-group">
-              <label for="area-interesse" class="info-key">COMPARTILHAR DADOS</label>
-              <select
-                class="info-value-form"
-                id="compartilhar-dados"
-                name="compartilhar-dados"
-                required
-              >
-                <option value="Apenas eu">Apenas eu</option>
-                <option value="Apenas Amigos">Apenas Amigos</option>
-                <option value="Visível para todos">Visível para todos</option>
-              </select>
-            </section>
-
-            <section class="form-group">
-              <label for="horario-estudo" class="info-key">SOLICITAR ANONIMATO</label>
-              <select
-                class="info-value-form"
-                id="anonimato"
-                name="anonimato"
-                required
-              >
-                <option value="Sim">Sempre</option>
-                <option value="Não">Nunca</option>
-                <option value="Não">Me pergunte</option>
-              </select>
-            </section>
-          </form>
-        </section>
-      <section class="preferencias">
-        <h3>COOKIES</h3>
-        <section class="caixa-das-info">
-          <form id="meuFormulario">
-            <section class="form-group">
-              <label for="metas" class="info-key">UTILIZAÇÃO DE COOKIES </label>
-              <select class="info-value-form" id="cookies" name="cookies" required>
-                <option value="Permitir">Permitir</option>
-                <option value="Não Permitir">Não Permitir</option>
-              </select>
-            </section>
-          </form>
-        </section>
-      </section>
+      <hr>
+      <form action="/professor/excluir-conta" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.');" style="display: flex; justify-content: center; margin-top: 40px;">
+        <button type="submit" class="excluir-conta">EXCLUIR CONTA</button>
+      </form>
     </main>
     <footer>
       <span>© 2024 Cappuensino. Todos os direitos reservados.</span>

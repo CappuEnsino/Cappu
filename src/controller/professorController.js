@@ -1,5 +1,6 @@
 const db = require("../config/database");
 
+
 // Página de criação de curso: busca categorias e renderiza
 exports.getCriarCursoPage = async (req, res) => {
   try {
@@ -12,6 +13,7 @@ exports.getCriarCursoPage = async (req, res) => {
       title: "Criar Curso",
       success: req.flash("success"),
       error: req.flash("error"),
+      timestamp: Date.now(),
     });
   } catch (err) {
     console.error("Erro ao buscar categorias:", err);
@@ -22,6 +24,7 @@ exports.getCriarCursoPage = async (req, res) => {
       title: "Criar Curso",
       success: req.flash("success"),
       error: req.flash("error"),
+      timestamp: Date.now(),
     });
   }
 };
@@ -42,6 +45,7 @@ exports.listarCursosProfessor = async (req, res) => {
       cursos,
       title: "Curso Professor",
       success: req.flash("success"),
+      timestamp: Date.now(),
     });
   } catch (err) {
     console.error("Erro ao listar cursos:", err);
@@ -50,6 +54,7 @@ exports.listarCursosProfessor = async (req, res) => {
       user: req.user || {},
       cursos: [],
       title: "Curso Professor",
+      timestamp: Date.now(),
     });
   }
 };
@@ -387,6 +392,9 @@ exports.getCursoById = async (req, res) => {
       categorias,
       modulos: modulos || [],
       title: "Editar Curso",
+      timestamp: Date.now(),
+      success: req.flash('success'),
+      error: req.flash('error')
     });
   } catch (err) {
     console.error("Erro ao buscar curso:", err);
@@ -665,6 +673,154 @@ exports.atualizarCursoCompleto = async (req, res) => {
     res.redirect("/dashboard/professor/p_gere_curso/" + idCurso);
   } finally {
     connection.release();
+  }
+};
+
+// Upload da foto do perfil do professor
+exports.uploadFoto = async (req, res) => {
+  const db = require("../config/database");
+  if (!req.file) {
+    req.flash('error', 'Nenhum arquivo enviado!');
+    return res.redirect('/professor/p-config');
+  }
+  try {
+    if (!req.user || !req.user.ID_USUARIO) {
+      req.flash('error', 'Usuário não autenticado para upload de foto.');
+      return res.redirect('/professor/p-config');
+    }
+    await db.query('UPDATE USUARIO SET FOTO_PERFIL = ? WHERE ID_USUARIO = ?', [req.file.buffer, req.user.ID_USUARIO]);
+    // Atualiza a sessão
+    const [rows] = await db.query('SELECT * FROM USUARIO WHERE ID_USUARIO = ?', [req.user.ID_USUARIO]);
+    if (rows.length) {
+      req.user.FOTO_PERFIL = rows[0].FOTO_PERFIL;
+    }
+    req.flash('success', 'Foto de perfil adicionada com sucesso!');
+    res.redirect('/professor/p-config');
+  } catch (err) {
+    console.error('Erro ao salvar foto no banco:', err);
+    req.flash('error', 'Erro ao salvar foto no banco: ' + err.message);
+    res.redirect('/professor/p-config');
+  }
+};
+
+// Excluir foto do perfil do professor
+exports.excluirFoto = async (req, res) => {
+  const db = require("../config/database");
+  try {
+    if (!req.user || !req.user.ID_USUARIO) {
+      req.flash('error', 'Usuário não autenticado para exclusão de foto.');
+      return res.redirect('/professor/p-config');
+    }
+    await db.query('UPDATE USUARIO SET FOTO_PERFIL = NULL WHERE ID_USUARIO = ?', [req.user.ID_USUARIO]);
+    if (req.user) {
+      req.user.FOTO_PERFIL = null;
+    }
+    req.flash('success', 'Foto de perfil removida com sucesso!');
+    res.redirect('/professor/p-config');
+  } catch (err) {
+    console.error('Erro ao excluir foto:', err);
+    req.flash('error', 'Erro ao excluir foto: ' + err.message);
+    res.redirect('/professor/p-config');
+  }
+};
+
+// Servir foto de perfil do professor
+exports.fotoPerfil = async (req, res) => {
+  const db = require("../config/database");
+  const path = require("path");
+  try {
+    const [rows] = await db.query('SELECT FOTO_PERFIL FROM USUARIO WHERE ID_USUARIO = ?', [req.params.id]);
+    if (!rows.length || !rows[0].FOTO_PERFIL) {
+      // Se não houver foto ou usuário, envia uma imagem padrão
+      return res.sendFile(path.join(__dirname, '../../public/images/icons/perfil.svg'));
+    }
+    res.set('Content-Type', 'image/jpeg');
+    res.send(rows[0].FOTO_PERFIL);
+  } catch (err) {
+    console.error('Erro ao buscar foto de perfil:', err);
+    const path = require("path");
+    res.sendFile(path.join(__dirname, '../../public/images/icons/perfil.svg'));
+  }
+};
+
+// Exclusão de conta do professor
+exports.excluirConta = async (req, res) => {
+  const db = require("../config/database");
+  try {
+    if (!req.user || !req.user.ID_USUARIO) {
+      req.flash('error', 'Usuário não autenticado.');
+      return res.redirect('/professor/p-config');
+    }
+    const userId = req.user.ID_USUARIO;
+
+    // Deleta dependências relacionadas ao professor
+    await db.query('DELETE FROM CONFIG_PROF WHERE ID_USUARIO = ?', [userId]);
+    await db.query('DELETE FROM CURSOS WHERE ID_USUARIO = ?', [userId]);
+    await db.query('UPDATE USUARIO SET FOTO_PERFIL = NULL WHERE ID_USUARIO = ?', [userId]);
+    await db.query('DELETE FROM USUARIO WHERE ID_USUARIO = ?', [userId]);
+
+    // Só tente logout se a sessão ainda existir
+    if (req.logout) {
+      req.flash('success', 'Conta excluída com sucesso!');
+      req.logout(function(err) {
+        if (err) {
+          console.error('Erro no logout após exclusão:', err);
+          req.flash('error', 'Erro ao fazer logout: ' + err.message);
+          return res.redirect('/professor/p-config');
+        }
+        if (req.session) {
+          req.session.destroy((err) => {
+            if (err) {
+              console.error('Erro ao destruir sessão:', err);
+              req.flash('error', 'Erro ao finalizar sessão.');
+              return res.redirect('/professor/p-config');
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+          });
+        } else {
+          res.clearCookie('connect.sid');
+          res.redirect('/');
+        }
+      });
+    } else {
+      res.clearCookie('connect.sid');
+      res.redirect('/');
+    }
+  } catch (err) {
+    console.error('Erro ao excluir conta:', err);
+    req.flash('error', 'Erro ao excluir conta: ' + err.message);
+    res.redirect('/professor/p-config');
+  }
+};
+
+// Salvar (criar/atualizar) dados bancários do professor
+exports.salvarDadosBancarios = async (req, res) => {
+  const { 'chave-pix': chavePix, agencia, banco, conta } = req.body;
+  const idUsuario = req.user.ID_USUARIO;
+
+  try {
+    // Tenta atualizar
+    const [result] = await db.query(
+      `UPDATE CONFIG_PROF
+       SET CONTA_PAG = ?, AGENCIA_PAG = ?, CHAVE_PIX = ?, BANCO_PAG = ?
+       WHERE ID_USUARIO = ?`,
+      [conta, agencia, chavePix, banco, idUsuario]
+    );
+    // Se não atualizou nenhuma linha, faz insert
+    if (result.affectedRows === 0) {
+      await db.query(
+        `INSERT INTO CONFIG_PROF (ID_USUARIO, CONTA_PAG, AGENCIA_PAG, CHAVE_PIX, BANCO_PAG)
+         VALUES (?, ?, ?, ?, ?)`,
+        [idUsuario, conta, agencia, chavePix, banco]
+      );
+    }
+    req.flash("success", "Dados bancários salvos com sucesso!");
+    res.redirect("/professor/p-config");
+  } catch (err) {
+    console.error("Erro ao salvar dados bancários:", err);
+    req.flash("error", "Erro ao salvar dados bancários!");
+    res.redirect("/professor/p-config");
   }
 };
 

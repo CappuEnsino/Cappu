@@ -18,6 +18,9 @@
             right: auto !important;
             transform: none !important;
         }
+        .campo-invalido {
+            border-bottom: 2px solid #ff0000 !important;
+        }
     </style>
 </head>
 <body>
@@ -79,47 +82,239 @@
 
     <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
     <script>
+    // Função para aplicar máscara de CPF/CNPJ
+    function aplicarMascaraCPF(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        } else {
+            value = value.replace(/(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1/$2');
+            value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+        }
+        input.value = value;
+    }
+
+    // Função para validar CPF
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, '');
+        
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        
+        let soma = 0;
+        let resto;
+        
+        for (let i = 1; i <= 9; i++) {
+            soma = soma + parseInt(cpf.substring(i-1, i)) * (11 - i);
+        }
+        
+        resto = (soma * 10) % 11;
+        if ((resto === 10) || (resto === 11)) resto = 0;
+        if (resto !== parseInt(cpf.substring(9, 10))) return false;
+        
+        soma = 0;
+        for (let i = 1; i <= 10; i++) {
+            soma = soma + parseInt(cpf.substring(i-1, i)) * (12 - i);
+        }
+        
+        resto = (soma * 10) % 11;
+        if ((resto === 10) || (resto === 11)) resto = 0;
+        if (resto !== parseInt(cpf.substring(10, 11))) return false;
+        
+        return true;
+    }
+
+    // Função para validar CNPJ
+    function validarCNPJ(cnpj) {
+        cnpj = cnpj.replace(/[^\d]+/g, '');
+        
+        if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
+        
+        let tamanho = cnpj.length - 2;
+        let numeros = cnpj.substring(0, tamanho);
+        let digitos = cnpj.substring(tamanho);
+        let soma = 0;
+        let pos = tamanho - 7;
+        
+        for (let i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2) pos = 9;
+        }
+        
+        let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado !== parseInt(digitos.charAt(0))) return false;
+        
+        tamanho = tamanho + 1;
+        numeros = cnpj.substring(0, tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        
+        for (let i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2) pos = 9;
+        }
+        
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado !== parseInt(digitos.charAt(1))) return false;
+        
+        return true;
+    }
+
+    // Função para validar email
+    function validarEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!re.test(email)) return false;
+        
+        // Validação adicional para domínios comuns
+        const dominiosValidos = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'icloud.com'];
+        const dominio = email.split('@')[1];
+        
+        // Verifica se o domínio é válido (opcional, você pode remover se quiser permitir qualquer domínio)
+        if (!dominiosValidos.includes(dominio)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Adiciona o evento de input para aplicar a máscara
+    document.getElementById('documento').addEventListener('input', function(e) {
+        aplicarMascaraCPF(e.target);
+    });
+
+    // Adiciona validação em tempo real para o email
+    document.getElementById('email').addEventListener('blur', function(e) {
+        const email = e.target.value;
+        if (email && !validarEmail(email)) {
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'Por favor, insira um email válido', 
+                position: 'left top' 
+            });
+            e.target.classList.add('campo-invalido');
+        } else {
+            e.target.classList.remove('campo-invalido');
+        }
+    });
+
+    // Adiciona validação em tempo real para o documento
+    document.getElementById('documento').addEventListener('blur', function(e) {
+        const documento = e.target.value.replace(/\D/g, '');
+        if (documento) {
+            if (documento.length === 11 && !validarCPF(documento)) {
+                new Notify({ 
+                    status: 'error', 
+                    title: 'Erro', 
+                    text: 'CPF inválido', 
+                    position: 'left top' 
+                });
+                e.target.classList.add('campo-invalido');
+            } else if (documento.length === 14 && !validarCNPJ(documento)) {
+                new Notify({ 
+                    status: 'error', 
+                    title: 'Erro', 
+                    text: 'CNPJ inválido', 
+                    position: 'left top' 
+                });
+                e.target.classList.add('campo-invalido');
+            } else {
+                e.target.classList.remove('campo-invalido');
+            }
+        }
+    });
+
     document.getElementById('cadastroForm').addEventListener('submit', async function(event) {
-        // Validação de e-mail
-        function validarEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        // Validação de CPF
-        function validarCPF(cpf) {
-            cpf = cpf.replace(/[^\d]+/g, '');
-            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-            let soma = 0, resto;
-            for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
-            resto = (soma * 10) % 11;
-            if (resto === 10 || resto === 11) resto = 0;
-            if (resto !== parseInt(cpf.substring(9, 10))) return false;
-            soma = 0;
-            for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
-            resto = (soma * 10) % 11;
-            if (resto === 10 || resto === 11) resto = 0;
-            if (resto !== parseInt(cpf.substring(10, 11))) return false;
-            return true;
-        }
+        event.preventDefault();
+        
         // Pega os valores
         const email = document.getElementById('email').value;
-        const documento = document.getElementById('documento').value;
-        // Validação
+        const documento = document.getElementById('documento').value.replace(/\D/g, '');
+        const senha = document.getElementById('senha').value;
+        const confirmarSenha = document.getElementById('confirmar_senha').value;
+        const termos = document.getElementById('termos').checked;
+        
+        // Validações
+        let isValid = true;
+        
+        // Validação do email
         if (!validarEmail(email)) {
-            new Notify({ status: 'error', title: 'Erro', text: 'E-mail inválido!', position: 'left top' });
-            event.preventDefault();
-            return;
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'Por favor, insira um email válido', 
+                position: 'left top' 
+            });
+            document.getElementById('email').classList.add('campo-invalido');
+            isValid = false;
         }
-        // Só valida CPF se for 11 dígitos (não CNPJ)
+        
+        // Validação do documento (CPF ou CNPJ)
         if (documento.length === 11 && !validarCPF(documento)) {
-            new Notify({ status: 'error', title: 'Erro', text: 'CPF inválido!', position: 'left top' });
-            event.preventDefault();
-            return;
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'CPF inválido', 
+                position: 'left top' 
+            });
+            document.getElementById('documento').classList.add('campo-invalido');
+            isValid = false;
+        } else if (documento.length === 14 && !validarCNPJ(documento)) {
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'CNPJ inválido', 
+                position: 'left top' 
+            });
+            document.getElementById('documento').classList.add('campo-invalido');
+            isValid = false;
         }
-        event.preventDefault();
+        
+        // Validação da senha
+        if (senha.length < 6) {
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'A senha deve ter pelo menos 6 caracteres', 
+                position: 'left top' 
+            });
+            document.getElementById('senha').classList.add('campo-invalido');
+            isValid = false;
+        }
+        
+        // Validação da confirmação de senha
+        if (senha !== confirmarSenha) {
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'As senhas não coincidem', 
+                position: 'left top' 
+            });
+            document.getElementById('confirmar_senha').classList.add('campo-invalido');
+            isValid = false;
+        }
+        
+        // Validação dos termos
+        if (!termos) {
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'Você precisa aceitar os termos de uso', 
+                position: 'left top' 
+            });
+            isValid = false;
+        }
+        
+        if (!isValid) return;
+
+        // Se todas as validações passarem, envia o formulário
         const form = event.target;
         const formData = new FormData(form);
         const payload = new URLSearchParams(formData);
+        
         try {
             const response = await fetch(form.action, {
                 method: form.method,
@@ -129,21 +324,42 @@
                 },
                 body: payload
             });
+            
             const data = await response.json();
             if (data.success) {
-                new Notify({ status: 'success', title: 'Sucesso', text: data.message || 'Cadastro realizado com sucesso', position: 'left top' });
+                new Notify({ 
+                    status: 'success', 
+                    title: 'Sucesso', 
+                    text: data.message || 'Cadastro realizado com sucesso', 
+                    position: 'left top' 
+                });
                 setTimeout(() => { window.location.href = data.redirect || '/'; }, 2000);
             } else {
                 if (data.errors) {
                     Object.values(data.errors).flat().forEach(msg => {
-                        new Notify({ status: 'error', title: 'Erro', text: msg, position: 'left top' });
+                        new Notify({ 
+                            status: 'error', 
+                            title: 'Erro', 
+                            text: msg, 
+                            position: 'left top' 
+                        });
                     });
                 } else {
-                    new Notify({ status: 'error', title: 'Erro', text: data.message || 'Erro ao cadastrar', position: 'left top' });
+                    new Notify({ 
+                        status: 'error', 
+                        title: 'Erro', 
+                        text: data.message || 'Erro ao cadastrar', 
+                        position: 'left top' 
+                    });
                 }
             }
         } catch (error) {
-            new Notify({ status: 'error', title: 'Erro', text: 'Erro de conexão, tente novamente', position: 'left top' });
+            new Notify({ 
+                status: 'error', 
+                title: 'Erro', 
+                text: 'Erro de conexão, tente novamente', 
+                position: 'left top' 
+            });
         }
     });
     </script>

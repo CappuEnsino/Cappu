@@ -1,58 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minha Rotina</title>
-    <link rel="stylesheet" href="/css/p-minha-rotina.css" />
-    <link
-      rel="shortcut icon"
-      href="../../Images/favicon.ico"
-      type="image/x-icon"
-    />
-  </head>
 
-  <body>
-    <header>
-      <nav>
-        <section>
-          <a href="./p-professor"><img src="/images/voltar.png" alt="" /></a>
-        </section>
-        <section class="txt-pag">
-          <h1>Minha Rotina</h1>
-        </section>
-        <section class="perfil-professor">
-          <h2><%= user.NOME_USU || 'Professor' %></h2>
-          <a href=""><img src="/images/perfil-professor-h.png" alt="" /></a>
-        </section>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Rotina</title>
+  <link rel="stylesheet" href="/css/p-minha-rotina.css">
+  <link rel="stylesheet" href="/css/header2.css">
+  <link rel="shortcut icon" href="../../Images/favicon.ico" type="image/x-icon">
+</head>
 
-    <main>
-      <h1 id="mes">Mes</h1>
-      <script>
-        function atualizarMes() {
-          const meses = [
-            "Janeiro",
-            "Fevereiro",
-            "Março",
-            "Abril",
-            "Maio",
-            "Junho",
-            "Julho",
-            "Agosto",
-            "Setembro",
-            "Outubro",
-            "Novembro",
-            "Dezembro",
-          ];
-          const mesAtual = new Date().getMonth();
-          document.getElementById("mes").textContent = meses[mesAtual];
-        }
-        window.onload = atualizarMes;
-      </script>
-      <section class="container">
+<body>
+  <header>
+    <a href="/professor/p-professor"><img src="/images/voltar.svg" alt=""></a>
+    <p>MINHA ROTINA</p>
+    <div>
+      <p><%= user.NOME_USU || 'Professor' %></p>
+      <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+          <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
+          style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+          onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
+          <div class="user-config" id="userConfig">
+              <ul>
+                  <li><a href="/professor/p-professor">MENU</a></li>
+                  <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
+                  <li><a href="/professor/logout">SAIR</a></li>
+              </ul>
+          </div>
+      </button>
+  </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <section class="calendario">
         <section class="tabela">
+          <div class="calendario-header">
+            <button id="prev">&lt;</button>
+            <h2 id="mesAno"></h2>
+            <button id="next">&gt;</button>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -65,106 +53,188 @@
                 <th>sáb</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-              </tr>
-              <tr>
-                <td>19</td>
-                <td>20</td>
-                <td>21</td>
-                <td>22</td>
-                <td>23</td>
-                <td>24</td>
-                <td>25</td>
-              </tr>
-              <tr>
-                <td>26</td>
-                <td>27</td>
-                <td>28</td>
-                <td>29</td>
-                <td>30</td>
-                <td>31</td>
-                <td></td>
-              </tr>
+            <tbody id="diasCalendario">
+              <!-- Dias serão gerados dinamicamente aqui -->
             </tbody>
           </table>
         </section>
-        <section class="tarefas">
-          <section class="titulo-tarefas">
-            <h2>tarefas</h2>
-            <img src="/images/brush.svg" alt="Editar" />
-          </section>
-          <section class="checkbox">
-            <section class="check">
-              <input type="checkbox" name="verificar mensagens" id="check1" />
-              <label for="check1">Verificar Mensagens</label><br />
-            </section>
-
-            <section class="check">
-              <input type="checkbox" name="Conferir Feedbacks" id="check2" />
-              <label for="check2">Conferir Feedbacks</label><br />
-            </section>
-
-            <section class="check">
-              <input type="checkbox" name="Conferir Feedbacks" id="check2" />
-              <label for="check2">Conferir Feedbacks</label><br />
-            </section>
-
-            <section class="check">
-              <input
-                type="checkbox"
-                name="Atualizar Cronograma Dos Cursos"
-                id="check3"
-              />
-              <label for="check3">Atualizar Cronograma Dos Cursos</label><br />
-            </section>
-
-            <section class="check">
-              <input
-                type="checkbox"
-                name="Adicionar Matriais Complementares Aula 3 - L"
-                id="check4"
-              />
-              <label for="check4"
-                >Adicionar Matriais Complementares Aula 3 - L</label
-              ><br />
-            </section>
-
-            <section class="check">
-              <input type="checkbox" name="Corrigir atividades" id="check5" />
-              <label for="chehck5">Corrigir atividades</label>
-            </section>
-          </section>
+        <button id="hoje">Hoje</button>
+      </section>
+      <section class="tarefas">
+        <section class="titulo-tarefas">
+          <h2>tarefas</h2>
+          <img src="/images/brush.svg" alt="Editar">
+        </section>
+        <section class="checkbox">
+          <!-- Adicionar tarefas aqui -->
         </section>
       </section>
-    </main>
-    <footer>
-      <p>© 2024 Cappuensino. Todos os direitos reservados.</p>
-    </footer>
-  </body>
+    </section>
+  </main>
+  <footer>
+    <p>© 2024 Cappuensino. Todos os direitos reservados.</p>
+  </footer>
+  <script>
+    const diasCalendario = document.getElementById("diasCalendario");
+    const mesAno = document.getElementById("mesAno");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const hoje = document.getElementById("hoje");
+
+    let dataAtual = new Date();
+    
+    function gerarCalendario(data) {
+      const ano = data.getFullYear();
+      const mes = data.getMonth();
+    
+      const primeiroDia = new Date(ano, mes, 1).getDay();
+      const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+    
+      const nomesMes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    
+      mesAno.textContent = `${nomesMes[mes]} ${ano}`;
+      diasCalendario.innerHTML = "";
+    
+      let dia = 1;
+      for (let i = 0; i < 6; i++) {
+        const linha = document.createElement("tr");
+        for (let j = 0; j < 7; j++) {
+          const celula = document.createElement("td");
+    
+          if (i === 0 && j < primeiroDia) {
+            celula.textContent = "";
+          } else if (dia > ultimoDia) {
+            celula.textContent = "";
+          } else {
+            celula.textContent = dia;
+            if (
+              dia === new Date().getDate() &&
+              mes === new Date().getMonth() &&
+              ano === new Date().getFullYear()
+            ) {
+              celula.style.backgroundColor = "black";
+              celula.style.color = "white";
+            }
+            dia++;
+          }
+    
+          linha.appendChild(celula);
+        }
+        diasCalendario.appendChild(linha);
+      }
+    }
+    
+    prev.addEventListener("click", () => {
+      dataAtual.setMonth(dataAtual.getMonth() - 1);
+      gerarCalendario(dataAtual);
+    });
+    
+    next.addEventListener("click", () => {
+      dataAtual.setMonth(dataAtual.getMonth() + 1);
+      gerarCalendario(dataAtual);
+    });
+    
+    gerarCalendario(dataAtual);
+
+    hoje.addEventListener("click", () => {
+      dataAtual = new Date(); // volta para o mês atual
+      gerarCalendario(dataAtual);
+    });
+  </script>
+
+  <script>
+    const checkboxContainer = document.querySelector('.checkbox');
+
+    // Salva tarefas no localStorage
+    function salvarTarefas() {
+      const tarefas = [];
+      checkboxContainer.querySelectorAll('.check').forEach(section => {
+        const checkbox = section.querySelector('input[type="checkbox"]');
+        const label = section.querySelector('label');
+        tarefas.push({
+          id: checkbox.id,
+          texto: label.textContent.trim(),
+          marcada: checkbox.checked
+        });
+      });
+      localStorage.setItem('tarefas', JSON.stringify(tarefas));
+    }
+
+    // Cria uma tarefa nova no DOM
+    function criarTarefa({ id, texto, marcada }) {
+      const novaTarefa = document.createElement('section');
+      novaTarefa.className = 'check';
+      novaTarefa.innerHTML = `
+        <input type="checkbox" id="${id}">
+        <label for="${id}" contenteditable="true">${texto}</label>
+        <button aria-label="Apagar tarefa" class="btn-apagar"><img src="/images/delete.svg" alt="deletar" style="width: 24px; height: 24px;"></button>
+      `;
+
+      const checkbox = novaTarefa.querySelector('input[type="checkbox"]');
+      const label = novaTarefa.querySelector('label');
+      const btnApagar = novaTarefa.querySelector('.btn-apagar');
+
+      // Aplica estilo conforme marcado
+      aplicarEstiloTarefa(label, marcada);
+      checkbox.checked = marcada;
+
+      // Evento: mudar estilo ao marcar/desmarcar e salvar
+      checkbox.addEventListener('change', () => {
+        aplicarEstiloTarefa(label, checkbox.checked);
+        salvarTarefas();
+      });
+
+      // Evento: apagar tarefa e salvar
+      btnApagar.addEventListener('click', () => {
+        novaTarefa.remove();
+        salvarTarefas();
+      });
+
+      // Evento: salvar ao editar texto (blur)
+      label.addEventListener('blur', () => {
+        salvarTarefas();
+      });
+
+      checkboxContainer.appendChild(novaTarefa);
+    }
+
+    // Aplica estilo riscado e opacidade ao label conforme status da checkbox
+    function aplicarEstiloTarefa(label, marcada) {
+      label.style.textDecoration = marcada ? 'line-through' : 'none';
+      label.style.opacity = marcada ? '0.5' : '1';
+    }
+
+    // Gera um id único para checkbox baseado em timestamp + random para evitar colisões
+    function gerarIdUnico() {
+      return 'check' + Date.now() + Math.floor(Math.random() * 1000);
+    }
+
+    // Adiciona nova tarefa pelo prompt
+    function adicionarTarefa() {
+      const texto = prompt('Digite a nova tarefa:');
+      if (texto && texto.trim()) {
+        const id = gerarIdUnico();
+        criarTarefa({ id, texto: texto.trim(), marcada: false });
+        salvarTarefas();
+      }
+    }
+
+    // Botão para adicionar tarefa
+    const botaoAdicionar = document.createElement('button');
+    botaoAdicionar.textContent = '+ Adicionar tarefa';
+    botaoAdicionar.style.marginTop = '20px';
+    botaoAdicionar.addEventListener('click', adicionarTarefa);
+    document.querySelector('.tarefas').appendChild(botaoAdicionar);
+
+    // Carrega tarefas do localStorage ao iniciar
+    function carregarTarefas() {
+      const tarefasSalvas = JSON.parse(localStorage.getItem('tarefas') || '[]');
+      tarefasSalvas.forEach(criarTarefa);
+    }
+
+    // Inicializa
+    carregarTarefas();
+  </script>
+</body>
 </html>

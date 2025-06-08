@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;300;400;500;600;700;800;900&display=swap");
+@import url("/css/alunoconfig.css");
 
 * {
   box-sizing: border-box;
@@ -104,6 +105,7 @@ main h1 {
   background-color: var(--primary-color);
   color: white;
   cursor: pointer;
+  border: none !important;
 }
 
 .flex {
@@ -160,6 +162,10 @@ main h1 {
   background-repeat: no-repeat;
   background-position: right 0.5em center;
   background-size: 1em;
+}
+
+input.info-value-form {
+  background-image: none !important;
 }
 
 .redefinir {
@@ -227,6 +233,10 @@ footer p {
   line-height: 24px;
   letter-spacing: 8%;
   text-align: center;
+}
+
+hr {
+  margin-top: 10em;
 }
 
 /* 1600px breakpoint */
