@@ -39,13 +39,16 @@
             </ul>
         </div>
         </button>
-        <img src="/images/chat.svg" alt="" />
       </section>
       <section class="container">
         <section class="profile">
           <h1 class="nome"><%= user.NOME_USU || 'Professor' %></h1>
           <h2 class="alunoid">@<%= user.id_usuario || user.ID_USUARIO || 'id' %></h2>
-          <img src="/images/professor-perfil.png" alt="" />
+         <img 
+            src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
+            alt="Foto do perfil" 
+            style="width: 15em; height: 15em; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+            onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
         </section>
         <section class="opcoes">
           <a href="/professor/p-curso_prof" class="botao">Meus Cursos</a>
