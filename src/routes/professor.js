@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../config/multer");
 const professorController = require("../controller/professorController");
+const db = require("../config/database");
 
 // Dashboard do professor
 router.get("/p-professor", (req, res) => {
@@ -14,9 +15,22 @@ router.get("/p-professor", (req, res) => {
   });
 });
 
-router.get("/p-config", (req, res) => {
+router.get("/p-config", async (req, res) => {
+  let dadosBancarios = {};
+  try {
+    const [rows] = await db.query(
+      "SELECT CONTA_PAG, AGENCIA_PAG, CHAVE_PIX, BANCO_PAG FROM CONFIG_PROF WHERE ID_USUARIO = ?",
+      [req.user.ID_USUARIO]
+    );
+    if (rows.length > 0) {
+      dadosBancarios = rows[0];
+    }
+  } catch (err) {
+    console.error("Erro ao buscar dados bancários:", err);
+  }
   res.render("dashboard/professor/p-config", {
     user: req.user,
+    dadosBancarios,
     title: "Configurações",
     timestamp: Date.now(),
     success: req.flash('success'),
@@ -125,5 +139,7 @@ router.get('/logout', (req, res, next) => {
         });
     });
 });
+
+router.post("/salvar-dados-bancarios", professorController.salvarDadosBancarios);
 
 module.exports = router;
