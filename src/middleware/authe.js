@@ -1,13 +1,13 @@
 module.exports = {
   isLoggedIn: (req, res, next) => {
     if (req.isAuthenticated()) return next();
-    req.flash('error', 'Faça login primeiro');
-    res.redirect('/auth/login');
+    req.flash("error", "Faça login primeiro");
+    res.redirect("/auth/login");
   },
 
   isNotLoggedIn: (req, res, next) => {
     if (!req.isAuthenticated()) return next();
-    res.redirect('/');
+    res.redirect("/");
   },
 
   isAuthenticated: (req, res, next) => {
@@ -22,15 +22,15 @@ module.exports = {
     if (req.isAuthenticated() && req.user.role === "professor") {
       return next();
     }
-    req.flash('error', 'Acesso restrito a professores');
-    res.redirect('/login');
+    req.flash("error", "Acesso restrito a professores");
+    res.redirect("/login");
   },
 
   isAluno: (req, res, next) => {
     if (req.isAuthenticated() && req.user.role === "aluno") {
       return next();
     }
-    req.flash('error', 'Acesso restrito a alunos');
-    res.redirect('/dashboard');
-  }
+    req.flash("error", "Acesso restrito a alunos");
+    res.redirect("/dashboard");
+  },
 };

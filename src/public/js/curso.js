@@ -3,17 +3,11 @@ const CursoManager = {
   modulos: [],
 
   init() {
+    console.log("DEBUG - Dados recebidos do backend:", window.cursoModulos);
     if (window.cursoModulos && Array.isArray(window.cursoModulos)) {
       this.modulos = window.cursoModulos;
     }
     this.createModal();
-    this.createModuloModal();
-
-    // Adiciona o evento de clique ao botão de adicionar módulo
-    const addModuloBtn = document.getElementById("addModuloBtn");
-    if (addModuloBtn) {
-      addModuloBtn.addEventListener("click", () => this.abrirModalModulo());
-    }
   },
 
   // Cria o modal dinamicamente
@@ -171,7 +165,7 @@ const CursoManager = {
     const form = modal.querySelector("#aulaForm");
     form.onsubmit = (e) => {
       e.preventDefault();
-      this.saveAula(e);
+      this.saveAula();
     };
 
     // Fecha o modal ao clicar fora
@@ -260,11 +254,7 @@ const CursoManager = {
   },
 
   // Salva a aula (criar/editar)
-  saveAula(event) {
-    if (event) {
-      event.preventDefault();
-    }
-
+  saveAula() {
     const form = document.getElementById("aulaForm");
     const formData = new FormData(form);
     const aulaId = formData.get("aula_id");
@@ -285,17 +275,9 @@ const CursoManager = {
     // Envia a requisição
     fetch(url, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(Object.fromEntries(formData)),
+      body: formData,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           this.showNotify(
@@ -303,33 +285,8 @@ const CursoManager = {
             aulaId ? "Aula atualizada com sucesso!" : "Aula criada com sucesso!"
           );
           this.closeModal();
-
-          // Atualiza a interface sem recarregar a página
-          if (data.data) {
-            const moduloContainer = document.querySelector(
-              `[data-modulo-id="${moduloId}"]`
-            );
-            if (moduloContainer) {
-              const aulasContainer =
-                moduloContainer.querySelector(".modulo-aulas");
-              const noAulasMsg = aulasContainer.querySelector("p");
-
-              // Remove a mensagem "Nenhuma aula neste módulo" se existir
-              if (
-                noAulasMsg &&
-                noAulasMsg.textContent === "Nenhuma aula neste módulo"
-              ) {
-                noAulasMsg.remove();
-              }
-
-              // Adiciona a nova aula à lista
-              const aulaHtml = this.criarHtmlAula(data.data);
-              aulasContainer.insertBefore(
-                aulaHtml,
-                aulasContainer.querySelector("button")
-              );
-            }
-          }
+          // Recarrega a página para atualizar a lista
+          window.location.reload();
         } else {
           this.showNotify("error", data.message || "Erro ao salvar aula");
         }
@@ -450,279 +407,6 @@ const CursoManager = {
       notification.style.animation = "slideOut 0.5s ease-out";
       setTimeout(() => notification.remove(), 500);
     }, 3000);
-  },
-
-  // Cria o modal para adicionar/editar módulo
-  createModuloModal() {
-    // Remove modal existente se houver
-    const existingModal = document.getElementById("moduloModal");
-    if (existingModal) existingModal.remove();
-
-    // Cria o modal
-    const modal = document.createElement("div");
-    modal.id = "moduloModal";
-    modal.className = "modal";
-    modal.style.cssText = `
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 1000;
-    `;
-
-    // Conteúdo do modal
-    modal.innerHTML = `
-      <div class="modal-content" style="
-        background-color: #fff;
-        margin: 10% auto;
-        padding: 20px;
-        width: 80%;
-        max-width: 600px;
-        border-radius: 8px;
-        position: relative;
-      ">
-        <span class="close-button" style="
-          position: absolute;
-          right: 10px;
-          top: 10px;
-          font-size: 24px;
-          cursor: pointer;
-          color: #666;
-        ">&times;</span>
-        
-        <h2 id="modalModuloTitle" style="margin-bottom: 20px;">Adicionar Módulo</h2>
-        
-        <form id="moduloForm" style="display: flex; flex-direction: column; gap: 15px;">
-          <input type="hidden" id="moduloId" name="modulo_id">
-          
-          <div class="form-group">
-            <label for="titulo">Título do Módulo *</label>
-            <input type="text" id="titulo" name="titulo" required style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
-          </div>
-          
-          <div class="form-group">
-            <label for="descricao">Descrição *</label>
-            <textarea id="descricao" name="descricao" required style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              min-height: 100px;
-            "></textarea>
-          </div>
-          
-          <div class="form-actions" style="
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-          ">
-            <button type="button" onclick="CursoManager.fecharModalModulo()" style="
-              padding: 8px 16px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              background: #f8f9fa;
-              cursor: pointer;
-            ">Cancelar</button>
-            <button type="submit" style="
-              padding: 8px 16px;
-              border: none;
-              border-radius: 4px;
-              background: #007bff;
-              color: white;
-              cursor: pointer;
-            ">Salvar</button>
-          </div>
-        </form>
-      </div>
-    `;
-
-    // Adiciona o modal ao body
-    document.body.appendChild(modal);
-
-    // Adiciona eventos
-    const closeBtn = modal.querySelector(".close-button");
-    closeBtn.onclick = () => this.fecharModalModulo();
-
-    const form = modal.querySelector("#moduloForm");
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      this.salvarModulo();
-    };
-
-    // Fecha o modal ao clicar fora
-    modal.onclick = (e) => {
-      if (e.target === modal) this.fecharModalModulo();
-    };
-  },
-
-  // Abre o modal de módulo
-  abrirModalModulo() {
-    const modal = document.getElementById("moduloModal");
-    const form = document.getElementById("moduloForm");
-    const title = document.getElementById("modalModuloTitle");
-
-    // Limpa o formulário
-    form.reset();
-    title.textContent = "Adicionar Módulo";
-    document.getElementById("moduloId").value = "";
-
-    // Mostra o modal
-    modal.style.display = "block";
-  },
-
-  // Fecha o modal de módulo
-  fecharModalModulo() {
-    const modal = document.getElementById("moduloModal");
-    modal.style.display = "none";
-  },
-
-  // Salva o módulo
-  salvarModulo() {
-    const form = document.getElementById("moduloForm");
-    const formData = new FormData(form);
-    const moduloId = formData.get("modulo_id");
-    const cursoId = window.location.pathname.split("/").pop(); // Pega o ID do curso da URL
-
-    const data = {
-      titulo: formData.get("titulo"),
-      descricao: formData.get("descricao"),
-      cursoId: cursoId,
-    };
-
-    const url = moduloId
-      ? `/dashboard/professor/modulo/${moduloId}`
-      : "/dashboard/professor/modulo";
-
-    fetch(url, {
-      method: moduloId ? "PUT" : "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.success) {
-          this.showNotify("success", "Módulo salvo com sucesso!");
-          this.fecharModalModulo();
-
-          // Adiciona o novo módulo à lista sem recarregar a página
-          if (result.data) {
-            const modulosContainer =
-              document.getElementById("modulosContainer");
-            const moduloHtml = this.criarHtmlModulo(result.data);
-
-            // Remove a mensagem "Nenhum módulo cadastrado" se existir
-            const noModulesMsg = modulosContainer.querySelector("p");
-            if (
-              noModulesMsg &&
-              noModulesMsg.textContent === "Nenhum módulo cadastrado"
-            ) {
-              noModulesMsg.remove();
-            }
-
-            // Adiciona o novo módulo antes do botão de adicionar
-            const addModuloBtn = document.getElementById("addModuloBtn");
-            modulosContainer.insertBefore(moduloHtml, addModuloBtn);
-          }
-        } else {
-          this.showNotify("error", result.message || "Erro ao salvar módulo");
-        }
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-        this.showNotify("error", "Erro ao salvar módulo");
-      });
-  },
-
-  // Cria o HTML para um módulo
-  criarHtmlModulo(modulo) {
-    const div = document.createElement("div");
-    div.className = "modulo-container";
-    div.setAttribute("data-modulo-id", modulo.ID_MODULO);
-
-    div.innerHTML = `
-      <div class="modulo-header">
-        <div class="modulo-title">${modulo.TITULO}</div>
-        <div class="modulo-actions">
-          <button type="button" class="btn" onclick="CursoManager.editarModulo(${modulo.ID_MODULO})">Editar</button>
-          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(${modulo.ID_MODULO})">Excluir</button>
-        </div>
-      </div>
-      <div class="modulo-aulas">
-        <p>Nenhuma aula neste módulo</p>
-        <button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>
-      </div>
-    `;
-
-    return div;
-  },
-
-  // Cria o HTML para uma aula
-  criarHtmlAula(aula) {
-    const div = document.createElement("div");
-    div.className = "aula-item";
-    div.setAttribute("data-aula-id", aula.ID_AULA);
-
-    div.innerHTML = `
-      <div class="aula-header">
-        <div class="aula-title">${aula.TITULO}</div>
-        <div class="aula-actions">
-          <button type="button" class="btn" onclick="CursoManager.editarAula(${
-            aula.ID_AULA
-          })">Editar</button>
-          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(${
-            aula.ID_AULA
-          })">Excluir</button>
-        </div>
-      </div>
-      <div class="aula-info">
-        <span class="aula-duracao">${aula.DURACAO}</span>
-        <span class="aula-tipo">${
-          aula.TIPO_CONTEUDO === "video" ? "Vídeo" : "Texto"
-        }</span>
-      </div>
-    `;
-
-    return div;
-  },
-
-  // Exclui um curso
-  excluirCurso(cursoId) {
-    if (
-      confirm(
-        "Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita."
-      )
-    ) {
-      fetch(`/dashboard/professor/curso/${cursoId}`, {
-        method: "DELETE",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            this.showNotify("success", "Curso excluído com sucesso");
-            // Redireciona para a página de cursos após 1 segundo
-            setTimeout(() => {
-              window.location.href = "/dashboard/professor/p-curso_prof";
-            }, 1000);
-          } else {
-            this.showNotify("error", data.message || "Erro ao excluir curso");
-          }
-        })
-        .catch((error) => {
-          console.error("Erro:", error);
-          this.showNotify("error", "Erro ao excluir curso");
-        });
-    }
   },
 };
 
