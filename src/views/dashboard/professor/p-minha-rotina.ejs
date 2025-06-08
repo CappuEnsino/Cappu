@@ -31,123 +31,142 @@
   </header>
 
   <main>
-    <h1 id="mes">Mes</h1>
-    <script>
-      function atualizarMes() {
-          const meses = [
-              "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-          ];
-          const mesAtual = new Date().getMonth();
-          document.getElementById("mes").textContent = meses[mesAtual];
-      }
-      window.onload = atualizarMes;
-      
-  </script>
     <section class="container">
+      <section class="calendario">
         <section class="tabela">
-            <table>
-                <thead>
-                    <tr>
-                        <th>dom</th>
-                        <th>seg</th>
-                        <th>ter</th>
-                        <th>qua</th>
-                        <th>qui</th>
-                        <th>sex</th>
-                        <th>sáb</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>6</td>
-                    <td>7</td>
-                    <td>8</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                  </tr>
-                  <tr>
-                    <td>12</td>
-                    <td>13</td>
-                    <td>14</td>
-                    <td>15</td>
-                    <td>16</td>
-                    <td>17</td>
-                    <td>18</td>
-                  </tr>
-                  <tr>
-                    <td>19</td>
-                    <td>20</td>
-                    <td>21</td>
-                    <td>22</td>
-                    <td>23</td>
-                    <td>24</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>26</td>
-                    <td>27</td>
-                    <td>28</td>
-                    <td>29</td>
-                    <td>30</td>
-                    <td>31</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-            </table>
+          <div class="calendario-header">
+            <button id="prev">&lt;</button>
+            <h2 id="mesAno"></h2>
+            <button id="next">&gt;</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>dom</th>
+                <th>seg</th>
+                <th>ter</th>
+                <th>qua</th>
+                <th>qui</th>
+                <th>sex</th>
+                <th>sáb</th>
+              </tr>
+            </thead>
+            <tbody id="diasCalendario">
+              <!-- Dias serão gerados dinamicamente aqui -->
+            </tbody>
+          </table>
         </section>
-        <section class="tarefas">
-          <section class="titulo-tarefas">
-            <h2>tarefas</h2>
-            <img src="/images/brush.svg" alt="Editar">
+        <button id="hoje">Hoje</button>
+      </section>
+      <section class="tarefas">
+        <section class="titulo-tarefas">
+          <h2>tarefas</h2>
+          <img src="/images/brush.svg" alt="Editar">
+        </section>
+        <section class="checkbox">
+          <section class="check">
+            <input type="checkbox" name="verificar mensagens" id="check1">
+            <label for="check1">Verificar Mensagens</label><br>
           </section>
-          <section class="checkbox">
-            <section class="check">
-              <input type="checkbox" name="verificar mensagens" id="check1">
-              <label for="check1">Verificar Mensagens</label><br>
-            </section>
 
-            <section class="check">
-              <input type="checkbox" name="Conferir Feedbacks" id="check2">
-              <label for="check2">Conferir Feedbacks</label><br>
-            </section>
+          <section class="check">
+            <input type="checkbox" name="Conferir Feedbacks" id="check2">
+            <label for="check2">Conferir Feedbacks</label><br>
+          </section>
 
-            <section class="check">
-              <input type="checkbox" name="Conferir Feedbacks" id="check2">
-              <label for="check2">Conferir Feedbacks</label><br>
-            </section>
-            
-            <section class="check">
-              <input type="checkbox" name="Atualizar Cronograma Dos Cursos" id="check3">
-              <label for="check3">Atualizar Cronograma Dos Cursos</label><br> 
-            </section>
-            
-            <section class="check">
-              <input type="checkbox" name="Adicionar Matriais Complementares Aula 3 - L" id="check4">
-              <label for="check4">Adicionar Matriais Complementares Aula 3 - L</label><br>
-            </section>
-            
-            <section class="check">
-              <input type="checkbox" name="Corrigir atividades" id="check5">
-              <label for="chehck5">Corrigir atividades</label>
-            </section>
+          <section class="check">
+            <input type="checkbox" name="Conferir Feedbacks" id="check2">
+            <label for="check2">Conferir Feedbacks</label><br>
+          </section>
+          
+          <section class="check">
+            <input type="checkbox" name="Atualizar Cronograma Dos Cursos" id="check3">
+            <label for="check3">Atualizar Cronograma Dos Cursos</label><br> 
+          </section>
+          
+          <section class="check">
+            <input type="checkbox" name="Adicionar Matriais Complementares Aula 3 - L" id="check4">
+            <label for="check4">Adicionar Matriais Complementares Aula 3 - L</label><br>
+          </section>
+          
+          <section class="check">
+            <input type="checkbox" name="Corrigir atividades" id="check5">
+            <label for="chehck5">Corrigir atividades</label>
           </section>
         </section>
+      </section>
     </section>
   </main>
   <footer>
     <p>© 2024 Cappuensino. Todos os direitos reservados.</p>
   </footer>
+  <script>
+    const diasCalendario = document.getElementById("diasCalendario");
+    const mesAno = document.getElementById("mesAno");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const hoje = document.getElementById("hoje");
+
+    let dataAtual = new Date();
+    
+    function gerarCalendario(data) {
+      const ano = data.getFullYear();
+      const mes = data.getMonth();
+    
+      const primeiroDia = new Date(ano, mes, 1).getDay();
+      const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+    
+      const nomesMes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    
+      mesAno.textContent = `${nomesMes[mes]} ${ano}`;
+      diasCalendario.innerHTML = "";
+    
+      let dia = 1;
+      for (let i = 0; i < 6; i++) {
+        const linha = document.createElement("tr");
+        for (let j = 0; j < 7; j++) {
+          const celula = document.createElement("td");
+    
+          if (i === 0 && j < primeiroDia) {
+            celula.textContent = "";
+          } else if (dia > ultimoDia) {
+            celula.textContent = "";
+          } else {
+            celula.textContent = dia;
+            if (
+              dia === new Date().getDate() &&
+              mes === new Date().getMonth() &&
+              ano === new Date().getFullYear()
+            ) {
+              celula.style.backgroundColor = "black";
+              celula.style.color = "white";
+            }
+            dia++;
+          }
+    
+          linha.appendChild(celula);
+        }
+        diasCalendario.appendChild(linha);
+      }
+    }
+    
+    prev.addEventListener("click", () => {
+      dataAtual.setMonth(dataAtual.getMonth() - 1);
+      gerarCalendario(dataAtual);
+    });
+    
+    next.addEventListener("click", () => {
+      dataAtual.setMonth(dataAtual.getMonth() + 1);
+      gerarCalendario(dataAtual);
+    });
+    
+    gerarCalendario(dataAtual);
+
+    hoje.addEventListener("click", () => {
+      dataAtual = new Date(); // volta para o mês atual
+      gerarCalendario(dataAtual);
+    });
+  </script>
 </body>
 </html>
