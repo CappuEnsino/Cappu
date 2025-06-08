@@ -8,6 +8,9 @@ router.get("/p-professor", (req, res) => {
   res.render("dashboard/professor/p-professor", {
     user: req.user,
     title: "Dashboard Professor",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -15,6 +18,9 @@ router.get("/p-config", (req, res) => {
   res.render("dashboard/professor/p-config", {
     user: req.user,
     title: "Configurações",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -22,6 +28,9 @@ router.get("/p-minha-rotina", (req, res) => {
   res.render("dashboard/professor/p-minha-rotina", {
     user: req.user,
     title: "Minha Rotina",
+    timestamp: Date.now(),
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -88,5 +97,33 @@ router.post(
   upload.single("imagem"),
   professorController.atualizarCursoCompleto
 );
+
+// --- CRUD de foto de perfil e conta do professor ---
+// Upload da foto do perfil
+router.post("/upload-foto", upload.single("foto_perfil"), professorController.uploadFoto);
+// Excluir foto do perfil
+router.post("/excluir-foto", professorController.excluirFoto);
+// Servir foto de perfil
+router.get("/foto-perfil/:id", professorController.fotoPerfil);
+// Excluir conta do professor
+router.post("/excluir-conta", professorController.excluirConta);
+
+// Rota de logout para professor
+router.get('/logout', (req, res, next) => {
+    req.logout(function(err) {
+        if (err) {
+            console.error('Erro no logout do professor:', err);
+            req.flash('error', 'Erro ao fazer logout: ' + err.message);
+            return res.redirect('/professor/p-professor');
+        }
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Erro ao destruir sessão no logout do professor:', err);
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+        });
+    });
+});
 
 module.exports = router;
