@@ -55,35 +55,42 @@
     </header>
 
     <main>
-      <% if (typeof cursos !== 'undefined' && cursos && cursos.length > 0) { %>
-      <% let temCursosValidos = false; %> <% cursos.forEach(function(curso) { %>
-      <% if (curso && curso.ID_CURSO && curso.TITULO) { %> <% temCursosValidos =
-      true; %>
-      <section class="cursos">
-        <p><%= curso.TITULO %></p>
-        <section class="download-section">
-          <span><%= curso.CATEGORIA || '-' %></span>
-          <span class="avaliacao"><%= curso.AVALIACAO || '-' %></span>
-          <a
-            href="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>"
-            title="Editar"
-          >
-            <button type="button" class="btn-editar">Editar</button>
-          </a>
+      <section class="meuscursos">
+        <section class="topic">
+          <h2>NOME</h2>
+          <h2>CATEGORIA</h2>
+          <h2>AVALIAÇÃO</h2>
         </section>
-      </section>
-      <% } %> <% }); %> <% if (!temCursosValidos) { %>
-      <section class="cursos">
-        <p>Nenhum curso cadastrado.</p>
-      </section>
-      <% } %> <% } else { %>
-      <section class="cursos">
-        <p>Nenhum curso cadastrado.</p>
-      </section>
-      <% } %>
-
-      <section class="vermais">
-        <a href="./p_criar_curso">ADICIONAR CURSO</a>
+  
+        <% if (cursos && cursos.length > 0) { %>
+          <% cursos.forEach(function(curso) { %>
+            <% if (curso && curso.ID_CURSO && curso.TITULO) { %>
+              <section class="cursos">
+                <p><%= curso.TITULO %></p>
+                <section class="download-section">
+                  <span><%= curso.CATEGORIA || '-' %></span>
+                  <span class="avaliacao"><%= curso.AVALIACAO || '-' %></span>
+                  <a href="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>" title="Editar">
+                    <button type="button" class="btn-editar">Editar</button>
+                  </a>
+                </section>
+              </section>
+            <% } %>
+          <% }); %>
+          <% if (!cursos.some(function(curso) { return curso && curso.ID_CURSO && curso.TITULO; })) { %>
+            <section class="cursos">
+              <p>Nenhum curso cadastrado.</p>
+            </section>
+          <% } %>
+        <% } else { %>
+          <section class="cursos">
+            <p>Nenhum curso cadastrado.</p>
+          </section>
+        <% } %>
+  
+        <section class="vermais">
+          <a href="/professor/p_criar_curso">ADICIONAR CURSO</a>
+        </section>
       </section>
     </main>
 
