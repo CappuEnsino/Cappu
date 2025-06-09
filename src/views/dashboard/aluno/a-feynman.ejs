@@ -63,42 +63,36 @@
             </div>
           </div>
         </section>                
-        <section class="btns-salvar-deletar">
-          <button type="submit" class="save-button">
-            SALVAR <img src="/images/salvar.svg" alt="Salvar"
-          />
-          </button>
-        </section>
       </section>
       <section class="aplicacao-do-metodo">
         <section class="resumo-form">
           <form action="/aluno/a-feynman" method="POST">
-  <label for="titulo">TÍTULO</label><br />
-  <input
-    type="text"
-    id="titulo"
-    name="titulo"
-    placeholder="Escreva o título do seu resumo feynman aqui..."
-    required
-    value="<%= feynman ? feynman.TITULO : '' %>"
-  />
-  <% if (feynman && feynman.COD_FEYNMAN) { %>
-    <input type="hidden" name="cod_feynman" value="<%= feynman.COD_FEYNMAN %>">
-  <% } %>
-  <textarea
-    id="texto_feynman"
-    name="texto_feynman"
-    rows="15"
-    cols="90"
-    placeholder="Escreva o seu resumo aqui..."
-    required
-  ><%= feynman ? feynman.TEXTO_FEYNMAN : '' %></textarea>
-  <section class="btns-salvar-deletar">
-    <button type="submit" class="save-button">
-      SALVAR <img src="/images/salvar.svg" alt="Salvar" />
-    </button>
-  </section>
-</form>
+            <label for="titulo">TÍTULO</label><br />
+            <input
+              type="text"
+              id="titulo"
+              name="titulo"
+              placeholder="Escreva o título do seu resumo feynman aqui..."
+              required
+              value="<%= feynman ? feynman.TITULO : '' %>"
+            />
+            <% if (feynman && feynman.COD_FEYNMAN) { %>
+              <input type="hidden" name="cod_feynman" value="<%= feynman.COD_FEYNMAN %>">
+            <% } %>
+            <textarea
+              id="texto_feynman"
+              name="texto_feynman"
+              rows="15"
+              cols="90"
+              placeholder="Escreva o seu resumo aqui..."
+              required
+            ><%= feynman ? feynman.TEXTO_FEYNMAN : '' %></textarea>
+            <section class="btns-salvar-deletar">
+              <button type="submit" class="save-button">
+                SALVAR <img src="/images/salvar.svg" alt="Salvar" />
+              </button>
+            </section>
+          </form>
         </section>
       </section>
     </main>
