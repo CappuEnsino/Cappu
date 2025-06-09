@@ -648,34 +648,75 @@ exports.excluirConta = async (req, res) => {
       return res.redirect('/professor/p-config');
     }
     const userId = req.user.ID_USUARIO;
-    // Deleta dependências relacionadas ao professor (ajuste conforme seu banco)
+
+    // Deleta dependências relacionadas ao professor
+    await db.query('DELETE FROM CONFIG_PROF WHERE ID_USUARIO = ?', [userId]);
     await db.query('DELETE FROM CURSOS WHERE ID_USUARIO = ?', [userId]);
-    // Seta foto_perfil como NULL
     await db.query('UPDATE USUARIO SET FOTO_PERFIL = NULL WHERE ID_USUARIO = ?', [userId]);
-    // Deleta o usuário do banco
     await db.query('DELETE FROM USUARIO WHERE ID_USUARIO = ?', [userId]);
-    // Logout e destrói a sessão
-    req.logout(function(err) {
-      if (err) {
-        console.error('Erro no logout após exclusão:', err);
-        req.flash('error', 'Erro ao fazer logout: ' + err.message);
-        return res.redirect('/professor/p-config');
-      }
-      req.session.destroy((err) => {
+
+    // Só tente logout se a sessão ainda existir
+    if (req.logout) {
+      req.flash('success', 'Conta excluída com sucesso!');
+      req.logout(function(err) {
         if (err) {
-          console.error('Erro ao destruir sessão:', err);
-          req.flash('error', 'Erro ao finalizar sessão.');
+          console.error('Erro no logout após exclusão:', err);
+          req.flash('error', 'Erro ao fazer logout: ' + err.message);
           return res.redirect('/professor/p-config');
         }
-        res.clearCookie('connect.sid');
-        req.flash('success', 'Conta excluída com sucesso!');
-        res.redirect('/');
+        if (req.session) {
+          req.session.destroy((err) => {
+            if (err) {
+              console.error('Erro ao destruir sessão:', err);
+              req.flash('error', 'Erro ao finalizar sessão.');
+              return res.redirect('/professor/p-config');
+            }
+            res.clearCookie('connect.sid');
+            res.redirect('/');
+          });
+        } else {
+          res.clearCookie('connect.sid');
+          res.redirect('/');
+        }
       });
-    });
+    } else {
+      res.clearCookie('connect.sid');
+      res.redirect('/');
+    }
   } catch (err) {
     console.error('Erro ao excluir conta:', err);
     req.flash('error', 'Erro ao excluir conta: ' + err.message);
     res.redirect('/professor/p-config');
+  }
+};
+
+// Salvar (criar/atualizar) dados bancários do professor
+exports.salvarDadosBancarios = async (req, res) => {
+  const { 'chave-pix': chavePix, agencia, banco, conta } = req.body;
+  const idUsuario = req.user.ID_USUARIO;
+
+  try {
+    // Tenta atualizar
+    const [result] = await db.query(
+      `UPDATE CONFIG_PROF
+       SET CONTA_PAG = ?, AGENCIA_PAG = ?, CHAVE_PIX = ?, BANCO_PAG = ?
+       WHERE ID_USUARIO = ?`,
+      [conta, agencia, chavePix, banco, idUsuario]
+    );
+    // Se não atualizou nenhuma linha, faz insert
+    if (result.affectedRows === 0) {
+      await db.query(
+        `INSERT INTO CONFIG_PROF (ID_USUARIO, CONTA_PAG, AGENCIA_PAG, CHAVE_PIX, BANCO_PAG)
+         VALUES (?, ?, ?, ?, ?)`,
+        [idUsuario, conta, agencia, chavePix, banco]
+      );
+    }
+    req.flash("success", "Dados bancários salvos com sucesso!");
+    res.redirect("/professor/p-config");
+  } catch (err) {
+    console.error("Erro ao salvar dados bancários:", err);
+    req.flash("error", "Erro ao salvar dados bancários!");
+    res.redirect("/professor/p-config");
   }
 };
 

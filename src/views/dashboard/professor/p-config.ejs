@@ -42,14 +42,6 @@
             <strong class="info-key">EMAIL</strong>
             <span class="info-value" id="email"><%= user.EMAIL %></span>
           </p>
-          <div class="info-item">
-            <strong class="info-key">BIOGRAFIA</strong>
-            <textarea class="bio-value" id="biografia" placeholder="Escreva sobre você..."></textarea>
-          </div>
-        </section>
-
-        <section class="flex">
-        <button class="salvar">SALVAR</button>
         </section>
       </section>
       
@@ -86,9 +78,42 @@
         </form>
       </div>
 
+      
+      <section class="preferencias">
+        <h3>MONETIZAÇÃO</h3>
+        <section class="caixa-das-info">
+          <form action="/professor/salvar-dados-bancarios" method="post" id="formDadosBancarios">
+            <section class="form-group">
+              <label for="chave-pix" class="info-key">CHAVE PIX</label>
+              <input type="text" class="info-value-form" id="chave-pix" name="chave-pix" placeholder="Digite sua chave PIX" required value="<%= dadosBancarios.CHAVE_PIX || '' %>">
+            </section>
+            
+            <section class="form-group">
+              <label for="agencia" class="info-key">AGÊNCIA</label>
+              <input type="number" class="info-value-form" id="agencia" name="agencia" placeholder="Digite sua agência" required value="<%= dadosBancarios.AGENCIA_PAG || '' %>">
+            </section>
+            
+            <section class="form-group">
+              <label for="banco" class="info-key">BANCO</label>
+              <input type="text" class="info-value-form" id="banco" name="banco" placeholder="Digite seu banco" required value="<%= dadosBancarios.BANCO_PAG || '' %>">
+            </section>
+            
+            <section class="form-group">
+              <label for="conta" class="info-key">CONTA</label>
+              <input type="number" class="info-value-form" id="conta" name="conta" placeholder="Digite sua conta" required value="<%= dadosBancarios.CONTA_PAG || '' %>">
+            </section>
+            
+            <section class="flex">
+              <button type="submit" class="salvar">SALVAR DADOS BANCÁRIOS</button>
+            </section>
+          </form>
+        </section>
+      </section>
+      <hr>
       <form action="/professor/excluir-conta" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.');" style="display: flex; justify-content: center; margin-top: 40px;">
         <button type="submit" class="excluir-conta">EXCLUIR CONTA</button>
       </form>
+<<<<<<< HEAD
       
       <section class="preferencias">
         <h3>COOKIES</h3>
@@ -104,6 +129,8 @@
           </form>
         </section>
       </section>
+=======
+>>>>>>> 15a31233775f5e616585a6ce0c2aa976f59a6a41
     </main>
     <footer>
       <span>© 2024 Cappuensino. Todos os direitos reservados.</span>
