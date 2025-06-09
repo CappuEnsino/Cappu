@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cappuensino - <%= curso.TITULO %></title>
+    <link rel="stylesheet" href="/css/c-log.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <header class="header">
+      <button onclick="history.back()" class="back-button">
+        <img src="/images/voltar.svg" alt="Voltar" />
+      </button>
+      <section>
+        <img
+          src="/images/Logo (370 x 65 px).png"
+          alt="Logo Cappuensino"
+          class="logo"
+        />
+      </section>
+    </header>
+
+    <main>
+      <section class="esquerda">
+        <h2>CURSO ONLINE DE</h2>
+        <h1><%= curso.TITULO %></h1>
+        <p class="curso">
+          <%= curso.DESCRICAO %>
+        </p>
+        <p class="aprender">O QUE VOU APRENDER?</p>
+        <p class="objetivos"><%= curso.OBJETIVOS %></p>
+        <section class="reviews">
+          <h3>PRINCIPAIS AVALIAÇÕES</h3>
+          <p class="ana">
+            <span class="stars">★★★★★</span><br />Gostei muito da didática e dos
+            exemplos práticos apresentados. Os exercícios foram desafiadores na
+            medida certa, e o suporte dos professores foi ótimo para esclarecer
+            minhas dúvidas. Só senti falta de mais exemplos ligados a linguagens
+            específicas, mas como base foi perfeito!
+          </p>
+          <strong class="nome">ANA P.</strong>
+
+          <p class="lucas">
+            <span class="stars">★★★★★</span><br />O curso superou minhas
+            expectativas! As aulas são bem estruturadas, e o conteúdo é
+            apresentado de forma que qualquer pessoa pode entender, mesmo sem
+            experiência. Aprendi a organizar meus pensamentos e a resolver
+            problemas usando lógica. É um ótimo ponto de partida para qualquer
+            área da tecnologia.
+          </p>
+          <strong class="nome">Lucas A.</strong>
+        </section>
+      </section>
+
+      <section class="direita">
+        <p class="estrelas">5 ★★★★★</p>
+        <% if (curso.IMAGEM) { %>
+          <img
+            src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>"
+            alt="<%= curso.TITULO %>"
+          />
+        <% } else { %>
+          <img
+            src="/images/log.svg"
+            alt="<%= curso.TITULO %>"
+          />
+        <% } %>
+        <section class="container">
+          <section class="linha-info">
+            <p class="bold">FEITO POR:</p>
+            <p class="reg"><%= curso.NOME_PROFESSOR %></p>
+          </section>
+          <section class="linha-info">
+            <p class="bold">DURAÇÃO:</p>
+            <p class="reg"><%= curso.DURACAO_TOTAL %></p>
+          </section>
+          <section class="linha-info">
+            <p class="bold">VALOR:</p>
+            <p class="reg">R$ <%= typeof curso.PRECO === 'number' ? curso.PRECO.toFixed(2) : '0.00' %></p>
+          </section>
+          <% if (cursoComprado) { %>
+            <a href="/curso/<%= curso.ID_CURSO %>/aulas" class="matricula">ACESSAR CURSO</a>
+          <% } else { %>
+            <a href="/planos" class="matricula">MATRICULAR-SE</a>
+          <% } %>
+        </section>
+      </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>
