@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/professor.css" />
-    <link rel="stylesheet" href="/css/header2.css" />
+    <link rel="stylesheet" href="/css/header2.css"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
     <title>Home</title>
   </head>
@@ -33,16 +33,19 @@
       <section class="icons">
         <button class="menu-hamburguer" id="menuHamburguer">
           <img src="/images/menu.svg" alt="" />
-          <div class="user-menu" id="userMenu">
-            <ul>
-
-                <li><a href="#">PAINEL DE CONTROLE</a></li>
-                <li><a href="#">AVALIAÇÕES</a></li>
-                <li><a href="/professor/p-curso_prof">MEUS CURSOS</a></li>
-
-            </ul>
-          </div>
         </button>
+        <div class="menu-overlay"></div>
+        <div class="user-menu" id="userMenu">
+          <button class="close-menu" id="closeMenu">×</button>
+          <h2>Menu</h2>
+          <ul>
+              <li><a href="#"><img src="/images/icon-avaliar.svg" alt="avaliar" class="icon">AVALIAÇÕES</a></li>
+              <li><a href="/professor/p-curso_prof"><img src="/images/icon-curso.svg" alt="curso" class="icon">MEUS CURSOS</a></li>
+              <li><a href="/professor/p-minha-rotina"><img src="/images/icon-rotina.svg" alt="rotina" class="icon">MINHA ROTINA</a></li>
+              <li><a href="#"><img src="/images/icon-material.svg" alt="material" class="icon">MEUS MATERIAIS</a></li>
+          </ul>
+          <a href="/professor/p-config"><img src="/images/config.svg" alt="configurações" class="icon"></a>
+        </div>
       </section>
       <section class="container">
         <section class="profile">

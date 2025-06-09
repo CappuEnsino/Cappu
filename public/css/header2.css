@@ -98,7 +98,6 @@ a {
   letter-spacing: 0%;
   text-align: center;
   vertical-align: middle;
-  
 }
 
 .user-config ul li {
@@ -114,50 +113,298 @@ a {
   background-color: #f5f5f5;
 }
 
-.menu-hamburguer{
+
+.icon {
+  width: 1.8rem;
+  height: auto;
+  margin-right: 0.8rem;
+}
+
+.menu-hamburguer {
   border: none;
-  background-color: #ffffff;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+
 }
 
-.user-menu{
+.user-menu {
   display: none;
-  position: absolute;
+  position: fixed;
+  top: 0;
   left: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  height: 100%;
+  background-color: white;
   z-index: 1000;
-  top: 0%;
-  width: 15rem;
-  margin-top: 6rem;
+  padding: 2rem;
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.user-menu ul{
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.user-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  z-index: 1000;
+  padding: 2rem;
+  box-sizing: border-box;
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-menu.show {
+  display: block;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: opacity 0.4s ease;
+}
+
+.menu-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Animação do menu */
+.user-menu {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.user-menu.show {
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Animação de saída */
+.user-menu {
+  animation: fadeOut 0.4s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.user-menu {
+  animation: slideOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  transition: opacity 0.4s ease;
+}
+
+.menu-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+.close-menu {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: black;
+  padding: 0.1em 0.5rem;
+  border-radius: 5em;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.close-menu:hover {
+  transform: scale(1.3);
+  border: 1px solid black;
+}
+
+.close-menu:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(104, 74, 67, 0.3);
+}
+
+/* Animação do menu */
+.user-menu {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+
+.menu-overlay {
+  transition: opacity 0.4s ease;
+}
+
+.menu-overlay.show {
+  opacity: 0.3;
+}
+
+/* Overlay para clicar fora e fechar */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.menu-overlay.show {
+  display: block;
+}
+
+.user-menu.show {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.user-menu h2 {
   font-family: Fira Sans;
-  font-weight: 400;
+  font-weight: 800;
   font-style: italic;
-  font-size: 1rem;
-  letter-spacing: 0%;
+  color: var(--primary-color);
+  font-size: 1.6rem;
   text-align: center;
-  vertical-align: middle;
+  margin-bottom: 3rem;
+}
+
+.user-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .user-menu ul li {
-  padding: 1rem;
+  margin-bottom: 1.8rem;
 }
 
 .user-menu ul li a {
+  display: flex;
+  align-items: center;
+  font-family: Fira Sans;
+  font-weight: 600;
+  font-style: italic;
   text-decoration: none;
   color: var(--primary-color);
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  transition: all 0.2s ease;
 }
 
-.user-menu ul li:hover {
+.user-menu ul li a:hover {
+  transform: scale(1.03);
   background-color: #f5f5f5;
+  border-radius: 0.5rem;
 }
 
+/* ícone engrenagem no rodapé */
+.user-menu > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.user-menu > a img {
+  width: 1.8rem;
+  height: auto;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.user-menu > a img:hover {
+  opacity: 1;
+}
+
+.user-menu ul li {
+  margin-bottom: 1.8rem;
+}
+
+.user-menu ul li a {
+  display: flex;
+  align-items: center;
+  font-family: Fira Sans;
+  font-weight: 600;
+  font-style: italic;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.user-menu ul li a:hover {
+  transform: scale(1.03);
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+}
+
+/* Ícone da engrenagem no rodapé do menu */
+.user-menu > a {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 2rem;
+}
 
 .logo-cappu{
   width: 100%;

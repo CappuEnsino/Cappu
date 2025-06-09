@@ -216,18 +216,20 @@ height: 10px;
 }
 
 .tarefas button {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 0.5em 1em;
+  border-radius: 5em;
   cursor: pointer;
-  margin-left: 10px;
   transition: background 0.3s;
 }
 
 .tarefas button:hover {
-  background-color: #555;
+  background-color: black;
+  color: white;
+  transform: scale(1.1);
+  transition: all 0.3s ease-in-out;
 }
 
 .check {
@@ -269,6 +271,7 @@ footer {
   font-weight: 300;
   font-style: normal;
   font-size: 0.8em;
+  font-weight: 400;
 }
 
 /* Tablets e telas médias */
