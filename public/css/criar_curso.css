@@ -124,12 +124,11 @@ small {
 }
 
 #addModuloBtn {
-  background-color: var(--white);
-  border: 2px solid black;
-  color: black;
-  text-transform: uppercase;
+  background-color: var(--primary);
+  color: white;
+  border: none;
   padding: 0.8rem 1.5rem;
-  border-radius: 5em;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
@@ -140,8 +139,7 @@ small {
 }
 
 #addModuloBtn:hover {
-  background-color: black;
-  color: white;
+  background-color: var(--primary-dark);
   transform: translateY(-2px);
 }
 
@@ -156,11 +154,11 @@ small {
   font-weight: 600;
   transition: all 0.3s ease;
   margin-top: 2rem;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  width: 100%;
 }
 
 .salvar:hover {
@@ -174,59 +172,44 @@ small {
   height: 20px;
 }
 
+/* Modal styles */
 .modal {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
 }
 
 .modal-content {
   background-color: var(--white);
   border-radius: var(--radius);
-  width: 100%;
+  width: 90%;
   max-width: 800px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: var(--shadow);
-  animation: modalFadeIn 0.3s ease;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-header {
-  position: sticky;
-  top: 0;
-  background-color: var(--white);
-  z-index: 10;
-  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--border);
 }
 
-.modal-body {
-  padding: 0 1.5rem 1.5rem;
-}
-
-.modal-footer {
-  position: sticky;
-  bottom: 0;
-  background-color: var(--white);
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+.modal-title {
+  font-size: 1.5rem;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .btn-close {
