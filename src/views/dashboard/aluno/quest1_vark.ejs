@@ -15,21 +15,21 @@
             <img src="../images/voltar.svg" alt="" />
         </button>
       <p>QUESTIONÁRIO VARK</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/aluno/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
     <main class="container">
@@ -41,7 +41,7 @@
             <!-- Questão 1 -->
             <section class= "quest">
                 <h3>1 - Eu quero saber mais sobre uma casa ou um apartamento. Antes de visitá-la(o) eu gostaria de:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q1" value="a">
                         <span>Ter uma conversa com o proprietário.</span>
@@ -58,13 +58,13 @@
                         <input type="radio" name="q1" value="d">
                         <span>Assistir a um vídeo da propriedade.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 2 -->
             <section class= "quest">
                 <h3>2 - Ao escolher uma carreira ou área de estudo, eu escolheria:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q2" value="c">
                         <span>Trabalho com desenhos, mapas e gráficos.</span>
@@ -81,13 +81,13 @@
                         <input type="radio" name="q2" value="b">
                         <span>Boa utilização de palavras na comunicação escrita.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 3 -->
             <section class= "quest">
                 <h3>3 - Eu prefiro assistir um apresentador ou um professor que use:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q3" value="d">
                         <span>Demonstrações, modelos ou sessões práticas.</span>
@@ -104,13 +104,13 @@
                         <input type="radio" name="q3" value="c">
                         <span>Diagramas, gráficos ou apresentações visuais.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 4 -->
             <section class= "quest">
                 <h3>4 - Eu quero descobrir mais sobre um passeio que vou fazer. Eu:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q4" value="b">
                         <span>Examinaria detalhes sobre os pontos altos e atividades do passeio.</span>
@@ -127,17 +127,17 @@
                         <input type="radio" name="q4" value="d">
                         <span>Experimentaria partes do passeio antecipadamente, se possível.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
-            <div class="navegacao">
-                <div class="indicador-progresso">
+            <section class="navegacao">
+                <section class="indicador-progresso">
                     <span class="pagina-atual">1</span>
                     <span class="separador">/</span>
                     <span class="total-paginas">4</span>
-                </div>
+                </section>
                 <button type="button" class="botao-proximo" onclick="window.location.href='/aluno/quest2_vark'">PRÓXIMO</button>
-            </div>
+            </section>
         </form>
         <script>
         // Salva no localStorage ao marcar
@@ -155,17 +155,17 @@
         </script>
     </main>
 
-    <div class="container-progresso-geral">
-        <div class="barra-progresso-grande">
-            <div class="progresso-grande"></div>
-        </div>
-    </div>
+    <section class="container-progresso-geral">
+        <section class="barra-progresso-grande">
+            <section class="progresso-grande"></section>
+        </section>
+    </section>
 
     <footer>
-        <div class="footer-text">
+        <section class="footer-text">
             <p> 2023 Questionário VARK. Todos os direitos reservados.</p>
             <p>Baseado no modelo VARK de Neil Fleming</p>
-        </div>
+        </section>
     </footer>
 
     <script src="/js/icon-menu.js"></script>

@@ -14,33 +14,33 @@
   <header>
     <a href="/professor/p-professor"><img src="/images/voltar.svg" alt=""></a>
     <p>MINHA ROTINA</p>
-    <div>
+    <section>
       <p><%= user.NOME_USU || 'Professor' %></p>
       <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
           <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
           style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
           onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-          <div class="user-config" id="userConfig">
+          <section class="user-config" id="userConfig">
             <h2><%= user.NOME_USU || 'Professor' %></h2>
               <ul>
                   <li><a href="/professor/p-professor">MENU</a></li>
                   <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                   <li><a href="/professor/logout">SAIR</a></li>
               </ul>
-          </div>
+          </section>
       </button>
-  </div>
+  </section>
   </header>
 
   <main>
     <section class="container">
       <section class="calendario">
         <section class="tabela">
-          <div class="calendario-header">
+          <section class="calendario-header">
             <button id="prev">&lt;</button>
             <h2 id="mesAno"></h2>
             <button id="next">&gt;</button>
-          </div>
+          </section>
 
           <table>
             <thead>

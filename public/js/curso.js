@@ -23,7 +23,7 @@ const CursoManager = {
     if (existingModal) existingModal.remove();
 
     // Cria o modal
-    const modal = document.createElement("div");
+    const modal = document.createElement("section");
     modal.id = "aulaModal";
     modal.className = "modal";
     modal.style.cssText = `
@@ -39,7 +39,7 @@ const CursoManager = {
 
     // Conteúdo do modal
     modal.innerHTML = `
-      <div class="modal-content" style="
+      <section class="modal-content" style="
         background-color: #fff;
         margin: 10% auto;
         padding: 20px;
@@ -63,7 +63,7 @@ const CursoManager = {
           <input type="hidden" id="moduloId" name="modulo_id">
           <input type="hidden" id="aulaId" name="aula_id">
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="titulo">Título da Aula *</label>
             <input type="text" id="titulo" name="titulo" required style="
               width: 100%;
@@ -71,9 +71,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="descricao">Descrição *</label>
             <textarea id="descricao" name="descricao" required style="
               width: 100%;
@@ -82,9 +82,9 @@ const CursoManager = {
               border-radius: 4px;
               min-height: 100px;
             "></textarea>
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="tipo_conteudo">Tipo de Conteúdo</label>
             <select id="tipo_conteudo" name="tipo_conteudo" onchange="CursoManager.toggleVideoFields()" style="
               width: 100%;
@@ -95,9 +95,9 @@ const CursoManager = {
               <option value="video">Vídeo</option>
               <option value="texto">Texto</option>
             </select>
-          </div>
+          </section>
           
-          <div id="videoFields" class="form-group">
+          <section id="videoFields" class="form-group">
             <label for="video_url">URL do Vídeo</label>
             <input type="url" id="video_url" name="video_url" style="
               width: 100%;
@@ -113,9 +113,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="duracao">Duração</label>
             <input type="time" id="duracao" name="duracao" value="00:10:00" style="
               width: 100%;
@@ -123,9 +123,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="ordem">Ordem</label>
             <input type="number" id="ordem" name="ordem" min="1" value="1" style="
               width: 100%;
@@ -133,9 +133,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-actions" style="
+          <section class="form-actions" style="
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -156,9 +156,9 @@ const CursoManager = {
               color: white;
               cursor: pointer;
             ">Salvar</button>
-          </div>
+          </section>
         </form>
-      </div>
+      </section>
     `;
 
     // Adiciona o modal ao body
@@ -423,7 +423,7 @@ const CursoManager = {
 
   // Função para mostrar notificações
   showNotify(status, text) {
-    const notification = document.createElement("div");
+    const notification = document.createElement("section");
     notification.className = `notification ${status}`;
     notification.textContent = text;
     notification.style.cssText = `
@@ -459,7 +459,7 @@ const CursoManager = {
     if (existingModal) existingModal.remove();
 
     // Cria o modal
-    const modal = document.createElement("div");
+    const modal = document.createElement("section");
     modal.id = "moduloModal";
     modal.className = "modal";
     modal.style.cssText = `
@@ -475,7 +475,7 @@ const CursoManager = {
 
     // Conteúdo do modal
     modal.innerHTML = `
-      <div class="modal-content" style="
+      <section class="modal-content" style="
         background-color: #fff;
         margin: 10% auto;
         padding: 20px;
@@ -498,7 +498,7 @@ const CursoManager = {
         <form id="moduloForm" style="display: flex; flex-direction: column; gap: 15px;">
           <input type="hidden" id="moduloId" name="modulo_id">
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="titulo">Título do Módulo *</label>
             <input type="text" id="titulo" name="titulo" required style="
               width: 100%;
@@ -506,9 +506,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="descricao">Descrição *</label>
             <textarea id="descricao" name="descricao" required style="
               width: 100%;
@@ -517,9 +517,9 @@ const CursoManager = {
               border-radius: 4px;
               min-height: 100px;
             "></textarea>
-          </div>
+          </section>
           
-          <div class="form-actions" style="
+          <section class="form-actions" style="
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -540,9 +540,9 @@ const CursoManager = {
               color: white;
               cursor: pointer;
             ">Salvar</button>
-          </div>
+          </section>
         </form>
-      </div>
+      </section>
     `;
 
     // Adiciona o modal ao body
@@ -646,54 +646,54 @@ const CursoManager = {
 
   // Cria o HTML para um módulo
   criarHtmlModulo(modulo) {
-    const div = document.createElement("div");
-    div.className = "modulo-container";
-    div.setAttribute("data-modulo-id", modulo.ID_MODULO);
+    const section = document.createElement("section");
+    section.className = "modulo-container";
+    section.setAttribute("data-modulo-id", modulo.ID_MODULO);
 
-    div.innerHTML = `
-      <div class="modulo-header">
-        <div class="modulo-title">${modulo.TITULO}</div>
-        <div class="modulo-actions">
+    section.innerHTML = `
+      <section class="modulo-header">
+        <section class="modulo-title">${modulo.TITULO}</section>
+        <section class="modulo-actions">
           <button type="button" class="btn" onclick="CursoManager.editarModulo(${modulo.ID_MODULO})">Editar</button>
           <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(${modulo.ID_MODULO})">Excluir</button>
-        </div>
-      </div>
-      <div class="modulo-aulas">
+        </section>
+      </section>
+      <section class="modulo-aulas">
         <p>Nenhuma aula neste módulo</p>
         <button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>
-      </div>
+      </section>
     `;
 
-    return div;
+    return section;
   },
 
   // Cria o HTML para uma aula
   criarHtmlAula(aula) {
-    const div = document.createElement("div");
-    div.className = "aula-item";
-    div.setAttribute("data-aula-id", aula.ID_AULA);
+    const section = document.createElement("section");
+    section.className = "aula-item";
+    section.setAttribute("data-aula-id", aula.ID_AULA);
 
-    div.innerHTML = `
-      <div class="aula-header">
-        <div class="aula-title">${aula.TITULO}</div>
-        <div class="aula-actions">
+    section.innerHTML = `
+      <section class="aula-header">
+        <section class="aula-title">${aula.TITULO}</section>
+        <section class="aula-actions">
           <button type="button" class="btn" onclick="CursoManager.editarAula(${
             aula.ID_AULA
           })">Editar</button>
           <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(${
             aula.ID_AULA
           })">Excluir</button>
-        </div>
-      </div>
-      <div class="aula-info">
+        </section>
+      </section>
+      <section class="aula-info">
         <span class="aula-duracao">${aula.DURACAO}</span>
         <span class="aula-tipo">${
           aula.TIPO_CONTEUDO === "video" ? "Vídeo" : "Texto"
         }</span>
-      </div>
+      </section>
     `;
 
-    return div;
+    return section;
   },
 
   // Exclui um curso

@@ -15,31 +15,31 @@
             <img src="../images/voltar.svg" alt="" />
         </button>
       <p>RESULTADO VARK</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/aluno/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
     <h1 class="result-title">Seu Resultado</h1>
-    <div class="main-container">
-        <div class="vark-container">
-            <div class="vark-title">
+    <section class="main-container">
+        <section class="vark-container">
+            <section class="vark-title">
                 <span>SEU ESTILO DE APRENDIZADO</span>
                 <span>VARK</span>
-            </div>
+            </section>
             
-            <div class="vark-subtitle">Pontuação em cada estilo:</div>
+            <section class="vark-subtitle">Pontuação em cada estilo:</section>
             
             <% if (resultado) { %>
             <ul class="vark-list">
@@ -51,14 +51,14 @@
             <% } else { %>
             <p>Você ainda não respondeu o questionário.</p>
             <% } %>
-        </div>
+        </section>
 
-        <div class="image-container">
+        <section class="image-container">
             <img src="/images/image.png" alt="Ilustração do Estilo VARK" class="vark-image">
-        </div>
-    </div>
+        </section>
+    </section>
 
-    <div class="result">
+    <section class="result">
 
         <h2>ENTÃO, QUAL ESTILO SE ENCAIXA COMIGO?</h2>
         <p>Você pode escolher o estilo que mais se encaixa com você vendo seu resultado e comparando quais deles há maior pontuação, caso a pontuação esteja acima ou igual a 4 pontos significa que aquele estilo se encaixa com você!</p>
@@ -77,7 +77,7 @@
 
         <h3>CINESTÉSICO = FEYNMAN</h3>
         <p>   Se o seu resultado Cinestésico ficou acima de 3 pontos, a sua melhor escolha pode ser o Feynman, pois nele você passa por 4 processos de memorização, onde você escolhe um conceito, defina o tópico que quer aprender ou rever, escreve de forma prática e simples os seus conhecimentos sobre o tema, identifica as lacunas na sua escrita, aprofundando seu conhecimento a partir dos pontos que enxerga como fracos e por fim revise o que você aprendeu e aprofunde isso, fazendo finalmente o resumo de forma sólida e concreta sobre seu tema.</p>
-    </div>
+    </section>
     
     <a href="/aluno/a-minha-rotina-2" class="ok-button">OK</a>
 

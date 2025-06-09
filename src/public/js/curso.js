@@ -17,7 +17,7 @@ const CursoManager = {
     if (existingModal) existingModal.remove();
 
     // Cria o modal
-    const modal = document.createElement("div");
+    const modal = document.createElement("section");
     modal.id = "aulaModal";
     modal.className = "modal";
     modal.style.cssText = `
@@ -33,7 +33,7 @@ const CursoManager = {
 
     // Conteúdo do modal
     modal.innerHTML = `
-      <div class="modal-content" style="
+      <section class="modal-content" style="
         background-color: #fff;
         margin: 10% auto;
         padding: 20px;
@@ -57,7 +57,7 @@ const CursoManager = {
           <input type="hidden" id="moduloId" name="modulo_id">
           <input type="hidden" id="aulaId" name="aula_id">
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="titulo">Título da Aula *</label>
             <input type="text" id="titulo" name="titulo" required style="
               width: 100%;
@@ -65,9 +65,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="descricao">Descrição *</label>
             <textarea id="descricao" name="descricao" required style="
               width: 100%;
@@ -76,9 +76,9 @@ const CursoManager = {
               border-radius: 4px;
               min-height: 100px;
             "></textarea>
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="tipo_conteudo">Tipo de Conteúdo</label>
             <select id="tipo_conteudo" name="tipo_conteudo" onchange="CursoManager.toggleVideoFields()" style="
               width: 100%;
@@ -89,9 +89,9 @@ const CursoManager = {
               <option value="video">Vídeo</option>
               <option value="texto">Texto</option>
             </select>
-          </div>
+          </section>
           
-          <div id="videoFields" class="form-group">
+          <section id="videoFields" class="form-group">
             <label for="video_url">URL do Vídeo</label>
             <input type="url" id="video_url" name="video_url" style="
               width: 100%;
@@ -107,9 +107,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="duracao">Duração</label>
             <input type="time" id="duracao" name="duracao" value="00:10:00" style="
               width: 100%;
@@ -117,9 +117,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-group">
+          <section class="form-group">
             <label for="ordem">Ordem</label>
             <input type="number" id="ordem" name="ordem" min="1" value="1" style="
               width: 100%;
@@ -127,9 +127,9 @@ const CursoManager = {
               border: 1px solid #ddd;
               border-radius: 4px;
             ">
-          </div>
+          </section>
           
-          <div class="form-actions" style="
+          <section class="form-actions" style="
             display: flex;
             justify-content: flex-end;
             gap: 10px;
@@ -150,9 +150,9 @@ const CursoManager = {
               color: white;
               cursor: pointer;
             ">Salvar</button>
-          </div>
+          </section>
         </form>
-      </div>
+      </section>
     `;
 
     // Adiciona o modal ao body
@@ -380,7 +380,7 @@ const CursoManager = {
 
   // Função para mostrar notificações
   showNotify(status, text) {
-    const notification = document.createElement("div");
+    const notification = document.createElement("section");
     notification.className = `notification ${status}`;
     notification.textContent = text;
     notification.style.cssText = `

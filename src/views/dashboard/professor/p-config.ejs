@@ -12,22 +12,22 @@
     <header>
       <a href="/professor/p-professor"><img src="/images/voltar.svg" alt=""></a>
       <p>CONFIGURAÇÕES</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
             style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
     <main>
@@ -46,20 +46,20 @@
         </section>
       </section>
       
-      <div class="profile-card">
-        <div class="profile-preview-container">
-            <div id="current-profile-container" class="current-profile">
+      <section class="profile-card">
+        <section class="profile-preview-container">
+            <section id="current-profile-container" class="current-profile">
                 <img src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
                      alt="Foto atual" 
                      class="profile-current-img"
                      onload="this.style.opacity=1"
                      onerror="this.onerror=null; this.src='/images/perfil.svg';">
-            </div>
-            <div class="image-preview">
+            </section>
+            <section class="image-preview">
                 <p class="preview-label">Nova foto</p>
                 <img id="preview-img" src="#" alt="Pré-visualização" class="preview-img">
-            </div>
-        </div>
+            </section>
+        </section>
     
         <form action="/professor/upload-foto" method="POST" enctype="multipart/form-data" class="upload-form">
             <label class="file-upload-box">
@@ -68,16 +68,16 @@
                 <span class="upload-icon">+</span>
             </label>
             
-            <div class="profile-actions">
+            <section class="profile-actions">
                 <button type="submit" class="action-button upload-btn">
                     <span>Salvar Foto</span>
                 </button>
                 <button type="submit" formaction="/professor/excluir-foto" class="action-button delete-btn" onclick="return confirm('Tem certeza?')">
                     <span>Remover Foto</span>
                 </button>
-            </div>
+            </section>
         </form>
-      </div>
+      </section>
 
       
       <section class="preferencias">

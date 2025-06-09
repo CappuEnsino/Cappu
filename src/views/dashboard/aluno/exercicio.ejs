@@ -14,7 +14,7 @@
         <img src="../images/voltar.svg" alt="" />
       </button>
       <p>LÓGICA DE PROGRAMAÇÃO</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button
           class="user-icon"
@@ -23,16 +23,16 @@
         >
           <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
           onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-          <div class="user-config" id="userConfig">
+          <section class="user-config" id="userConfig">
             <h2><%= user.NOME_USU || 'Aluno' %></h2>
             <ul>
               <li><a href="/aluno/a-perfil">MENU</a></li>
               <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
               <li><a href="/aluno/logout">SAIR</a></li>
             </ul>
-          </div>
+          </section>
         </button>
-      </div>
+      </section>
     </header>
     <main id="questions-container">
       
@@ -42,15 +42,15 @@
           Qual alternativa representa corretamente a negação da expressão X e Y
           no VisualG?
         </h3>
-        <div class="options-flex">
-          <div class="option" data-correct="true">nao (X e Y)</div>
-          <div class="option" data-correct="false">nao X e nao Y</div>
-          <div class="option" data-correct="false">X ou Y</div>
-          <div class="option" data-correct="false">nao X ou nao Y</div>
-        </div>
-        <div class="feedback correct-feedback">
+        <section class="options-flex">
+          <section class="option" data-correct="true">nao (X e Y)</section>
+          <section class="option" data-correct="false">nao X e nao Y</section>
+          <section class="option" data-correct="false">X ou Y</section>
+          <section class="option" data-correct="false">nao X ou nao Y</section>
+        </section>
+        <section class="feedback correct-feedback">
           no VisualG, o operador nao é usado para negar uma expressão lógica.
-        </div>
+        </section>
       </section>
 
      
@@ -60,15 +60,15 @@
           No VisualG, qual das alternativas representa corretamente a negação da
           expressão X ou Y?
         </h3>
-        <div class="options-flex">
-          <div class="option" data-correct="false">nao X e nao Y</div>
-          <div class="option" data-correct="false">nao X ou nao Y</div>
-          <div class="option" data-correct="true">nao (X ou Y)</div>
-          <div class="option" data-correct="false">!(X e Y)</div>
-        </div>
-        <div class="feedback correct-feedback">
+        <section class="options-flex">
+          <section class="option" data-correct="false">nao X e nao Y</section>
+          <section class="option" data-correct="false">nao X ou nao Y</section>
+          <section class="option" data-correct="true">nao (X ou Y)</section>
+          <section class="option" data-correct="false">!(X e Y)</section>
+        </section>
+        <section class="feedback correct-feedback">
             no VisualG, o operador nao inverte o valor lógico de uma expressão.
-        </div>
+        </section>
       </section>
       <button id="completionButton" class="completion-button">SEGUINTE</button>
 

@@ -42,20 +42,20 @@ header p {
   color: var(--primary-color);
 }
 
-header div {
+header section {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 1.5rem;
 }
 
-header div img {
+header section img {
   width: 60px;
   height: auto;
   cursor: pointer;
 }
 
-header div p {
+header section p {
   font-family: Fira Sans;
   font-weight: 800;
   font-style: italic;
@@ -500,7 +500,7 @@ a {
     font-size: 1.4rem;
   }
 
-  header div p {
+  header section p {
     font-size: 0.9rem;
   }
 }
@@ -516,11 +516,11 @@ a {
     font-size: 1.3rem;
   }
 
-  header div img {
+  header section img {
     width: 50px;
   }
 
-  header div p {
+  header section p {
     font-size: 0.8rem;
   }
 }
@@ -536,15 +536,15 @@ a {
     font-size: 1.2rem;
   }
 
-  header div {
+  header section {
     gap: 1rem;
   }
 
-  header div img {
+  header section img {
     width: 40px;
   }
 
-  header div p {
+  header section p {
     font-size: 0.7rem;
   }
 }
@@ -560,15 +560,15 @@ a {
     font-size: 1rem;
   }
 
-  header div {
+  header section {
     gap: 0.5rem;
   }
 
-  header div img {
+  header section img {
     width: 30px;
   }
 
-  header div p {
+  header section p {
     font-size: 0.6rem;
   }
 

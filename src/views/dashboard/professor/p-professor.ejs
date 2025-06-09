@@ -12,22 +12,22 @@
     <header>
 
       <a href="/professor/p-professor"><img src="/images/logo+nome.svg" class="logo-cappu" alt=""></a>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
 
         </button>
-      </div>
+      </section>
     </header>
 
     <main>
@@ -35,8 +35,8 @@
         <button class="menu-hamburguer" id="menuHamburguer">
           <img src="/images/menu.svg" alt="" />
         </button>
-        <div class="menu-overlay"></div>
-        <div class="user-menu" id="userMenu">
+        <section class="menu-overlay"></section>
+        <section class="user-menu" id="userMenu">
           <button class="close-menu" id="closeMenu">×</button>
           <h2>Menu</h2>
           <ul>
@@ -46,7 +46,7 @@
               <li><a href="#"><img src="/images/icon-material.svg" alt="material" class="icon">MEUS MATERIAIS</a></li>
           </ul>
           <a href="/professor/p-config"><img src="/images/config.svg" alt="configurações" class="icon"></a>
-        </div>
+        </section>
       </section>
       <section class="container">
         <section class="profile">

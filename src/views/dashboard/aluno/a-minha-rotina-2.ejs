@@ -14,31 +14,31 @@
             <img src="../images/voltar.svg" alt="" />
         </button>
         <p>Minha Rotina</p>
-        <div>
+        <section>
           <p><%= user.NOME_USU || 'Aluno' %></p>
           <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';" />
-              <div class="user-config" id="userConfig">
+              <section class="user-config" id="userConfig">
                   <h2><%= user.NOME_USU || 'Aluno' %></h2>
                   <ul>
                       <li><a href="/aluno/a-perfil">MENU</a></li>
                       <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                       <li><a href="/aluno/logout">SAIR</a></li>
                   </ul>
-              </div>
+              </section>
           </button>
-      </div>
+      </section>
       </header>
     <main>
         <section class="conteudo">
             <section class="calendário">
                 <section class="tabela">
-                    <div class="calendario-header">
+                    <section class="calendario-header">
                         <button id="prev">&lt;</button>
                         <h2 id="mesAno"></h2>
                         <button id="next">&gt;</button>
-                    </div>
+                    </section>
                     <table>
                         <thead>
                             <tr>
@@ -64,10 +64,10 @@
             <section class="metodos">
                 <section id="pomodoro">
                     <h4 class="h4-metodo">pomodoro</h4>
-                    <div class="tooltip-wrapper">
+                    <section class="tooltip-wrapper">
                         <p class="desc-metodo" id="tooltip-target">descrição</p>
                         <span class="tooltip-box">Consiste em estudar durante 25 minutos focados, seguidos de uma pausa de 5 minutos. Após quatro ciclos, faz-se uma pausa mais longa de 15-30 minutos.</span>
-                    </div>
+                    </section>
                     <img src="/images/line.svg" alt="linha" class="img-linha">
                     <a href="/aluno/a-pomodoro" class="button-go">
                         <img src="/images/button-go.svg" alt="Botão ir">
@@ -78,10 +78,10 @@
 
                 <section id="resumos">
                     <h4 class="h4-metodo">resumos</h4>
-                    <div class="tooltip-wrapper">
+                    <section class="tooltip-wrapper">
                         <p class="desc-metodo" id="tooltip-target">descrição</p>
                         <span class="tooltip-box">É uma forma de memorizar matérias a partir de resumos simples com suas próprias palavras, a fim de fixar e entender melhor o assunto estudado.</span>
-                    </div>
+                    </section>
                     <a href="/aluno/a-bd_resumos">
                        <img src="/images/bd-metodos.svg" alt="banco de dados" class="img"> 
                     </a>
@@ -94,10 +94,10 @@
 
                 <section id="mnemonica">
                     <h4 class="h4-metodo">mnemônica</h4>
-                    <div class="tooltip-wrapper">
+                    <section class="tooltip-wrapper">
                         <p class="desc-metodo" id="tooltip-target">descrição</p>
                         <span class="tooltip-box">É uma técnica de memorização de coisas a partir da simplificação dela com objetos associados, como por exemplo associar uma célula procarionte á uma pílula de remédio.</span>
-                    </div>
+                    </section>
                     <a href="/aluno/a-bd_mnemonicas">
                         <img src="/images/bd-metodos.svg" alt="banco de dados" class="img"> 
                     </a>
@@ -110,10 +110,10 @@
 
                 <section id="feynman">
                     <h4 class="h4-metodo">feynman</h4>
-                    <div class="tooltip-wrapper">
+                    <section class="tooltip-wrapper">
                         <p class="desc-metodo" id="tooltip-target">descrição</p>
                         <span class="tooltip-box">É baseada no princípio de que, para entender um conceito profundamente, você deve ser capaz de explicá-lo de maneira simples.</span>
-                    </div>
+                    </section>
                     <a href="/aluno/a-bd_feynman">
                         <img src="/images/bd-metodos.svg" alt="banco de dados" class="img"> 
                     </a>

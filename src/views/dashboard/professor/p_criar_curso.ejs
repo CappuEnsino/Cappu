@@ -16,22 +16,22 @@
     <header>
       <a href="/professor/p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
       <p>Criar Curso</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
             style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
     <main class="container">
@@ -40,10 +40,10 @@
         action="/dashboard/professor/p_criar_curso"
         method="POST"
       >
-        <div class="left">
+        <section class="left">
           <h1>Criar Curso</h1>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="titulo">Nome do curso</label>
             <input
               type="text"
@@ -52,9 +52,9 @@
               placeholder="Adicione um nome..."
               required
             />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
             <textarea
               id="descricao"
@@ -62,9 +62,9 @@
               placeholder="Adicione uma descrição..."
               required
             ></textarea>
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="categoria">CATEGORIA</label>
             <select id="categoria" name="categoria" required>
               <option value="" disabled selected>
@@ -77,9 +77,9 @@
               <option value="">Nenhuma categoria cadastrada</option>
               <% } %>
             </select>
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="preco">PREÇO</label>
             <input
               type="number"
@@ -90,9 +90,9 @@
               placeholder="Ex: 99.90"
               required
             />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="duracao_total">DURAÇÃO TOTAL (horas)</label>
             <input
               type="number"
@@ -103,9 +103,9 @@
               placeholder="Ex: 10.5"
               required
             />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="objetivos">OBJETIVOS</label>
             <textarea
               id="objetivos"
@@ -113,8 +113,8 @@
               placeholder="Descreva os objetivos do curso..."
               required
             ></textarea>
-          </div>
-          <div class="form-group">
+          </section>
+          <section class="form-group">
             <label for="imagem" class="custom-label">IMAGEM DE CAPA</label>
             <input
               type="file"
@@ -129,11 +129,11 @@
             <small class="form-text text-muted"
               >Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB</small
             >
-          </div>
-        </div>
+          </section>
+        </section>
         <section class="right">
           <h1>ADICIONAR MÓDULOS</h1>
-          <div id="modulosContainer"></div>
+          <section id="modulosContainer"></section>
           <button type="button" id="addModuloBtn" style="margin-top: 10px">
             Adicionar módulo
           </button>
@@ -152,16 +152,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Modal para adicionar/editar aula -->
-    <div
+    <section
       class="modal fade"
       id="aulaModal"
       tabindex="-1"
       aria-labelledby="aulaModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
+      <section class="modal-dialog modal-lg">
+        <section class="modal-content">
+          <section class="modal-header">
             <h5 class="modal-title" id="aulaModalLabel">Nova Aula</h5>
             <button
               type="button"
@@ -169,10 +169,10 @@
               data-bs-dismiss="modal"
               aria-label="Fechar"
             ></button>
-          </div>
+          </section>
           <form id="aulaForm" onsubmit="CursoManager.saveAulaFromModal(event);">
-            <div class="modal-body">
-              <div class="mb-3">
+            <section class="modal-body">
+              <section class="mb-3">
                 <label for="titulo" class="form-label"
                   >Título da Aula <span class="text-danger">*</span></label
                 >
@@ -183,8 +183,8 @@
                   name="titulo"
                   required
                 />
-              </div>
-              <div class="mb-3">
+              </section>
+              <section class="mb-3">
                 <label for="descricao" class="form-label">Descrição</label>
                 <textarea
                   class="form-control"
@@ -192,8 +192,8 @@
                   name="descricao"
                   rows="3"
                 ></textarea>
-              </div>
-              <div class="mb-3">
+              </section>
+              <section class="mb-3">
                 <label for="tipo_conteudo" class="form-label"
                   >Tipo de Conteúdo</label
                 >
@@ -206,9 +206,9 @@
                   <option value="video">Vídeo</option>
                   <option value="texto">Texto</option>
                 </select>
-              </div>
-              <div id="videoUrlGroup">
-                <div class="mb-3">
+              </section>
+              <section id="videoUrlGroup">
+                <section class="mb-3">
                   <label for="video_url" class="form-label"
                     >URL do Vídeo (Youtube/Vimeo)</label
                   >
@@ -219,9 +219,9 @@
                     name="video_url"
                     placeholder="https://www.youtube.com/watch?v=..."
                   />
-                  <div class="form-text">Insira a URL completa do vídeo</div>
-                </div>
-                <div class="mb-3">
+                  <section class="form-text">Insira a URL completa do vídeo</section>
+                </section>
+                <section class="mb-3">
                   <label for="video_arquivo" class="custom-label"
                     >Ou envie um arquivo de vídeo</label
                   >
@@ -235,14 +235,14 @@
                   />
                   <br>
                   <video id="previewVideo" controls style="display: none;" class="video-preview"></video>
-                  <div class="form-text">
+                  <section class="form-text">
                     Formatos suportados: MP4, WebM, OGG (Máx. 500MB)
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="mb-3">
+                  </section>
+                </section>
+              </section>
+              <section class="row">
+                <section class="col-md-6">
+                  <section class="mb-3">
                     <label for="duracao" class="form-label"
                       >Duração (HH:MM:SS)
                       <span class="text-danger">*</span></label
@@ -256,14 +256,14 @@
                       placeholder="00:10:00"
                       required
                     />
-                    <div class="form-text">
+                    <section class="form-text">
                       Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30
                       segundos)
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mb-3">
+                    </section>
+                  </section>
+                </section>
+                <section class="col-md-6">
+                  <section class="mb-3">
                     <label for="ordem" class="form-label"
                       >Ordem no Módulo <span class="text-danger">*</span></label
                     >
@@ -275,14 +275,14 @@
                       min="1"
                       required
                     />
-                    <div class="form-text">
+                    <section class="form-text">
                       A ordem em que esta aula aparecerá no módulo
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
+                    </section>
+                  </section>
+                </section>
+              </section>
+            </section>
+            <section class="modal-footer">
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -291,11 +291,11 @@
                 Cancelar
               </button>
               <button type="submit" class="btn btn-primary">Salvar Aula</button>
-            </div>
+            </section>
           </form>
-        </div>
-      </div>
-    </div>
+        </section>
+      </section>
+    </section>
     <script>
       // Inicializa o CursoManager ao carregar a página
       document.addEventListener("DOMContentLoaded", function () {

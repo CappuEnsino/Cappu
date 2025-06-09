@@ -90,48 +90,48 @@
     <header>
       <a href="/professor/p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
       <p>CRIAR CURSO</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
             style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
     <main class="container">
-      <div class="curso-header">
+      <section class="curso-header">
         <h1><%= curso.TITULO %></h1>
-        <div class="curso-actions">
+        <section class="curso-actions">
           <button type="button" class="btn btn-danger" onclick="CursoManager.excluirCurso(<%= curso.ID_CURSO %>)">
             <i class="fas fa-trash"></i> Excluir Curso
           </button>
-        </div>
-      </div>
+        </section>
+      </section>
       <form id="formEditarCurso" action="/dashboard/professor/p_gere_curso_completo/<%= curso.ID_CURSO %>" method="POST">
-        <div class="left">
+        <section class="left">
           <h1>EDITAR CURSO</h1>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="titulo">NOME DO CURSO</label>
             <input type="text" id="titulo" name="titulo" value="<%= curso.TITULO %>" required />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
             <textarea id="descricao" name="descricao" required><%= curso.DESCRICAO %></textarea>
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="categoria">CATEGORIA</label>
             <select id="categoria" name="categoria" required>
               <% if (categorias && categorias.length > 0) { %>
@@ -142,73 +142,73 @@
                 <option value="">Nenhuma categoria cadastrada</option>
               <% } %>
             </select>
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="preco">PREÇO</label>
             <input type="number" id="preco" name="preco" step="0.01" min="0" value="<%= curso.PRECO %>" required />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="duracao_total">DURAÇÃO TOTAL (horas)</label>
             <input type="number" id="duracao_total" name="duracao_total" step="0.1" min="0" value="<%= curso.DURACAO_TOTAL %>" required />
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="objetivos">OBJETIVOS</label>
             <textarea id="objetivos" name="objetivos" required><%= curso.OBJETIVOS %></textarea>
-          </div>
+          </section>
 
-          <div class="form-group">
+          <section class="form-group">
             <label for="imagem">IMAGEM DE CAPA</label>
             <% if (curso.IMAGEM) { %>
-              <div class="current-image">
+              <section class="current-image">
                 <img src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>" alt="Capa atual" />
                 <p>Imagem atual</p>
-              </div>
+              </section>
             <% } %>
             <input type="file" id="imagem" name="imagem" accept="image/*" />
             <small>Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB</small>
-          </div>
-        </div>
+          </section>
+        </section>
 
         <section class="right">
           <h1>MÓDULOS DO CURSO</h1>
-          <div id="modulosContainer">
+          <section id="modulosContainer">
             <% if (modulos && modulos.length > 0) { %>
               <% modulos.forEach(function(modulo) { %>
-                <div class="modulo-container" data-modulo-id="<%= modulo.ID_MODULO %>">
-                  <div class="modulo-header">
-                    <div class="modulo-title"><%= modulo.TITULO %></div>
-                    <div class="modulo-actions">
+                <section class="modulo-container" data-modulo-id="<%= modulo.ID_MODULO %>">
+                  <section class="modulo-header">
+                    <section class="modulo-title"><%= modulo.TITULO %></section>
+                    <section class="modulo-actions">
                       <button type="button" class="btn" onclick="CursoManager.editarModulo(<%= modulo.ID_MODULO %>)">Editar</button>
                       <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(<%= modulo.ID_MODULO %>)">Excluir</button>
-                    </div>
-                  </div>
-                  <div class="modulo-aulas">
+                    </section>
+                  </section>
+                  <section class="modulo-aulas">
                     <% if (modulo.aulas && modulo.aulas.length > 0) { %>
                       <% modulo.aulas.forEach(function(aula) { %>
-                        <div class="aula-item" data-aula-id="<%= aula.ID_AULA %>">
-                          <div class="aula-title"><%= aula.TITULO %></div>
-                          <div class="aula-desc"><%= aula.DESCRICAO %></div>
-                          <div class="aula-actions">
+                        <section class="aula-item" data-aula-id="<%= aula.ID_AULA %>">
+                          <section class="aula-title"><%= aula.TITULO %></section>
+                          <section class="aula-desc"><%= aula.DESCRICAO %></section>
+                          <section class="aula-actions">
                             <button type="button" class="btn" onclick="CursoManager.editarAula(<%= aula.ID_AULA %>)">Editar</button>
                             <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(<%= aula.ID_AULA %>)">Excluir</button>
-                          </div>
-                        </div>
+                          </section>
+                        </section>
                       <% }); %>
                     <% } else { %>
                       <p>Nenhuma aula neste módulo</p>
                     <% } %>
                     <button type="button" class="btn" onclick="CursoManager.adicionarAula(<%= modulo.ID_MODULO %>)">Adicionar Aula</button>
-                  </div>
-                </div>
+                  </section>
+                </section>
               <% }); %>
             <% } else { %>
               <p>Nenhum módulo cadastrado</p>
             <% } %>
             <button type="button" class="btn" id="addModuloBtn">Adicionar módulo</button>
-          </div>
+          </section>
         </section>
 
         <button type="submit" class="salvar">

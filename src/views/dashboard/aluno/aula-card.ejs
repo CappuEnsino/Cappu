@@ -14,7 +14,7 @@
         <img src="../images/voltar.svg" alt="" />
       </button>
       <p>LÓGICA DE PROGRAMAÇÃO</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button
           class="user-icon"
@@ -23,26 +23,26 @@
         >
           <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;" 
           onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-          <div class="user-config" id="userConfig">
+          <section class="user-config" id="userConfig">
             <h2><%= user.NOME_USU || 'Aluno' %></h2>
             <ul>
               <li><a href="/aluno/a-perfil">MENU</a></li>
               <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
               <li><a href="/aluno/logout">SAIR</a></li>
             </ul>
-          </div>
+          </section>
         </button>
-      </div>
+      </section>
     </header>
     <main class="conteiner">
       <section class="card">
-        <div class="parabens">
+        <section class="parabens">
           <h2>PARABÉNS</h2>
           <img
             src="/images/clapping-hands.svg"
             alt="icone de duas maos batendo palmas em comemoracao"
           />
-        </div>
+        </section>
         <section class="terminou">
           <img
             src="/images/celebration.svg"

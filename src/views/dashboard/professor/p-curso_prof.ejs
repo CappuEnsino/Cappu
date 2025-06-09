@@ -23,7 +23,7 @@
         ><img src="/images/voltar.svg" alt=""
       /></a>
       <p>MEUS CURSOS</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button
           class="user-icon"
@@ -43,16 +43,16 @@
             "
             onerror="this.onerror=null; this.src='/images/perfil.svg';"
           />
-          <div class="user-config" id="userConfig">
+          <section class="user-config" id="userConfig">
             <h2><%= user.NOME_USU || 'Professor' %></h2>
             <ul>
               <li><a href="/professor/p-professor">MENU</a></li>
               <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
               <li><a href="/professor/logout">SAIR</a></li>
             </ul>
-          </div>
+          </section>
         </button>
-      </div>
+      </section>
     </header>
 
     <main>

@@ -14,21 +14,21 @@
         <img src="../images/voltar.svg" alt="" />
       </button>
       <p>MÉTODOS DE ESTUDO</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/aluno/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
     <h1>FEYNMAN</h1>
     <main class="conteiner">
@@ -36,34 +36,34 @@
         <h2>COMO APLICAR?</h2>
         <p>A técnica de Feynman consiste em 4 etapas simples, sendo:</p>
         <section class="passos">
-          <div class="passo um">
+          <section class="passo um">
             <span>1</span>
-            <div>
+            <section>
               <h3>DEFINA UM TÓPICO</h3>
               <p>Defina um tópico principal do qual você irá estudar.</p>
-            </div>
-          </div>
-          <div class="passo dois">
+            </section>
+          </section>
+          <section class="passo dois">
             <span>2</span>
-            <div>
+            <section>
               <h3>EXPLIQUE</h3>
               <p>Explique-o como se estivesse ensinando a uma criança...</p>
-            </div>
-          </div>
-          <div class="passo tres">
+            </section>
+          </section>
+          <section class="passo tres">
             <span>3</span>
-            <div>
+            <section>
               <h3>REVISE</h3>
               <p>Revise o que disse ou escreveu para garantir que não há erros...</p>
-            </div>
-          </div>
-          <div class="passo quatro">
+            </section>
+          </section>
+          <section class="passo quatro">
             <span>4</span>
-            <div>
+            <section>
               <h3>REFINE E SIMPLIFIQUE</h3>
               <p>Refine seu resumo com informações verdadeiras e o simplifique...</p>
-            </div>
-          </div>
+            </section>
+          </section>
         </section>                
       </section>
       <section class="aplicacao-do-metodo">

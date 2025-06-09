@@ -15,21 +15,21 @@
             <img src="../images/voltar.svg" alt="" />
         </button>
         <p>QUESTIONÁRIO VARK</p>
-        <div>
+        <section>
             <p><%= user.NOME_USU || 'Aluno' %></p>
             <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
                 <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
                 onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-                <div class="user-config" id="userConfig">
+                <section class="user-config" id="userConfig">
                     <h2><%= user.NOME_USU || 'Aluno' %></h2>
                     <ul>
                         <li><a href="/aluno/a-perfil">MENU</a></li>
                         <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                         <li><a href="/aluno/logout">SAIR</a></li>
                     </ul>
-                </div>
+                </section>
             </button>
-        </div>
+        </section>
     </header>
 
     <main class="container">
@@ -41,7 +41,7 @@
             <!-- Questão 5 -->
             <section class="quest">
                 <h3>5 - Eu quero aprender sobre um novo projeto. Eu começaria por:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q5" value="c">
                         <span>Diagramas que mostrem os estágios do projeto com gráficos de benefícios e custos.</span>
@@ -58,13 +58,13 @@
                         <input type="radio" name="q5" value="d">
                         <span>Exemplos de onde o projeto foi utilizado com sucesso.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 6 -->
             <section class="quest">
                 <h3>6 - Quando procuro por tutoriais na internet eu gosto de ver:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q6" value="c">
                         <span>Desenhos interessantes e características visuais.</span>
@@ -81,13 +81,13 @@
                         <input type="radio" name="q6" value="b">
                         <span>Descrições escritas interessantes, listas e explicações.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 7 -->
             <section class="quest">
                 <h3>7 - Eu quero aprender a mexer em um programa complexo no computador. Eu:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q7" value="b">
                         <span>Leria as instruções escritas que vieram com o programa.</span>
@@ -104,13 +104,13 @@
                         <input type="radio" name="q7" value="c">
                         <span>Seguiria os diagramas de um livro.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 8 -->
             <section class="quest">
                 <h3>8 - Quando eu estou estudando eu:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q8" value="b">
                         <span>Leio livros, artigos e folhetos.</span>
@@ -127,18 +127,18 @@
                         <input type="radio" name="q8" value="c">
                         <span>Vejo padrões nas coisas.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
-            <div class="navegacao">
+            <section class="navegacao">
                 <button type="button" class="botao-anterior" onclick="window.location.href='/aluno/quest1_vark'">ANTERIOR</button>
-                <div class="indicador-progresso">
+                <section class="indicador-progresso">
                     <span class="pagina-atual">2</span>
                     <span class="separador">/</span>
                     <span class="total-paginas">4</span>
-                </div>
+                </section>
                 <button type="button" class="botao-proximo" onclick="window.location.href='/aluno/quest3_vark'">PRÓXIMO</button>
-            </div>
+            </section>
         </form>
         <script>
         // Salva no localStorage ao marcar
@@ -156,17 +156,17 @@
         </script>
     </main>
 
-    <div class="container-progresso-geral">
-        <div class="barra-progresso-grande">
-            <div class="progresso-grande"></div>
-        </div>
-    </div>
+    <section class="container-progresso-geral">
+        <section class="barra-progresso-grande">
+            <section class="progresso-grande"></section>
+        </section>
+    </section>
 
     <footer>
-        <div class="footer-text">
+        <section class="footer-text">
             <p> 2023 Questionário VARK. Todos os direitos reservados.</p>
             <p>Baseado no modelo VARK de Neil Fleming</p>
-        </div>
+        </section>
     </footer>
 
     <script src="/js/icon-menu.js"></script>

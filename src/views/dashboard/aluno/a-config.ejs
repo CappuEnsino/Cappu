@@ -14,22 +14,22 @@
         <img src="../images/voltar.svg" alt="" />
       </button>
       <p>CONFIGURAÇÕES</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img id="header-profile-img" src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
             style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/aluno/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
     <main>
       <h1>INFORMAÇÕES PESSOAIS</h1>
@@ -45,20 +45,20 @@
             <span class="info-value" id="email"><%= user.EMAIL %></span>
           </p>
         </section>
-          <div class="profile-card">
-            <div class="profile-preview-container">
-                <div id="current-profile-container" class="current-profile">
+          <section class="profile-card">
+            <section class="profile-preview-container">
+                <section id="current-profile-container" class="current-profile">
                     <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
                          alt="Foto atual" 
                          class="profile-current-img"
                          onload="this.style.opacity=1"
                          onerror="this.onerror=null; this.src='/images/perfil.svg';">
-                </div>
-                <div class="image-preview">
+                </section>
+                <section class="image-preview">
                     <p class="preview-label">Nova foto</p>
                     <img id="preview-img" src="#" alt="Pré-visualização" class="preview-img">
-                </div>
-            </div>
+                </section>
+            </section>
         
             <form action="/aluno/upload-foto" method="POST" enctype="multipart/form-data" class="upload-form">
                 <label class="file-upload-box">
@@ -67,16 +67,16 @@
                     <span class="upload-icon">+</span>
                 </label>
                 
-                <div class="profile-actions">
+                <section class="profile-actions">
                     <button type="submit" class="action-button upload-btn">
                         <span>Salvar Foto</span>
                     </button>
                     <button type="submit" formaction="/aluno/excluir-foto" class="action-button delete-btn" onclick="return confirm('Tem certeza?')">
                         <span>Remover Foto</span>
                     </button>
-                </div>
+                </section>
             </form>
-          </div>
+          </section>
       </section>
       <form action="/aluno/excluir-conta" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.');" style="display: flex; justify-content: center; margin-top: 40px;">
         <button type="submit" class="excluir-conta">EXCLUIR CONTA</button>
@@ -84,10 +84,10 @@
     </section>
     </main>
     <% if (success && success.length) { %>
-      <div class="alert success"><%= success %></div>
+      <section class="alert success"><%= success %></section>
     <% } %>
     <% if (error && error.length) { %>
-      <div class="alert error"><%= error %></div>
+      <section class="alert error"><%= error %></section>
     <% } %>
     <footer>
       <span>© 2024 Cappuensino. Todos os direitos reservados.</span>

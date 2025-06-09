@@ -12,25 +12,25 @@
     <header>
       <a href="/professor/p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
       <p>CRIAR MATERIAL</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
             style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
                     <li><a href="/professor/p-professor">MENU</a></li>
                     <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
-    <div class="container">
+    <section class="container">
       <form
         action="/dashboard/professor/material/save"
         method="POST"
@@ -39,12 +39,12 @@
         <input type="hidden" name="curso_id"  />
         <input type="hidden" name="aula_id" />
 
-        <div class="form-group">
+        <section class="form-group">
           <label for="nome">NOME DO MATERIAL</label>
           <input type="text" id="nome" name="nome" required />
-        </div>
+        </section>
 
-        <div class="form-group">
+        <section class="form-group">
           <label for="tipo">TIPO DE MATERIAL</label>
           <select id="tipo" name="tipo" required>
             <option value="">Selecione...</option>
@@ -52,23 +52,23 @@
             <option value="video">Vídeo</option>
             <option value="link">Link</option>
           </select>
-        </div>
+        </section>
 
-        <div class="form-group" id="arquivo-group">
+        <section class="form-group" id="arquivo-group">
           <label for="arquivo">ARQUIVO</label>
           <input type="file" id="arquivo" name="arquivo" />
-        </div>
+        </section>
 
-        <div class="form-group" id="url-group" style="display: none">
+        <section class="form-group" id="url-group" style="display: none">
           <label for="url">URL</label>
           <input type="url" id="url" name="url" />
-        </div>
+        </section>
 
         <button type="submit" class="salvar">
           SALVAR <img src="/images/save_gere.png" alt="Salvar" />
         </button>
       </form>
-    </div>
+    </section>
 
     <script src="/js/icon-menu.js"></script>
     <script src="/js/material.js"></script>

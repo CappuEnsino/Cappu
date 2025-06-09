@@ -15,21 +15,21 @@
             <img src="../images/voltar.svg" alt="" />
         </button>
       <p>QUESTIONÁRIO VARK</p>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
                 <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
                     <li><a href="/aluno/logout">SAIR</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-    </div>
+    </section>
     </header>
 
     <main class="container">
@@ -41,7 +41,7 @@
             <!-- Questão 9 -->
             <section class="quest">
                 <h3>9 - Um site tem um vídeo mostrando como fazer um gráfico especial. Nele a pessoa fala algumas listas, palavras descrevendo o que fazer e alguns diagramas. Eu aprenderia melhor:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q9" value="c">
                         <span>Olhando os diagramas.</span>
@@ -58,13 +58,13 @@
                         <input type="radio" name="q9" value="d">
                         <span>Assistindo o processo.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 10 -->
             <section class="quest">
                 <h3>10 - Eu quero montar uma mesa de madeira que veio em partes. Eu montaria a partir de:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q10" value="c">
                         <span>Diagramas mostrando cada estágio da montagem.</span>
@@ -81,13 +81,13 @@
                         <input type="radio" name="q10" value="b">
                         <span>Instruções escritas que vieram com as partes da mesa.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 11 -->
             <section class="quest">
                 <h3>11 - Eu quero aprender como jogar um novo jogo de tabuleiro ou um jogo de cartas. Eu:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q11" value="c">
                         <span>Usaria os diagramas que explicam os vários estágios, movimentos e estratégias no jogo.</span>
@@ -104,13 +104,13 @@
                         <input type="radio" name="q11" value="b">
                         <span>Leria as instruções.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
             <!-- Questão 12 -->
             <section class="quest">
                 <h3>12 - Eu quero guardar mais dinheiro, planejando meus próximos gastos. Eu:</h3>
-                <div class="options">
+                <section class="options">
                     <label class="option">
                         <input type="radio" name="q12" value="c">
                         <span>Usaria gráficos mostrando diferentes opções para diferentes períodos de tempo.</span>
@@ -127,18 +127,18 @@
                         <input type="radio" name="q12" value="b">
                         <span>Leria um catálogo impresso que descreve as opções em detalhe.</span>
                     </label>
-                </div>
+                </section>
             </section>
 
-            <div class="navegacao">
+            <section class="navegacao">
                 <button type="button" class="botao-anterior" onclick="window.location.href='/aluno/quest2_vark'">ANTERIOR</button>
-                <div class="indicador-progresso">
+                <section class="indicador-progresso">
                     <span class="pagina-atual">3</span>
                     <span class="separador">/</span>
                     <span class="total-paginas">4</span>
-                </div>
+                </section>
                 <button type="button" class="botao-proximo" onclick="window.location.href='/aluno/quest4_vark'">PRÓXIMO</button>
-            </div>
+            </section>
         </form>
         <script>
         // Salva no localStorage ao marcar
@@ -156,17 +156,17 @@
         </script>
     </main>
 
-    <div class="container-progresso-geral">
-        <div class="barra-progresso-grande">
-            <div class="progresso-grande"></div>
-        </div>
-    </div>
+    <section class="container-progresso-geral">
+        <section class="barra-progresso-grande">
+            <section class="progresso-grande"></section>
+        </section>
+    </section>
 
     <footer>
-        <div class="footer-text">
+        <section class="footer-text">
             <p> 2023 Questionário VARK. Todos os direitos reservados.</p>
             <p>Baseado no modelo VARK de Neil Fleming</p>
-        </div>
+        </section>
     </footer>
 
     <script src="/js/icon-menu.js"></script>

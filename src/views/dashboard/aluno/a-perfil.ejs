@@ -11,12 +11,12 @@
   <body>
     <header>
       <a href="/aluno/a-perfil"><img src="/images/logo+nome.svg" class="logo-cappu" alt=""></a>
-      <div>
+      <section>
         <p><%= user.NOME_USU || 'Aluno' %></p>
         <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <div class="user-config" id="userConfig">
+            <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
@@ -24,17 +24,17 @@
                     <li><a href="/aluno/logout">SAIR</a></li>
                     <li><a href="/aluno/teste-header">TESTE</a></li>
                 </ul>
-            </div>
+            </section>
         </button>
-      </div>
+      </section>
     </header>
     <main>
       <section class="icons">
         <button class="menu-hamburguer" id="menuHamburguer">
           <img src="/images/menu.svg" alt="" />
         </button>
-        <div class="menu-overlay"></div>
-        <div class="user-menu" id="userMenu">
+        <section class="menu-overlay"></section>
+        <section class="user-menu" id="userMenu">
           <button class="close-menu" id="closeMenu">×</button>
           <h2>Menu</h2>
           <ul>
@@ -45,7 +45,7 @@
               <li><a href="/aluno/a-gerenciarplano"><img src="/images/icon-plano.svg" alt="plano" class="icon">MEU PLANO</a></li>
           </ul>
           <a href="/aluno/a-config"><img src="/images/config.svg" alt="configurações" class="icon"></a>
-        </div>
+        </section>
       </section>
       <section class="container">
         <section class="profile">

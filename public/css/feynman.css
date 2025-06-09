@@ -13,7 +13,7 @@
     --button-color: #00549D;
 }
 
-/* Container principal que divide a tela em dois */
+/* Container principal que sectionide a tela em dois */
 main.conteiner {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -43,7 +43,7 @@ main.conteiner {
     margin-top: 2em;
   }
   
-  .passos div {
+  .passos section {
     display: flex;
     align-items: flex-start;
     gap: 0.8em;
