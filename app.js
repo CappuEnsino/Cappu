@@ -19,7 +19,7 @@ require("./src/controller/passport");
 // ======================
 app.set("view engine", "ejs");
 app.set("views", "src/views");
-app.use(express.static( "./public"));
+app.use(express.static("./public"));
 
 // ======================
 // Middlewares
@@ -57,7 +57,6 @@ app.use("/professor", require("./src/routes/professor"));
 app.use("/dashboard/professor", require("./src/routes/professor"));
 app.use("/admin", require("./src/routes/admin"));
 
-
 app.get("/login", (req, res) => res.redirect("/auth/login"));
 app.get("/cadastro", (req, res) => res.redirect("/auth/register"));
 
@@ -67,8 +66,8 @@ app.get("/curso/:nome", (req, res) => {
     curso: {
       professor: "Professor Exemplo",
       duracao: "8 Meses",
-      valor: "728,90"
-    }
+      valor: "728,90",
+    },
   });
 });
 

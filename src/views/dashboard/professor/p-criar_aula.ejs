@@ -10,6 +10,7 @@
   </head>
   <body>
     <header>
+
       <a href="/p-modulo"><img src="/images/voltar.svg" alt=""></a>
       <p>CRIAR AULA</p>
       <div>
@@ -30,26 +31,31 @@
     </header>
 
     <div class="container">
-      <form action="/dashboard/professor/p-criar_aula" method="POST" enctype="multipart/form-data">
+      <form
+        action="/dashboard/professor/p-criar_aula"
+        method="POST"
+        enctype="multipart/form-data"
+      >
         <input type="hidden" name="modulo_id" value="<%= moduloId %>" />
 
         <div class="left">
           <h1>DETALHES DA AULA</h1>
-          
+
           <% if (typeof error !== 'undefined' && error) { %>
-            <div class="alert alert-danger">
-              <%= typeof error === 'string' ? error : 'Ocorreu um erro ao processar a aula' %>
-            </div>
+          <div class="alert alert-danger">
+            <%= typeof error === 'string' ? error : 'Ocorreu um erro ao
+            processar a aula' %>
+          </div>
           <% } %>
 
           <div class="form-group">
-            <label for="nome">TÍTULO DA AULA *</label>
+            <label for="titulo">TÍTULO DA AULA *</label>
             <input
               type="text"
-              id="nome"
-              name="nome"
+              id="titulo"
+              name="titulo"
               class="form-control"
-              value="<%= typeof aula !== 'undefined' ? aula.NOME : '' %>"
+              value="<%= typeof aula !== 'undefined' ? aula.TITULO : '' %>"
               required
               placeholder="Digite o título da aula"
             />
@@ -57,41 +63,34 @@
 
           <div class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
-            <textarea 
-              id="descricao" 
-              name="descricao" 
+            <textarea
+              id="descricao"
+              name="descricao"
               class="form-control"
               rows="4"
               placeholder="Descreva o conteúdo desta aula"
-            ><%= typeof aula !== 'undefined' ? aula.DESCRICAO : '' %></textarea>
+            >
+<%= typeof aula !== 'undefined' ? aula.DESCRICAO : '' %></textarea
+            >
           </div>
 
           <div class="form-group">
             <label>TIPO DE CONTEÚDO</label>
             <div class="radio-group">
               <label class="radio-label">
-                <input 
-                  type="radio" 
-                  name="tipo_conteudo" 
-                  value="video" 
-                  <%= (typeof aula === 'undefined' || aula.TIPO_CONTEUDO === 'video') ? 'checked' : '' %>
-                  onchange="toggleVideoFields()"
-                >
+                <input type="radio" name="tipo_conteudo" value="video" <%=
+                (typeof aula === 'undefined' || aula.TIPO_CONTEUDO === 'video')
+                ? 'checked' : '' %> onchange="toggleVideoFields()" >
                 <span>Vídeo</span>
               </label>
               <label class="radio-label">
-                <input 
-                  type="radio" 
-                  name="tipo_conteudo" 
-                  value="texto"
-                  <%= (typeof aula !== 'undefined' && aula.TIPO_CONTEUDO === 'texto') ? 'checked' : '' %>
-                  onchange="toggleVideoFields()"
-                >
+                <input type="radio" name="tipo_conteudo" value="texto" <%=
+                (typeof aula !== 'undefined' && aula.TIPO_CONTEUDO === 'texto')
+                ? 'checked' : '' %> onchange="toggleVideoFields()" >
                 <span>Texto</span>
               </label>
             </div>
           </div>
-
 
           <div class="form-group" id="videoUrlGroup">
             <label for="video_url">URL DO VÍDEO (Youtube/Vimeo)</label>
@@ -108,26 +107,25 @@
             </small>
           </div>
 
-
           <div class="form-group" id="videoUploadGroup">
             <label for="video_arquivo">OU ENVIE UM ARQUIVO DE VÍDEO</label>
             <div class="custom-file">
-              <input 
-                type="file" 
-                class="custom-file-input" 
-                id="video_arquivo" 
-                name="video_arquivo" 
+              <input
+                type="file"
+                class="custom-file-input"
+                id="video_arquivo"
+                name="video_arquivo"
                 accept="video/*"
-              >
+              />
               <label class="custom-file-label" for="video_arquivo">
-                <%= (typeof aula !== 'undefined' && aula.ARQUIVO) ? aula.ARQUIVO : 'Selecione um arquivo de vídeo' %>
+                <%= (typeof aula !== 'undefined' && aula.ARQUIVO) ? aula.ARQUIVO
+                : 'Selecione um arquivo de vídeo' %>
               </label>
             </div>
             <small class="form-text text-muted">
               Formatos suportados: MP4, WebM, OGG (Máx. 500MB)
             </small>
           </div>
-
 
           <div class="form-group">
             <label for="duracao">DURAÇÃO (HH:MM:SS)</label>
@@ -145,7 +143,6 @@
               Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30 segundos)
             </small>
           </div>
-
 
           <div class="form-group">
             <label for="ordem">ORDEM NO MÓDULO</label>
@@ -167,7 +164,6 @@
         <div class="right">
           <h1>MATERIAIS</h1>
           <div class="materiais">
-           
             <div class="material">
               <h3>material titulo</h3>
               <p>material tipo</p>
@@ -175,19 +171,14 @@
                 <a href="material url" target="_blank">
                   <img src="/images/icon_pesquisa.png" alt="Visualizar" />
                 </a>
-                <a
-                  href="/dashboard/professor/material"
-                >
+                <a href="/dashboard/professor/material">
                   <img src="/images/icon_delete.png" alt="Excluir" />
                 </a>
               </div>
             </div>
-       
           </div>
           <div class="add-material">
-            <a
-              href="/dashboard/professor/material/new"
-            >
+            <a href="/dashboard/professor/material/new">
               <img src="/images/icon_mais.png" alt="Adicionar material" />
             </a>
           </div>
@@ -202,69 +193,83 @@
     <script>
       // Função para alternar entre campos de vídeo e texto
       function toggleVideoFields() {
-        const tipoConteudo = document.querySelector('input[name="tipo_conteudo"]:checked').value;
-        const videoUrlGroup = document.getElementById('videoUrlGroup');
-        const videoUploadGroup = document.getElementById('videoUploadGroup');
-        
-        if (tipoConteudo === 'video') {
-          videoUrlGroup.style.display = 'block';
-          videoUploadGroup.style.display = 'block';
+        const tipoConteudo = document.querySelector(
+          'input[name="tipo_conteudo"]:checked'
+        ).value;
+        const videoUrlGroup = document.getElementById("videoUrlGroup");
+        const videoUploadGroup = document.getElementById("videoUploadGroup");
+
+        if (tipoConteudo === "video") {
+          videoUrlGroup.style.display = "block";
+          videoUploadGroup.style.display = "block";
         } else {
-          videoUrlGroup.style.display = 'none';
-          videoUploadGroup.style.display = 'none';
+          videoUrlGroup.style.display = "none";
+          videoUploadGroup.style.display = "none";
         }
       }
 
       // Inicializar o estado dos campos
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Atualizar o label do arquivo selecionado
-        document.getElementById('video_arquivo').addEventListener('change', function(e) {
-          const fileName = e.target.files[0] ? e.target.files[0].name : 'Selecione um arquivo de vídeo';
-          const nextElement = e.target.nextElementSibling;
-          if (nextElement && nextElement.tagName === 'LABEL') {
-            nextElement.textContent = fileName;
-          }
-        });
+        document
+          .getElementById("video_arquivo")
+          .addEventListener("change", function (e) {
+            const fileName = e.target.files[0]
+              ? e.target.files[0].name
+              : "Selecione um arquivo de vídeo";
+            const nextElement = e.target.nextElementSibling;
+            if (nextElement && nextElement.tagName === "LABEL") {
+              nextElement.textContent = fileName;
+            }
+          });
 
         // Inicializar o estado dos campos
         toggleVideoFields();
 
         // Validar formulário antes de enviar
-        const form = document.querySelector('form');
+        const form = document.querySelector("form");
         if (form) {
-          form.addEventListener('submit', function(e) {
-            const tipoConteudo = document.querySelector('input[name="tipo_conteudo"]:checked').value;
-            const videoUrl = document.getElementById('video_url').value;
-            const videoArquivo = document.getElementById('video_arquivo').files[0];
-            
-            if (tipoConteudo === 'video' && !videoUrl && !videoArquivo) {
+          form.addEventListener("submit", function (e) {
+            const tipoConteudo = document.querySelector(
+              'input[name="tipo_conteudo"]:checked'
+            ).value;
+            const videoUrl = document.getElementById("video_url").value;
+            const videoArquivo =
+              document.getElementById("video_arquivo").files[0];
+
+            if (tipoConteudo === "video" && !videoUrl && !videoArquivo) {
               e.preventDefault();
-              alert('Por favor, insira uma URL de vídeo ou envie um arquivo de vídeo.');
+              alert(
+                "Por favor, insira uma URL de vídeo ou envie um arquivo de vídeo."
+              );
               return false;
             }
-            
+
             // Validar duração no formato HH:MM:SS
-            const duracao = document.getElementById('duracao').value;
+            const duracao = document.getElementById("duracao").value;
             const duracaoRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
             if (!duracaoRegex.test(duracao)) {
               e.preventDefault();
-              alert('Formato de duração inválido. Use o formato HH:MM:SS (ex: 00:15:30)');
+              alert(
+                "Formato de duração inválido. Use o formato HH:MM:SS (ex: 00:15:30)"
+              );
               return false;
             }
-            
+
             // Exibir indicador de carregamento
             const submitButton = form.querySelector('button[type="submit"]');
             if (submitButton) {
               submitButton.disabled = true;
-              submitButton.innerHTML = 'SALVANDO... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+              submitButton.innerHTML =
+                'SALVANDO... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
             }
-            
+
             return true;
           });
         }
       });
     </script>
-    
+
     <style>
       /* Estilos para os campos do formulário */
       .form-control {
@@ -275,40 +280,40 @@
         border-radius: 0.25rem;
         font-size: 1rem;
       }
-      
+
       .form-group {
         margin-bottom: 1.5rem;
       }
-      
+
       .form-text {
         display: block;
         margin-top: 0.25rem;
         color: #6c757d;
         font-size: 0.875rem;
       }
-      
+
       .radio-group {
         display: flex;
         gap: 1.5rem;
         margin-top: 0.5rem;
       }
-      
+
       .radio-label {
         display: flex;
         align-items: center;
         cursor: pointer;
       }
-      
+
       .radio-label input[type="radio"] {
         margin-right: 0.5rem;
       }
-      
+
       .custom-file {
         position: relative;
         display: inline-block;
         width: 100%;
       }
-      
+
       .custom-file-input {
         position: relative;
         z-index: 2;
@@ -317,7 +322,7 @@
         margin: 0;
         opacity: 0;
       }
-      
+
       .custom-file-label {
         position: absolute;
         top: 0;
@@ -337,7 +342,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      
+
       .custom-file-label::after {
         position: absolute;
         top: 0;
@@ -354,20 +359,20 @@
         border-left: 1px solid #ced4da;
         border-radius: 0 0.25rem 0.25rem 0;
       }
-      
+
       .alert {
         padding: 1rem;
         margin-bottom: 1.5rem;
         border: 1px solid transparent;
         border-radius: 0.25rem;
       }
-      
+
       .alert-danger {
         color: #721c24;
         background-color: #f8d7da;
         border-color: #f5c6cb;
       }
-      
+
       .spinner-border {
         display: inline-block;
         width: 1rem;
@@ -378,12 +383,14 @@
         border-radius: 50%;
         animation: spinner-border 0.75s linear infinite;
       }
-      
+
       @keyframes spinner-border {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
     </style>
-    
+
     <script src="/js/icon-menu.js"></script>
     <script src="/js/aula.js"></script>
   </body>

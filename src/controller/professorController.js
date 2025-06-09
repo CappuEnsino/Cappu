@@ -171,28 +171,132 @@ exports.criarCurso = async (req, res) => {
   }
 };
 
-// Criação de aula
+// Criação/edição de aula
 exports.criarAula = async (req, res) => {
   try {
-    const { titulo, descricao, modulo_id } = req.body;
-    let videoPath = null;
-    if (req.file) {
-      videoPath = req.file.filename; // ou req.file.path, conforme config do multer
-    }
+    const {
+      titulo,
+      descricao,
+      modulo_id,
+      aula_id,
+      duracao,
+      ordem,
+      tipo_conteudo,
+      video_url,
+    } = req.body;
+
+    // Validação básica
     if (!titulo || !descricao || !modulo_id) {
       req.flash("error", "Preencha todos os campos obrigatórios!");
-      return res.redirect("/dashboard/professor/p-criar_aula");
+      return res.redirect(
+        "/dashboard/professor/p-criar_aula" +
+          (aula_id ? `?aula_id=${aula_id}` : `?modulo_id=${modulo_id}`)
+      );
     }
-    await db.query(
-      "INSERT INTO AULA (TITULO, DESCRICAO, ID_MODULO, VIDEO) VALUES (?, ?, ?, ?)",
-      [titulo, descricao, modulo_id, videoPath]
+
+    // Verificar se o módulo pertence a um curso do professor
+    const [modulos] = await db.query(
+      `SELECT m.* FROM MODULO m 
+       JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
+       WHERE m.ID_MODULO = ? AND c.ID_USUARIO = ?`,
+      [modulo_id, req.user.ID_USUARIO]
     );
-    req.flash("success", "Aula criada com sucesso!");
-    res.redirect("/dashboard/professor/p-modulo?moduloId=" + modulo_id);
+
+    if (!modulos || modulos.length === 0) {
+      req.flash(
+        "error",
+        "Módulo não encontrado ou você não tem permissão para editá-lo"
+      );
+      return res.redirect("/dashboard/professor/p-curso_prof");
+    }
+
+    // Processar arquivo se foi enviado
+    let arquivo = null;
+    let tamanhoArquivo = null;
+    let tipoArquivo = null;
+    if (req.file) {
+      arquivo = req.file.buffer;
+      tamanhoArquivo = req.file.size;
+      tipoArquivo = req.file.mimetype;
+    }
+
+    if (aula_id) {
+      // Atualizar aula existente
+      const updateQuery = `
+        UPDATE AULA SET 
+          TITULO = ?, 
+          DESCRICAO = ?, 
+          DURACAO = ?, 
+          ORDEM = ?,
+          TIPO_CONTEUDO = ?,
+          VIDEO_URL = ?
+          ${
+            arquivo
+              ? ", ARQUIVO = ?, TAMANHO_ARQUIVO = ?, TIPO_ARQUIVO = ?"
+              : ""
+          }
+        WHERE ID_AULA = ? AND ID_MODULO = ?
+      `;
+
+      const updateParams = [
+        titulo,
+        descricao,
+        duracao || "00:00:00",
+        ordem || 1,
+        tipo_conteudo || "video",
+        video_url || "",
+        ...(arquivo ? [arquivo, tamanhoArquivo, tipoArquivo] : []),
+        aula_id,
+        modulo_id,
+      ];
+
+      await db.query(updateQuery, updateParams);
+      req.flash("success", "Aula atualizada com sucesso!");
+    } else {
+      // Criar nova aula
+      const insertQuery = `
+        INSERT INTO AULA (
+          ID_MODULO, 
+          TITULO, 
+          DESCRICAO, 
+          DURACAO, 
+          ORDEM,
+          TIPO_CONTEUDO,
+          VIDEO_URL,
+          ARQUIVO,
+          TAMANHO_ARQUIVO,
+          TIPO_ARQUIVO
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      const insertParams = [
+        modulo_id,
+        titulo,
+        descricao,
+        duracao || "00:00:00",
+        ordem || 1,
+        tipo_conteudo || "video",
+        video_url || "",
+        arquivo,
+        tamanhoArquivo,
+        tipoArquivo,
+      ];
+
+      await db.query(insertQuery, insertParams);
+      req.flash("success", "Aula criada com sucesso!");
+    }
+
+    // Redirecionar de volta para a página do curso
+    const [curso] = await db.query(
+      "SELECT c.ID_CURSO FROM CURSOS c JOIN MODULO m ON c.ID_CURSO = m.ID_CURSO WHERE m.ID_MODULO = ?",
+      [modulo_id]
+    );
+
+    res.redirect(`/dashboard/professor/p_gere_curso/${curso[0].ID_CURSO}`);
   } catch (err) {
-    console.error("Erro ao criar aula:", err);
-    req.flash("error", "Erro ao criar aula!");
-    res.redirect("/dashboard/professor/p-criar_aula");
+    console.error("Erro ao salvar aula:", err);
+    req.flash("error", "Erro ao salvar aula: " + err.message);
+    res.redirect("/dashboard/professor/p-curso_prof");
   }
 };
 

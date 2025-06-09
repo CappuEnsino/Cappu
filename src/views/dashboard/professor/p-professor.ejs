@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/professor.css" />
     <link rel="stylesheet" href="/css/header2.css" />
-    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
     <title>Home</title>
   </head>
   <body>
     <header>
+
       <a href="/professor/p-professor"><img src="/images/logo+nome.svg" class="logo-cappu" alt=""></a>
       <div>
         <p><%= user.NOME_USU || 'Professor' %></p>
@@ -23,6 +24,7 @@
                     <li><a href="/professor/logout">SAIR</a></li>
                 </ul>
             </div>
+
         </button>
       </div>
     </header>
@@ -33,22 +35,26 @@
           <img src="/images/menu.svg" alt="" />
           <div class="user-menu" id="userMenu">
             <ul>
+
                 <li><a href="#">PAINEL DE CONTROLE</a></li>
                 <li><a href="#">AVALIAÇÕES</a></li>
                 <li><a href="/professor/p-curso_prof">MEUS CURSOS</a></li>
+
             </ul>
-        </div>
+          </div>
         </button>
       </section>
       <section class="container">
         <section class="profile">
           <h1 class="nome"><%= user.NOME_USU || 'Professor' %></h1>
+
           <h2 class="alunoid">@<%= user.id_usuario || user.ID_USUARIO || 'id' %></h2>
          <img 
             src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" 
             alt="Foto do perfil" 
             style="width: 15em; height: 15em; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
+
         </section>
         <section class="opcoes">
           <a href="/professor/p-curso_prof" class="botao">Meus Cursos</a>
