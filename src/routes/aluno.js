@@ -165,6 +165,14 @@ router.get("/a-comprar-curso", (req, res) => {
   });
 });
 
+router.get("/teste-header", (req, res) => {
+  res.render("dashboard/aluno/teste-header", {
+    user: req.user,
+    title: "Teste Header",
+    timestamp: Date.now()
+  });
+});
+
 
 // Função utilitária para checar se o usuário já respondeu o VARK
 async function usuarioRespondeuVark(userId) { // Removido o parâmetro 'query' pois db já está no escopo
