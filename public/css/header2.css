@@ -75,42 +75,75 @@ a {
   background-color: #ffffff;
 }
 
+.user-icon {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.user-icon:hover {
+  background-color: #f5f5f5;
+  border-radius: 50%;
+}
+
 .user-config {
   display: none;
   position: absolute;
   right: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
   top: 100%;
-  width: 12rem;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.user-config h2 {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  color: var(--primary-color);
+  font-family: Fira Sans;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
 }
 
 .user-config ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  font-family: Fira Sans;
-  font-weight: 400;
-  font-style: italic;
-  font-size: 1rem;
-  letter-spacing: 0%;
-  text-align: center;
-  vertical-align: middle;
 }
 
 .user-config ul li {
-  padding: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-config ul li:last-child {
+  border-bottom: none;
 }
 
 .user-config ul li a {
+  display: block;
+  color: #333;
   text-decoration: none;
-  color: var(--primary-color);
+  font-family: Fira Sans;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .user-config ul li:hover {
   background-color: #f5f5f5;
+}
+
+.user-config ul li:hover a {
+  color: var(--primary-color);
 }
 
 

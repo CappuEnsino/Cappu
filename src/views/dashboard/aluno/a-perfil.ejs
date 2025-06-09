@@ -17,6 +17,7 @@
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
             <div class="user-config" id="userConfig">
+              <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
@@ -30,16 +31,20 @@
       <section class="icons">
         <button class="menu-hamburguer" id="menuHamburguer">
           <img src="/images/menu.svg" alt="" />
-          <div class="user-menu" id="userMenu">
-            <ul>
-                <li><a href="/aluno/a-todososcursos">TODOS OS CURSOS</a></li>
-                <li><a href="/aluno/a-meuscursos">MEUS CURSOS</a></li>
-                <li><a href="/aluno/a-minha-rotina">MINHA ROTINA</a></li>
-                <li><a href="/aluno/a-meusmateriais">MEUS MATERIAIS</a></li>
-                <li><a href="/aluno/a-gerenciarplano">MEU PLANO</a></li>
-            </ul>
-          </div>
         </button>
+        <div class="menu-overlay"></div>
+        <div class="user-menu" id="userMenu">
+          <button class="close-menu" id="closeMenu">×</button>
+          <h2>Menu</h2>
+          <ul>
+              <li><a href="/aluno/a-todososcursos"><img src="/images/icon-todos.svg" alt="curso" class="icon">TODOS OS CURSOS</a></li>
+              <li><a href="/aluno/a-meuscursos"><img src="/images/icon-curso.svg" alt="curso" class="icon">MEUS CURSOS</a></li>
+              <li><a href="/aluno/a-minha-rotina"><img src="/images/icon-rotina.svg" alt="rotina" class="icon">MINHA ROTINA</a></li>
+              <li><a href="/aluno/a-meusmateriais"><img src="/images/icon-material.svg" alt="material" class="icon">MEUS MATERIAIS</a></li>
+              <li><a href="/aluno/a-gerenciarplano"><img src="/images/icon-plano.svg" alt="plano" class="icon">MEU PLANO</a></li>
+          </ul>
+          <a href="/aluno/a-config"><img src="/images/config.svg" alt="configurações" class="icon"></a>
+        </div>
       </section>
       <section class="container">
         <section class="profile">

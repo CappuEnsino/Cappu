@@ -19,6 +19,7 @@
             <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
             onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
             <div class="user-config" id="userConfig">
+                <h2><%= user.NOME_USU || 'Aluno' %></h2>
                 <ul>
                     <li><a href="/aluno/a-perfil">MENU</a></li>
                     <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
