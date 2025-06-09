@@ -8,45 +8,30 @@
     <link rel="stylesheet" href="/css/header2.css"> 
 </head>
 <body>
-    <header>
-        <a href="/aluno/a-perfil"><img src="/images/logo+nome.svg" class="logo-cappu" alt=""></a>
-        <div>
-          <p><%= user.NOME_USU || 'Aluno' %></p>
-          <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-              <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"
-              onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-              <div class="user-config" id="userConfig">
-                <h2><%= user.NOME_USU || 'Aluno' %></h2>
-                  <ul>
-                      <li><a href="/aluno/a-perfil">MENU</a></li>
-                      <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
-                      <li><a href="/aluno/logout">SAIR</a></li>
-                  </ul>
-              </div>
-          </button>
-        </div>
-      </header>
+    <%- include('../../pages/partials/header') %>
+    <main>
+        <div class="main-content">
+            <div class="container">
+                <h2>Todos os Cursos Disponíveis</h2>
 
-    <main class="container">
-        <h2>Todos os Cursos Disponíveis</h2>
-
-        <% if (cursos && cursos.length > 0) { %>
-            <div class="cursos-container">
-                <% cursos.forEach(curso => { %>
-                    <div class="card">
-                        <div class="descricao">
-                            <span class="subtitulo"><%= curso.TITULO %></span>
-                            <p><span>Professor:</span> <%= curso.NOME_PROFESSOR %></p>
-                            <p><span>Descrição:</span> <%= curso.DESCRICAO %></p>
-                            <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
-                        </div>
+                <% if (cursos && cursos.length > 0) { %>
+                    <div class="cursos-container">
+                        <% cursos.forEach(curso => { %>
+                            <div class="card">
+                                <div class="descricao">
+                                    <span class="subtitulo"><%= curso.TITULO %></span>
+                                    <p><span>Professor:</span> <%= curso.NOME_PROFESSOR %></p>
+                                    <p><span>Descrição:</span> <%= curso.DESCRICAO %></p>
+                                    <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
+                                </div>
+                            </div>
+                        <% }); %>
                     </div>
-                <% }); %>
+                <% } else { %>
+                    <p>Nenhum curso encontrado no momento.</p>
+                <% } %>
             </div>
-        <% } else { %>
-            <p>Nenhum curso encontrado no momento.</p>
-        <% } %>
-
+        </div>
     </main>
     <script src="/js/icon-menu.js"></script>
 

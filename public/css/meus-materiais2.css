@@ -62,6 +62,16 @@ h1 {
     color: black;
     cursor: pointer;
     text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .download-icon:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+  }
+
+  .download-icon:active{
+    transform: scale(0.9);
   }
 
   .download-btn {
@@ -93,11 +103,16 @@ h1 {
     font-weight: 700;
     text-transform: uppercase;
     font-family: 'Fira Sans', sans-serif;
+    transition: all 0.2s ease-in-out;
 }
 
 .button:hover {
     cursor: pointer;
     background-color: var(--primary-color);
     color: white;
-    transition: 0.2s ease-in-out;
+    transform: scale(1.1);
+}
+
+.button:active{
+    transform: scale(0.9);
 }

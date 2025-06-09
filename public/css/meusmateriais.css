@@ -69,6 +69,16 @@ main {
   line-height: 7.2px;
   letter-spacing: 0%;
   color: #000000;
+  transition: all 0.3s ease;
+}
+
+.download-section:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.download-section:active{
+  transform: scale(0.9);
 }
 
 .cursos p {
