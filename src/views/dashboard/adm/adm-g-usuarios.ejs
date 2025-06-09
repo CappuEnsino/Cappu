@@ -6,6 +6,8 @@
 
     <link rel="stylesheet" href="/css/adm.css">
 
+    <link rel="stylesheet" href="/css/header2.css">
+
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,51 +20,40 @@
 </head>
 <body>
     <header>
-        <img src="/images/logo.svg" alt="logo" id="logo">
-        <section id="user">
-            <p id="name_user">Administrador1</p>
-            <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-                <section id="circle"></section>
-                <div class="user-config" id="userConfig">
-                    <ul>
-<<<<<<< HEAD
-                        <li><a href="../../pages/home/index">SAIR</a></li>
-=======
-                        <li><a href="/auth/logout">SAIR</a></li>
->>>>>>> upstream/master
-                    </ul>
-                </div>
-            </button>
+        <a href="/admin/adm-painel"><img src="/images/voltar.svg" alt=""></a>
+        <p>Painel Administrativo</p>
+        <div>
+          <p>Admin</p>
+          <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+              <img src="/images/adm-perfil.svg" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"/>
+              <div class="user-config" id="userConfig">
+                <h2>Admin</h2>
+                  <ul>
+                      <li><a href="/auth/logout">SAIR</a></li>
+                  </ul>
+              </div>
+          </button>
+      </div>
     </header>
     <main>
         <nav>
-<<<<<<< HEAD
-            <a href="adm-painel" title="Painel de Controle">painel de controle</a>
-            <a href="adm-g-cursos" title="gerenciamento de cursos">gerenciamento de cursos</a>
-=======
-            <a href="/dashboard/adm/adm-painel.ejs" title="Painel de Controle">painel de controle</a>
-            <a href="/dashboard/adm/adm-g-cursos.ejs" title="gerenciamento de cursos">gerenciamento de cursos</a>
->>>>>>> upstream/master
+            <a href="/admin/adm-painel" title="Painel de Controle">painel de controle</a>
+            <a href="/admin/adm-g-cursos" title="gerenciamento de cursos">gerenciamento de cursos</a>
             <section class="select">
-                <img src="/images/gamepad.svg" alt="Usuarios">
-                <p>gerenciamento de usuários</p>
+                <img src="/images/user.svg" alt="Controle">
+                <a href="/admin/adm-g-usuarios" title="gerenciamento de usuários">gerenciamento de usuários</a>
             </section>
-<<<<<<< HEAD
-            <a href="adm-financeiro" title="financeiro">financeiro</a>
-            <a href="adm-suporte" title="suporte">suporte</a>
-=======
-            <a href="/dashboard/adm/adm-financeiro.ejs" title="financeiro">financeiro</a>
-            <a href="/dashboard/adm/adm-suporte.ejs" title="suporte">suporte</a>
->>>>>>> upstream/master
+            <a href="/admin/adm-financeiro" title="financeiro">financeiro</a>
+            <a href="/admin/adm-suporte" title="suporte">suporte</a>
         </nav>
         <section class="conteudo">
-            <h1>Gerenciamento de usuários</h1>
+            <h1>Gerenciamento de cursos</h1>
             <br>
-            <p><i>Nessa área você pode adicionar, excluir, alterar usuários, e atribuir direitos <br> de acesso.</i></p>
+            <p><i>Nessa área você pode adicionar, excluir, alterar cursos, e atribuir direitos <br> de acesso.</i></p>
             
             <section class="quadrado2">
                 <section class="caixa-cinza">
-                    <input type="text" class="search-box" placeholder="Buscar usuários...">
+                    <input type="text" class="search-box" placeholder="Buscar cursos...">
                 </section>
     
                 <table class="gerenciamento">
@@ -151,5 +142,6 @@
             </section>
         </section>
     </main>
+    <script src="/js/icon-menu.js"></script>
 </body>
 </html>

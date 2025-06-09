@@ -4,23 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/adm.css">
+    <link rel="stylesheet" href="/css/header2.css">
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <title>Financeiro</title>
+    <title>Suporte</title>
 </head>
 <body>
-    
+    <header>
+        <a href="/admin/adm-painel"><img src="/images/voltar.svg" alt=""></a>
+        <p>Painel Administrativo</p>
+        <div>
+          <p>Admin</p>
+          <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+              <img src="/images/adm-perfil.svg" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"/>
+              <div class="user-config" id="userConfig">
+                <h2>Admin</h2>
+                  <ul>
+                      <li><a href="/auth/logout">SAIR</a></li>
+                  </ul>
+              </div>
+          </button>
+      </div>
+    </header>
     <main>
         <nav>
-            <a href="adm-painel" title="Painel de Controle">painel de controle</a>
-            <a href="adm-g-cursos" title="gerenciamento de cursos">gerenciamento de cursos</a>
-            <a href="adm-g-usuarios" title="gerenciamento de usuários">gerenciamento de usuários</a>
-            <a href="adm-financeiro" title="financeiro">financeiro</a>
+            <a href="/admin/adm-painel" title="Painel de Controle">painel de controle</a>
+            <a href="/admin/adm-g-cursos" title="gerenciamento de cursos">gerenciamento de cursos</a>
+            <a href="/admin/adm-g-usuarios" title="gerenciamento de usuários">gerenciamento de usuários</a>
+            <a href="/admin/adm-financeiro" title="financeiro">financeiro</a>
             <section class="select">
-                <img src="/images/suporte.svg" alt="Suporte"> <!--Adicionar "../../Images/" no src dessa linha-->
-                <p>suporte</p>
+                <img src="/images/suporte.svg" alt="Suporte">
+                <a href="/admin/adm-suporte" title="suporte">suporte</a>
             </section>
         </nav>
         <section class="conteudo">
@@ -66,5 +82,6 @@
             </section>
         </section>
     </main>
+    <script src="/js/icon-menu.js"></script>
 </body>
 </html>

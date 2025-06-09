@@ -10,15 +10,23 @@ function isAdmin(req, res, next) {
   res.redirect('/auth/login');
 }
 
-// Dashboard principal do admin
+// Rota principal do admin
 router.get('/', isAdmin, (req, res) => {
-  res.render('dashboard/adm/adm-dashboard', {
+  res.render('dashboard/adm/adm-painel', {
     user: req.user,
-    title: 'Painel Administrativo'
+    title: 'Painel de Controle'
   });
 });
 
-// Outras telas administrativas
+// Rota para o painel de controle
+router.get('/adm-painel', isAdmin, (req, res) => {
+  res.render('dashboard/adm/adm-painel', {
+    user: req.user,
+    title: 'Painel de Controle'
+  });
+});
+
+// Rota para gerenciamento de usuários
 router.get('/adm-g-usuarios', isAdmin, (req, res) => {
   res.render('dashboard/adm/adm-g-usuarios', {
     user: req.user,
@@ -26,13 +34,7 @@ router.get('/adm-g-usuarios', isAdmin, (req, res) => {
   });
 });
 
-router.get('/adm-financeiro', isAdmin, (req, res) => {
-  res.render('dashboard/adm/adm-financeiro', {
-    user: req.user,
-    title: 'Financeiro'
-  });
-});
-
+// Rota para gerenciamento de cursos
 router.get('/adm-g-cursos', isAdmin, (req, res) => {
   res.render('dashboard/adm/adm-g-cursos', {
     user: req.user,
@@ -40,17 +42,19 @@ router.get('/adm-g-cursos', isAdmin, (req, res) => {
   });
 });
 
+// Rota para financeiro
+router.get('/adm-financeiro', isAdmin, (req, res) => {
+  res.render('dashboard/adm/adm-financeiro', {
+    user: req.user,
+    title: 'Financeiro'
+  });
+});
+
+// Rota para suporte
 router.get('/adm-suporte', isAdmin, (req, res) => {
   res.render('dashboard/adm/adm-suporte', {
     user: req.user,
     title: 'Suporte'
-  });
-});
-
-router.get('/adm-painel', isAdmin, (req, res) => {
-  res.render('dashboard/adm/adm-painel', {
-    user: req.user,
-    title: 'Painel de Controle'
   });
 });
 
