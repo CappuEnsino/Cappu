@@ -3,10 +3,9 @@ const router = express.Router();
 const upload = require("../config/multer");
 const professorController = require("../controller/professorController");
 const db = require("../config/database");
-<<<<<<< HEAD
 const multer = require("multer");
-=======
->>>>>>> 15a31233775f5e616585a6ce0c2aa976f59a6a41
+
+
 
 // Dashboard do professor
 router.get("/p-professor", (req, res) => {
@@ -269,7 +268,7 @@ router.post(
   professorController.atualizarCursoCompleto
 );
 
-<<<<<<< HEAD
+
 // Rota para buscar o ID do módulo de uma aula
 router.get("/aula/:id/modulo", async (req, res) => {
   const aulaId = req.params.id;
