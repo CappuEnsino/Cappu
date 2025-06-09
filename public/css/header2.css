@@ -223,6 +223,26 @@ a {
   animation: fadeIn 0.4s ease-out forwards;
 }
 
+.back-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button img {
+  width: 2rem;
+  height: auto;
+}
+
+.back-button:hover {
+  transform: scale(1.2);
+}
+
+.back-button:focus {
+  outline: none;
+}
+
 #pesquisa{
     border: none;
     outline: none;

@@ -10,7 +10,9 @@
   </head>
   <body>
     <header>
-      <a href="/aluno/a-perfil"><img src="/images/voltar.svg" alt=""></a>
+      <button onclick="history.back()" class="back-button">
+        <img src="../images/voltar.svg" alt="" />
+      </button>
       <p>GERENCIAR PLANO</p>
       <div>
         <p><%= user.NOME_USU || 'Aluno' %></p>

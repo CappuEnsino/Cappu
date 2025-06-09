@@ -26,17 +26,21 @@ button {
 main {
   height: auto;
   display: flex;
-  width: 70%;
+  width: 100%;
+  box-sizing: border-box;
   flex-direction: column;
-  margin-top: 5.625em;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15%;
 }
 
 .meuscursos {
   display: flex;
-  width: 100%;
+  width: 50%;
   flex-direction: column;
-  gap: 6rem;
-  padding-top: 9rem;
+  justify-content: center;
+  gap: 1em;
+  padding: 1rem 0;
 }
 
 .topic {
@@ -49,15 +53,13 @@ main {
 .topic h2 {
   font-family: Fira Sans;
   font-weight: 900;
-  font-size: 2.5em;
-  line-height: 10.8px;
-  letter-spacing: 0%;
+  font-size: 1.5em;
+  margin-bottom: 2em;
   color: var(--primary-color);
 }
 
 .cursos {
   display: flex;
-  border-bottom: 2px solid #000000;
   align-items: center;
   justify-content: space-between;
 }
@@ -66,9 +68,7 @@ main {
   font-family: Fira Sans;
   font-weight: 400;
   font-style: italic;
-  font-size: 1.5rem;
-  line-height: 7.2px;
-  letter-spacing: 0%;
+  font-size: 1rem;
   color: #000000;
   display: flex;
   align-items: center;
@@ -80,9 +80,7 @@ main {
   font-family: Fira Sans;
   font-weight: 400;
   font-style: italic;
-  font-size: 1.5rem;
-  line-height: 0.5rem;
-  letter-spacing: 0%;
+  font-size: 1rem;
   color: #000000;
 }
 
@@ -90,9 +88,7 @@ main {
   font-family: Fira Sans;
   font-weight: 900;
   font-style: italic;
-  font-size: 1.5rem;
-  line-height: 2.25rem;
-  letter-spacing: 8%;
+  font-size: 1rem;
   text-align: center;
   color: black;
 }
@@ -108,36 +104,22 @@ main {
   font-family: Fira Sans;
   font-weight: 400;
   font-style: italic;
-  font-size: 1.5rem;
-  letter-spacing: 0%;
+  font-size: 1rem;
   border: 2px solid black;
-  width: 25rem;
-  height: 3rem;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* padding: 0.5em; */
+  padding: 0.5em 3em;
+  margin-top: 2em;
 }
 
-@media (max-width: 1600px) {
-  main {
-    width: 80%;
-  }
-
-  .meuscursos h2 {
-    font-size: 2.5em;
-  }
-
-  .cursos p,
-  .download-section {
-    font-size: 20px;
-  }
-
-  .vermais a {
-    width: 11rem;
-    font-size: 1.3rem;
-  }
+.vermais a:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  background-color: black;
+  color: white;
+  transition: all 0.3s ease-in-out;
 }
 
 @media (max-width: 1200px) {

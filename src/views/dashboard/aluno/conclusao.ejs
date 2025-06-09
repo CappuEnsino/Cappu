@@ -11,7 +11,9 @@
 </head>
 <body>
     <header>
-        <a href="/aluno/a-minha-rotina"><img src="/images/voltar.svg" alt=""></a>
+        <button onclick="history.back()" class="back-button">
+            <img src="../images/voltar.svg" alt="" />
+        </button>
       <p>RESULTADO VARK</p>
       <div>
         <p><%= user.NOME_USU || 'Aluno' %></p>

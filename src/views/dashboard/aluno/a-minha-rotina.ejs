@@ -16,7 +16,9 @@
       }
     </script>
     <header>
-        <a href="/aluno/a-perfil"><img src="/images/voltar.svg" alt=""></a>
+      <button onclick="history.back()" class="back-button">
+        <img src="../images/voltar.svg" alt="" />
+      </button>
         <p>Minha Rotina</p>
         <div>
           <p><%= user.NOME_USU || 'Aluno' %></p>

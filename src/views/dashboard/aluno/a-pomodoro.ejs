@@ -9,7 +9,9 @@
 </head>
 <body>
     <header>
-        <a href="/aluno/a-minha-rotina-2"><img src="/images/voltar.svg" alt=""></a>
+        <button onclick="history.back()" class="back-button">
+            <img src="../images/voltar.svg" alt="" />
+        </button>
         <p>MÉTODOS DE ESTUDO</p>
         <div>
           <p><%= user.NOME_USU || 'Aluno' %></p>
