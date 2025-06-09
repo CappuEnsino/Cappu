@@ -60,17 +60,6 @@ app.use("/admin", require("./src/routes/admin"));
 app.get("/login", (req, res) => res.redirect("/auth/login"));
 app.get("/cadastro", (req, res) => res.redirect("/auth/register"));
 
-app.get("/curso/:nome", (req, res) => {
-  const viewName = `c-${req.params.nome}`;
-  res.render(`courses/${viewName}`, {
-    curso: {
-      professor: "Professor Exemplo",
-      duracao: "8 Meses",
-      valor: "728,90",
-    },
-  });
-});
-
 app.get("/institucional/:pagina", (req, res) => {
   const viewPage = `inst-${req.params.pagina}`;
   res.render(`pages/institucional/${viewPage}`);

@@ -53,67 +53,96 @@
       <h1>MAIS COMPRADOS</h1>
     </section>
     <section class="cards-container">
-      <section class="cards">
-        <a href="/curso/log" class="h-ref">
-          <section>
-            <h1>Lógica de Programação</h1>
-            <h2>8 meses</h2>
+      <% if (cursos && cursos.length > 0) { %>
+        <% cursos.slice(0, 2).forEach(curso => { %>
+          <section class="cards">
+            <a href="/curso/<%= curso.ID_CURSO %>" class="h-ref">
+              <section>
+                <h1><%= curso.TITULO %></h1>
+                <h2><%= curso.DURACAO_TOTAL %></h2>
+              </section>
+              <% if (curso.IMAGEM) { %>
+                <img src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>" alt="<%= curso.TITULO %>" />
+              <% } else { %>
+                <img src="/images/card-default.png" alt="<%= curso.TITULO %>" />
+              <% } %>
+            </a>
           </section>
-          <img src="/images/card-1.png" alt="Curso de Lógica de Programação" />
-        </a>
-      </section>
-      <section class="cards">
-        <a href="/curso/python" class="h-ref">
-          <section>
-            <h1>Python do Zero ao Pro</h1>
-            <h2>8 meses</h2>
-          </section>
-          <img src="/images/card-2.png" alt="Curso de Python" />
-        </a>
-      </section>
+        <% }); %>
+      <% } else { %>
+        <section class="cards">
+          <a href="#" class="h-ref">
+            <section>
+              <h1>Nenhum curso disponível</h1>
+              <h2>-</h2>
+            </section>
+            <img src="/images/card-default.png" alt="Curso não disponível" />
+          </a>
+        </section>
+      <% } %>
     </section>
+
     <section class="sesao">
       <h1>MELHORES OFERTAS</h1>
     </section>
     <section class="cards-container">
-      <section class="cards">
-        <a href="/curso/design" class="h-ref">
-          <section>
-            <h1>Design Gráfico</h1>
-            <h2>5 meses</h2>
+      <% if (cursos && cursos.length > 2) { %>
+        <% cursos.slice(2, 4).forEach(curso => { %>
+          <section class="cards">
+            <a href="/curso/<%= curso.ID_CURSO %>" class="h-ref">
+              <section>
+                <h1><%= curso.TITULO %></h1>
+                <h2><%= curso.DURACAO_TOTAL %></h2>
+              </section>
+              <% if (curso.IMAGEM) { %>
+                <img src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>" alt="<%= curso.TITULO %>" />
+              <% } else { %>
+                <img src="/images/card-default.png" alt="<%= curso.TITULO %>" />
+              <% } %>
+            </a>
           </section>
-          <img src="/images/card-3.png" alt="Curso de Design Gráfico" />
-        </a>
-      </section>
-      <section class="cards">
-        <a href="/curso/photo" class="h-ref">
-          <section>
-            <h1>Photoshop Profissional</h1>
-            <h2>8 meses</h2>
-          </section>
-          <img src="/images/card-4.png" alt="Curso de Photoshop" />
-        </a>
-      </section>
+        <% }); %>
+      <% } else { %>
+        <section class="cards">
+          <a href="#" class="h-ref">
+            <section>
+              <h1>Nenhum curso disponível</h1>
+              <h2>-</h2>
+            </section>
+            <img src="/images/card-default.png" alt="Curso não disponível" />
+          </a>
+        </section>
+      <% } %>
     </section>
+
     <section class="cards-container">
-      <section class="cards">
-        <a href="/curso/foto" class="h-ref">
-          <section>
-            <h1>Fotografia</h1>
-            <h2>8 meses</h2>
+      <% if (cursos && cursos.length > 4) { %>
+        <% cursos.slice(4, 6).forEach(curso => { %>
+          <section class="cards">
+            <a href="/curso/<%= curso.ID_CURSO %>" class="h-ref">
+              <section>
+                <h1><%= curso.TITULO %></h1>
+                <h2><%= curso.DURACAO_TOTAL %></h2>
+              </section>
+              <% if (curso.IMAGEM) { %>
+                <img src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>" alt="<%= curso.TITULO %>" />
+              <% } else { %>
+                <img src="/images/card-default.png" alt="<%= curso.TITULO %>" />
+              <% } %>
+            </a>
           </section>
-          <img src="/images/card-5.png" alt="Curso de Fotografia" />
-        </a>
-      </section>
-      <section class="cards">
-        <a href="/curso/copy" class="h-ref">
-          <section>
-            <h1>Copywriting</h1>
-            <h2>4 meses</h2>
-          </section>
-          <img src="/images/card-6.png" alt="Curso de Copywriting" />
-        </a>
-      </section>
+        <% }); %>
+      <% } else { %>
+        <section class="cards">
+          <a href="#" class="h-ref">
+            <section>
+              <h1>Nenhum curso disponível</h1>
+              <h2>-</h2>
+            </section>
+            <img src="/images/card-default.png" alt="Curso não disponível" />
+          </a>
+        </section>
+      <% } %>
     </section>
 
     <hr class="separador" />
