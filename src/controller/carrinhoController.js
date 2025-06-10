@@ -334,7 +334,12 @@ const carrinhoController = {
                     pending: `${process.env.BASE_URL}/aluno/pagamento/pendente`
                 },
                 external_reference: compraId.toString(),
-                notification_url: `${process.env.BASE_URL}/aluno/webhook/mercadopago`
+                notification_url: `${process.env.BASE_URL}/aluno/webhook/mercadopago`,
+
+                // ✅ Adicione esta parte:
+                payer: {
+                    email: 'test_user_123456@testuser.com' // e-mail de uma conta de teste COMPRADORA
+                }
             };
 
             console.log('Dados da preferência:', preferenceData);
