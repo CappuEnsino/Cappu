@@ -180,6 +180,12 @@ const CursoManager = {
     const closeBtn = modal.querySelector(".close-button");
     closeBtn.onclick = () => this.closeModal();
 
+    // Adiciona evento de submit ao formulário
+    const aulaForm = document.getElementById("aulaForm");
+    if (aulaForm) {
+      aulaForm.onsubmit = (e) => this.saveAula(e);
+    }
+
     // Fecha o modal ao clicar fora
     modal.onclick = (e) => {
       if (e.target === modal) this.closeModal();
@@ -266,122 +272,33 @@ const CursoManager = {
 
   // Salva a aula (criar/editar)
   saveAula(event) {
-    if (event) {
-      event.preventDefault();
-    }
-
+    event.preventDefault();
     const form = document.getElementById("aulaForm");
     const formData = new FormData(form);
-    const aulaId = formData.get("aula_id");
-    const moduloId = formData.get("modulo_id");
 
-    // Validação básica
-    if (!formData.get("titulo") || !formData.get("descricao")) {
-      this.showNotify("error", "Preencha todos os campos obrigatórios");
-      return;
-    }
-
-    // Determina a URL e método baseado se é criação ou edição
-    const url = aulaId
-      ? `/dashboard/professor/aula/${aulaId}`
-      : "/dashboard/professor/aula";
-    const method = aulaId ? "PUT" : "POST";
-
-    // Converte FormData para objeto
-    const dadosAula = {};
-    formData.forEach((value, key) => {
-      dadosAula[key] = value;
-    });
-
-    // Envia a requisição
-    fetch(url, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dadosAula),
+    fetch("/dashboard/professor/p-criar_aula", {
+      method: "POST",
+      body: formData,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          this.showNotify(
-            "success",
-            aulaId ? "Aula atualizada com sucesso!" : "Aula criada com sucesso!"
-          );
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        this.showNotify("success", data.message);
+        this.closeModal();
+        
+        // Recarrega a página para exibir a nova aula
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
 
-          // Atualiza a interface sem recarregar a página
-          if (data.data) {
-            const moduloContainer = document.querySelector(
-              `[data-modulo-id="${moduloId}"]`
-            );
-
-            if (moduloContainer) {
-              const aulasContainer =
-                moduloContainer.querySelector(".modulo-aulas");
-
-              if (!aulasContainer) {
-                console.error("Container de aulas não encontrado");
-                return;
-              }
-
-              // Remove a mensagem "Nenhuma aula neste módulo" se existir
-              const noAulasMsg = aulasContainer.querySelector("p");
-              if (
-                noAulasMsg &&
-                noAulasMsg.textContent.includes("Nenhuma aula")
-              ) {
-                noAulasMsg.remove();
-              }
-
-              if (aulaId) {
-                // Se for edição, atualiza a aula existente
-                const aulaExistente = aulasContainer.querySelector(
-                  `[data-aula-id="${aulaId}"]`
-                );
-                if (aulaExistente) {
-                  const novaAula = this.criarHtmlAula(data.data);
-                  aulaExistente.replaceWith(novaAula);
-                }
-              } else {
-                // Se for criação, adiciona a nova aula
-                const addButton = aulasContainer.querySelector("button");
-                const novaAula = this.criarHtmlAula(data.data);
-
-                if (addButton) {
-                  aulasContainer.insertBefore(novaAula, addButton);
-                } else {
-                  aulasContainer.appendChild(novaAula);
-                }
-
-                // Atualiza o array de módulos local
-                const moduloIndex = this.modulos.findIndex(
-                  (m) => m.ID_MODULO === moduloId
-                );
-                if (moduloIndex !== -1) {
-                  if (!this.modulos[moduloIndex].AULAS) {
-                    this.modulos[moduloIndex].AULAS = [];
-                  }
-                  this.modulos[moduloIndex].AULAS.push(data.data);
-                }
-              }
-            }
-          }
-
-          // Fecha o modal
-          this.closeModal();
-        } else {
-          this.showNotify("error", data.message || "Erro ao salvar aula");
-        }
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-        this.showNotify("error", "Erro ao salvar aula");
-      });
+      } else {
+        this.showNotify("error", data.message || "Ocorreu um erro ao salvar a aula.");
+      }
+    })
+    .catch(error => {
+      console.error("Erro na requisição:", error);
+      this.showNotify("error", "Erro de comunicação com o servidor.");
+    });
   },
 
   // Função para editar uma aula existente

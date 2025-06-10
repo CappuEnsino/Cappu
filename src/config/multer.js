@@ -1,14 +1,36 @@
 const multer = require("multer");
+const path = require("path");
 
-// Configuração do multer para processar uploads de imagem
+// Configuração de armazenamento em memória
 const storage = multer.memoryStorage();
 
-// Filtro para aceitar apenas imagens
+// Filtro de arquivo para permitir múltiplos tipos
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/")) {
+  const allowedTypes = [
+    // Imagens
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    // Vídeos
+    "video/mp4",
+    "video/mpeg",
+    "video/quicktime",
+    "video/x-msvideo", // avi
+    "video/webm",
+    // Documentos
+    "application/pdf",
+    "application/msword", // .doc
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    "application/vnd.ms-powerpoint", // .ppt
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Apenas imagens são permitidas!"), false);
+    console.error(`Tipo de arquivo não permitido: ${file.mimetype}`);
+    cb(new Error("Tipo de arquivo não suportado! Por favor, envie imagens, vídeos, PDFs ou apresentações."), false);
   }
 };
 
@@ -17,7 +39,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 500 * 1024 * 1024, // 500MB
   },
 });
 

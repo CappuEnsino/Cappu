@@ -171,131 +171,83 @@ exports.criarCurso = async (req, res) => {
   }
 };
 
-// Criação/edição de aula
-exports.criarAula = async (req, res) => {
+// Rota para criar/editar aula
+exports.getCriarAulaPage = async (req, res) => {
   try {
-    const {
-      titulo,
-      descricao,
-      modulo_id,
-      aula_id,
-      duracao,
-      ordem,
-      tipo_conteudo,
-      video_url,
-    } = req.body;
+    const moduloId = req.query.modulo_id;
+    const aulaId = req.query.aula_id;
+    console.log("Carregando página de aula. Módulo:", moduloId, "Aula:", aulaId);
 
-    // Validação básica
-    if (!titulo || !descricao || !modulo_id) {
-      req.flash("error", "Preencha todos os campos obrigatórios!");
-      return res.redirect(
-        "/dashboard/professor/p-criar_aula" +
-          (aula_id ? `?aula_id=${aula_id}` : `?modulo_id=${modulo_id}`)
-      );
-    }
-
-    // Verificar se o módulo pertence a um curso do professor
-    const [modulos] = await db.query(
-      `SELECT m.* FROM MODULO m 
-       JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
-       WHERE m.ID_MODULO = ? AND c.ID_USUARIO = ?`,
-      [modulo_id, req.user.ID_USUARIO]
-    );
-
-    if (!modulos || modulos.length === 0) {
-      req.flash(
-        "error",
-        "Módulo não encontrado ou você não tem permissão para editá-lo"
-      );
+    if (!moduloId && !aulaId) {
+      req.flash("error", "Módulo não especificado");
       return res.redirect("/dashboard/professor/p-curso_prof");
     }
 
-    // Processar arquivo se foi enviado
-    let arquivo = null;
-    let tamanhoArquivo = null;
-    let tipoArquivo = null;
-    if (req.file) {
-      arquivo = req.file.buffer;
-      tamanhoArquivo = req.file.size;
-      tipoArquivo = req.file.mimetype;
+    let aula = null;
+    let modulo = null;
+
+    if (moduloId) {
+      // Buscar informações do módulo e seu curso
+      const [modulos] = await db.query(
+        `SELECT m.*, c.TITULO as CURSO_TITULO 
+         FROM MODULO m 
+         JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
+         WHERE m.ID_MODULO = ? AND c.ID_USUARIO = ?`,
+        [moduloId, req.user.ID_USUARIO]
+      );
+
+      if (!modulos || modulos.length === 0) {
+        req.flash("error", "Módulo não encontrado ou sem permissão");
+        return res.redirect("/dashboard/professor/p-curso_prof");
+      }
+
+      modulo = modulos[0];
+      console.log("Módulo encontrado:", modulo);
     }
 
-    if (aula_id) {
-      // Atualizar aula existente
-      const updateQuery = `
-        UPDATE AULA SET 
-          TITULO = ?, 
-          DESCRICAO = ?, 
-          DURACAO = ?, 
-          ORDEM = ?,
-          TIPO_CONTEUDO = ?,
-          VIDEO_URL = ?
-          ${
-            arquivo
-              ? ", ARQUIVO = ?, TAMANHO_ARQUIVO = ?, TIPO_ARQUIVO = ?"
-              : ""
-          }
-        WHERE ID_AULA = ? AND ID_MODULO = ?
-      `;
+    if (aulaId) {
+      // Buscar informações da aula para edição
+      const [aulas] = await db.query(
+        `SELECT a.*, m.TITULO as MODULO_TITULO 
+         FROM AULA a 
+         JOIN MODULO m ON a.ID_MODULO = m.ID_MODULO 
+         JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
+         WHERE a.ID_AULA = ? AND c.ID_USUARIO = ?`,
+        [aulaId, req.user.ID_USUARIO]
+      );
 
-      const updateParams = [
-        titulo,
-        descricao,
-        duracao || "00:00:00",
-        ordem || 1,
-        tipo_conteudo || "video",
-        video_url || "",
-        ...(arquivo ? [arquivo, tamanhoArquivo, tipoArquivo] : []),
-        aula_id,
-        modulo_id,
-      ];
+      if (!aulas || aulas.length === 0) {
+        req.flash("error", "Aula não encontrada ou sem permissão");
+        return res.redirect("/dashboard/professor/p-curso_prof");
+      }
 
-      await db.query(updateQuery, updateParams);
-      req.flash("success", "Aula atualizada com sucesso!");
-    } else {
-      // Criar nova aula
-      const insertQuery = `
-        INSERT INTO AULA (
-          ID_MODULO, 
-          TITULO, 
-          DESCRICAO, 
-          DURACAO, 
-          ORDEM,
-          TIPO_CONTEUDO,
-          VIDEO_URL,
-          ARQUIVO,
-          TAMANHO_ARQUIVO,
-          TIPO_ARQUIVO
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
+      aula = aulas[0];
+      console.log("Aula encontrada:", aula);
 
-      const insertParams = [
-        modulo_id,
-        titulo,
-        descricao,
-        duracao || "00:00:00",
-        ordem || 1,
-        tipo_conteudo || "video",
-        video_url || "",
-        arquivo,
-        tamanhoArquivo,
-        tipoArquivo,
-      ];
-
-      await db.query(insertQuery, insertParams);
-      req.flash("success", "Aula criada com sucesso!");
+      if (!modulo) {
+        const [modulos] = await db.query(
+          `SELECT m.*, c.TITULO as CURSO_TITULO 
+           FROM MODULO m 
+           JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
+           WHERE m.ID_MODULO = ? AND c.ID_USUARIO = ?`,
+          [aula.ID_MODULO, req.user.ID_USUARIO]
+        );
+        modulo = modulos[0];
+      }
     }
 
-    // Redirecionar de volta para a página do curso
-    const [curso] = await db.query(
-      "SELECT c.ID_CURSO FROM CURSOS c JOIN MODULO m ON c.ID_CURSO = m.ID_CURSO WHERE m.ID_MODULO = ?",
-      [modulo_id]
-    );
-
-    res.redirect(`/dashboard/professor/p_gere_curso/${curso[0].ID_CURSO}`);
+    res.render("dashboard/professor/p-criar_aula", {
+      user: req.user,
+      title: aulaId ? "Editar Aula" : "Criar Aula",
+      modulo,
+      aula,
+      success: req.flash("success"),
+      error: req.flash("error"),
+      timestamp: Date.now()
+    });
   } catch (err) {
-    console.error("Erro ao salvar aula:", err);
-    req.flash("error", "Erro ao salvar aula: " + err.message);
+    console.error("Erro ao carregar página de aula:", err);
+    req.flash("error", "Erro ao carregar página de aula: " + err.message);
     res.redirect("/dashboard/professor/p-curso_prof");
   }
 };
@@ -306,6 +258,9 @@ exports.updateCursoById = async (req, res) => {
     const cursoId = req.params.id;
     const { titulo, descricao, categoria, preco, duracao_total, objetivos } =
       req.body;
+    
+    // Log para verificar os dados recebidos
+    console.log('Dados recebidos para atualização:', { cursoId, titulo, descricao, categoria, preco, duracao_total, objetivos });
 
     // Processa a imagem se foi enviada
     let imagemBuffer = null;
@@ -313,33 +268,31 @@ exports.updateCursoById = async (req, res) => {
       imagemBuffer = req.file.buffer;
     }
 
-    // Se não houver nova imagem, mantém a imagem existente
+    // Monta a query de atualização
+    let query = 'UPDATE CURSOS SET TITULO = ?, DESCRICAO = ?, ID_CATEGORIA = ?, PRECO = ?, DURACAO_TOTAL = ?, OBJETIVOS = ?';
+    const params = [titulo, descricao, categoria, preco, duracao_total, objetivos];
+
     if (imagemBuffer) {
-      await db.query(
-        `UPDATE CURSOS SET TITULO = ?, DESCRICAO = ?, ID_CATEGORIA = ?, PRECO = ?, DURACAO_TOTAL = ?, OBJETIVOS = ?, IMAGEM = ? WHERE ID_CURSO = ?`,
-        [
-          titulo,
-          descricao,
-          categoria,
-          preco,
-          duracao_total,
-          objetivos,
-          imagemBuffer,
-          cursoId,
-        ]
-      );
-    } else {
-      await db.query(
-        `UPDATE CURSOS SET TITULO = ?, DESCRICAO = ?, ID_CATEGORIA = ?, PRECO = ?, DURACAO_TOTAL = ?, OBJETIVOS = ? WHERE ID_CURSO = ?`,
-        [titulo, descricao, categoria, preco, duracao_total, objetivos, cursoId]
-      );
+      query += ', IMAGEM = ?';
+      params.push(imagemBuffer);
+    }
+
+    query += ' WHERE ID_CURSO = ? AND ID_USUARIO = ?';
+    params.push(cursoId, req.user.ID_USUARIO);
+
+    // Executa a query
+    const [result] = await db.query(query, params);
+
+    if (result.affectedRows === 0) {
+      req.flash("error", "Não foi possível atualizar o curso. Verifique se você tem permissão ou se o curso existe.");
+      return res.redirect("/dashboard/professor/p-curso_prof");
     }
 
     req.flash("success", "Curso atualizado com sucesso!");
     res.redirect("/dashboard/professor/p_gere_curso/" + cursoId);
   } catch (err) {
     console.error("Erro ao atualizar curso:", err);
-    req.flash("error", "Erro ao atualizar curso!");
+    req.flash("error", "Erro ao atualizar curso: " + err.message);
     res.redirect("/dashboard/professor/p_gere_curso/" + req.params.id);
   }
 };
@@ -348,44 +301,50 @@ exports.updateCursoById = async (req, res) => {
 exports.getCursoById = async (req, res) => {
   try {
     const cursoId = req.params.id;
-    // Busca o curso específico
+    console.log("Buscando curso:", cursoId);
+
+    // Busca o curso específico com JOIN para categorias
     const [rows] = await db.query(
-      `SELECT c.*, cat.NOME as CATEGORIA, c.ID_CATEGORIA FROM CURSOS c 
+      `SELECT c.*, cat.NOME as CATEGORIA, c.ID_CATEGORIA 
+       FROM CURSOS c 
        LEFT JOIN CATEGORIAS cat ON c.ID_CATEGORIA = cat.ID_CATEGORIA 
-       WHERE c.ID_CURSO = ?`,
-      [cursoId]
+       WHERE c.ID_CURSO = ? AND c.ID_USUARIO = ?`,
+      [cursoId, req.user.ID_USUARIO]
     );
+
     if (!rows || rows.length === 0) {
+      console.log("Curso não encontrado ou sem permissão");
       req.flash("error", "Curso não encontrado!");
       return res.redirect("/dashboard/professor/p-curso_prof");
     }
 
     const curso = rows[0];
+    console.log("Curso encontrado:", curso.TITULO);
 
     // Busca todas as categorias disponíveis
     const [categorias] = await db.query(
       "SELECT * FROM CATEGORIAS ORDER BY NOME"
     );
 
-    // Buscar módulos do curso
+    // Buscar módulos do curso com ordenação
     const [modulos] = await db.query(
-      `SELECT * FROM MODULO WHERE ID_CURSO = ? ORDER BY ORDEM ASC`, // Adicionado ORDER BY
+      `SELECT * FROM MODULO WHERE ID_CURSO = ? ORDER BY ORDEM ASC, ID_MODULO ASC`,
       [cursoId]
     );
 
-    // Buscar aulas de cada módulo
+    console.log(`Encontrados ${modulos.length} módulos`);
+
+    // Buscar aulas de cada módulo com ordenação
     for (let modulo of modulos) {
       const [aulas] = await db.query(
-        `SELECT * FROM AULA WHERE ID_MODULO = ? ORDER BY ORDEM ASC`,
-        [
-          // Adicionado ORDER BY
-          modulo.ID_MODULO,
-        ]
+        `SELECT * FROM AULA WHERE ID_MODULO = ? ORDER BY ORDEM ASC, ID_AULA ASC`,
+        [modulo.ID_MODULO]
       );
       modulo.aulas = aulas;
+      console.log(`Módulo ${modulo.TITULO}: ${aulas.length} aulas`);
     }
 
-    console.log("DEBUG - modulos enviados para a view:", modulos);
+    // Enviar dados para o template
     res.render("dashboard/professor/p_gere_curso", {
       user: req.user,
       curso,
@@ -398,7 +357,7 @@ exports.getCursoById = async (req, res) => {
     });
   } catch (err) {
     console.error("Erro ao buscar curso:", err);
-    req.flash("error", "Erro ao buscar curso!");
+    req.flash("error", "Erro ao buscar curso: " + err.message);
     res.redirect("/dashboard/professor/p-curso_prof");
   }
 };
@@ -821,6 +780,45 @@ exports.salvarDadosBancarios = async (req, res) => {
     console.error("Erro ao salvar dados bancários:", err);
     req.flash("error", "Erro ao salvar dados bancários!");
     res.redirect("/professor/p-config");
+  }
+};
+
+// Rota para buscar o arquivo de uma aula
+exports.getAulaArquivo = async (req, res) => {
+  try {
+    const { aula_id } = req.params;
+    const professorId = req.user.ID_USUARIO;
+
+    // Busca o arquivo, tipo e título da aula, verificando a permissão do professor
+    const [aulas] = await db.query(
+      `SELECT a.ARQUIVO, a.TIPO_ARQUIVO, a.TITULO
+       FROM AULA a
+       JOIN MODULO m ON a.ID_MODULO = m.ID_MODULO
+       JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO
+       WHERE a.ID_AULA = ? AND c.ID_USUARIO = ?`,
+      [aula_id, professorId]
+    );
+
+    if (!aulas || aulas.length === 0 || !aulas[0].ARQUIVO) {
+      return res.status(404).send("Arquivo não encontrado ou sem permissão de acesso.");
+    }
+
+    const aula = aulas[0];
+    const fileContents = aula.ARQUIVO;
+    const mimeType = aula.TIPO_ARQUIVO;
+    
+    // Gera um nome de arquivo a partir do título da aula
+    // Ex: "Introdução ao JavaScript" -> "introducao_ao_javascript.mp4"
+    const extension = mimeType.split('/')[1] || 'bin';
+    const filename = `${aula.TITULO.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.${extension}`;
+
+    res.setHeader('Content-Type', mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(fileContents);
+
+  } catch (err) {
+    console.error("Erro ao buscar arquivo da aula:", err);
+    res.status(500).send("Erro interno do servidor ao tentar buscar o arquivo.");
   }
 };
 

@@ -34,36 +34,37 @@
     <main>
       <section class="meuscursos">
         <section class="topic">
-        <h2>NOME</h2>
-        <h2>CATEGORIA</h2>
-        <h2>%</h2>
+          <h2>NOME</h2>
+          <h2>CATEGORIA</h2>
+          <h2>%</h2>
         </section>
-        <section class="cursos">
-          <p>Phyton do Zero ao Pro</p>
-          <section class="download-section">
-            <span>Developer</span>
-            <span class="porcentagem">100%</span>
+        
+        <% if (cursos && cursos.length > 0) { %>
+          <% cursos.forEach(function(curso) { %>
+            <section class="cursos">
+              <p><%= curso.TITULO %></p>
+              <section class="download-section">
+                <span><%= curso.CATEGORIA || 'Geral' %></span>
+                <span class="porcentagem"><%= curso.PORCENTAGEM %>%</span>
+              </section>
+            </section>
+          <% }); %>
+        <% } else { %>
+          <section class="cursos">
+            <p>Você ainda não possui nenhum curso.</p>
+            <section class="download-section">
+              <span>-</span>
+              <span class="porcentagem">0%</span>
+            </section>
           </section>
-        </section>
-        <section class="cursos">
-          <p>Photoshop Profissional</p>
-          <section class="download-section">
-            <span>Design</span>
-            <span class="porcentagem">2%</span>
-          </section>
-        </section>
-        <section class="cursos">
-          <p>I.A para Negócios</p>
-          <section class="download-section">
-            <span>Negócios</span>
-            <span class="porcentagem">30%</span>
-          </section>
-        </section>
+        <% } %>
+
         <section class="vermais">
           <a href="/aluno/a-todososcursos">TODOS OS MEUS CURSOS</a>
           <a href="/aluno/a-certificado">MEUS CERTIFICADOS</a>
         </section>
       </section>
       <script src="/js/icon-menu.js"></script>
-      <body>
-      <html>
+    </main>
+  </body>
+</html>

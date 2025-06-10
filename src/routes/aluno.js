@@ -163,12 +163,50 @@ router.get("/a-perfil", (req, res) => {
 });
 
 // Rota para Meus Cursos
-router.get("/a-meuscursos", (req, res) => {
-  res.render("dashboard/aluno/a-meuscursos", {
-    user: req.user,
-    title: "Meus Cursos",
-    timestamp: Date.now()
-  });
+router.get("/a-meuscursos", async (req, res) => {
+  try {
+    if (!req.user) {
+      req.flash('error', 'Usuário não autenticado');
+      return res.redirect('/auth/cl-login');
+    }
+
+    // Buscar os cursos comprados pelo aluno
+    const [cursosComprados] = await db.query(`
+      SELECT c.*, cur.TITULO, cur.DESCRICAO, cur.CATEGORIA, u.NOME_USU as NOME_PROFESSOR,
+             (SELECT COUNT(*) FROM PROGRESSO_AULA pa 
+              JOIN AULA a ON pa.ID_AULA = a.ID_AULA 
+              JOIN MODULO m ON a.ID_MODULO = m.ID_MODULO 
+              WHERE m.ID_CURSO = cur.ID_CURSO AND pa.ID_USUARIO = ?) as AULAS_CONCLUIDAS,
+             (SELECT COUNT(*) FROM AULA a 
+              JOIN MODULO m ON a.ID_MODULO = m.ID_MODULO 
+              WHERE m.ID_CURSO = cur.ID_CURSO) as TOTAL_AULAS
+      FROM CURSOS_COMPRA c
+      JOIN COMPRA comp ON c.ID_COMPRA = comp.ID_COMPRA
+      JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO
+      JOIN USUARIO u ON cur.ID_USUARIO = u.ID_USUARIO
+      WHERE comp.ID_USUARIO = ? AND comp.STATUS = 1
+      ORDER BY comp.DATA_COMPRA DESC
+    `, [req.user.ID_USUARIO, req.user.ID_USUARIO]);
+
+    // Calcular a porcentagem de conclusão para cada curso
+    const cursosFormatados = cursosComprados.map(curso => ({
+      ...curso,
+      PORCENTAGEM: curso.TOTAL_AULAS > 0 
+        ? Math.round((curso.AULAS_CONCLUIDAS / curso.TOTAL_AULAS) * 100) 
+        : 0
+    }));
+
+    res.render("dashboard/aluno/a-meuscursos", {
+      user: req.user,
+      title: "Meus Cursos",
+      cursos: cursosFormatados,
+      timestamp: Date.now()
+    });
+  } catch (err) {
+    console.error('Erro ao buscar cursos do aluno:', err);
+    req.flash('error', 'Erro ao carregar seus cursos');
+    res.redirect('/aluno/a-perfil');
+  }
 });
 
 router.get("/a-comprar-curso", (req, res) => {

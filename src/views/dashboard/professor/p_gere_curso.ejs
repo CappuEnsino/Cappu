@@ -120,7 +120,7 @@
           </button>
         </section>
       </section>
-      <form id="formEditarCurso" action="/professor/p_gere_curso/<%= curso.ID_CURSO %>" method="POST" enctype="multipart/form-data">
+      <form id="formEditarCurso" action="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>" method="POST" enctype="multipart/form-data">
         <section class="left">
           <h1>EDITAR CURSO</h1>
 
@@ -192,18 +192,29 @@
                     <% if (modulo.aulas && modulo.aulas.length > 0) { %>
                       <% modulo.aulas.forEach(function(aula) { %>
                         <section class="aula-item" data-aula-id="<%= aula.ID_AULA %>">
-                          <section class="aula-title"><%= aula.TITULO %></section>
-                          <section class="aula-desc"><%= aula.DESCRICAO %></section>
-                          <section class="aula-actions">
-                            <button type="button" class="btn" onclick="CursoManager.editarAula(<%= aula.ID_AULA %>)">Editar</button>
-                            <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(<%= aula.ID_AULA %>)">Excluir</button>
+                          <section class="aula-header">
+                            <section class="aula-title"><%= aula.TITULO %></section>
+                            <section class="aula-actions">
+                              <% if (aula.ARQUIVO) { %>
+                                <a href="/dashboard/professor/aula/<%= aula.ID_AULA %>/arquivo" class="btn btn-download" download>Download</a>
+                              <% } %>
+                              <button type="button" class="btn" onclick="CursoManager.editarAula(<%= aula.ID_AULA %>)">Editar</button>
+                              <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(<%= aula.ID_AULA %>)">Excluir</button>
+                            </section>
+                          </section>
+                          <section class="aula-info">
+                            <section class="aula-desc"><%= aula.DESCRICAO %></section>
+                            <section class="aula-details">
+                              <span class="aula-duracao"><%= aula.DURACAO %></span>
+                              <span class="aula-tipo"><%= aula.TIPO_CONTEUDO === 'video' ? 'Vídeo' : 'Texto' %></span>
+                            </section>
                           </section>
                         </section>
                       <% }); %>
                     <% } else { %>
                       <p>Nenhuma aula neste módulo</p>
                     <% } %>
-                    <button type="button" class="btn" onclick="CursoManager.adicionarAula(<%= modulo.ID_MODULO %>)">Adicionar Aula</button>
+                    <button type="button" class="btn add-aula-btn" onclick="CursoManager.adicionarAula(<%= modulo.ID_MODULO %>)">Adicionar Aula</button>
                   </section>
                 </section>
               <% }); %>
