@@ -85,24 +85,42 @@ document.addEventListener('DOMContentLoaded', function() {
     if (botaoFinalizar) {
         botaoFinalizar.addEventListener('click', async function() {
             try {
-                const response = await fetch('/aluno/api/carrinho/finalizar', {
+                // Desabilitar o botão e mostrar loading
+                this.disabled = true;
+                this.innerHTML = 'Processando...';
+                
+                // Primeiro, criar o pagamento no Mercado Pago
+                const response = await fetch('/aluno/api/carrinho/criar-pagamento', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    alert('Compra finalizada com sucesso!');
-                    window.location.href = '/aluno/a-meuscursos';
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        // Se não estiver autenticado, redirecionar para o login
+                        window.location.href = '/auth/cl-login';
+                        return;
+                    }
+                    throw new Error(data.message || 'Erro ao criar pagamento');
+                }
+
+                if (data.init_point) {
+                    // Redirecionar para a página de pagamento do Mercado Pago
+                    window.location.href = data.init_point;
                 } else {
-                    throw new Error(data.message || 'Erro ao finalizar compra');
+                    throw new Error('Link de pagamento não encontrado');
                 }
             } catch (erro) {
-                console.error('Erro ao finalizar compra:', erro);
-                alert(erro.message || 'Erro ao finalizar compra');
+                console.error('Erro ao criar pagamento:', erro);
+                alert(erro.message || 'Erro ao criar pagamento');
+                // Restaurar o botão
+                this.disabled = false;
+                this.innerHTML = 'Finalizar Compra';
             }
         });
     }

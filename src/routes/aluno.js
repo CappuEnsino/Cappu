@@ -5,12 +5,25 @@ const fs = require("fs");
 const upload = require("../middleware/multer"); // Middleware para upload de arquivos
 const db = require('../config/database'); // Importação do banco de dados
 const carrinhoController = require('../controller/carrinhoController');
+const { client } = require('../config/mercadopago');
+const { Payment } = require('mercadopago');
 
 // Middleware para verificar se o usuário é aluno
 const isAluno = (req, res, next) => {
   if (req.user && (req.user.role === "aluno" || req.user.TIPO_USUARIO === "aluno")) {
     return next();
   }
+  
+  // Verificar se é uma requisição AJAX
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  if (isAjax) {
+    return res.status(401).json({
+      success: false,
+      message: 'Acesso negado. Faça login como aluno.'
+    });
+  }
+  
   req.flash('error', 'Acesso negado. Faça login como aluno.');
   res.redirect("/auth/cl-login");
 };
@@ -861,5 +874,139 @@ router.get('/api/carrinho/contador', carrinhoController.getContadorCarrinho);
 router.get('/carrinho', carrinhoController.getCarrinho);
 router.post('/api/carrinho/remover', carrinhoController.removerDoCarrinho);
 router.post('/api/carrinho/finalizar', carrinhoController.finalizarCompra);
+router.post('/api/carrinho/criar-pagamento', carrinhoController.criarPagamento);
+
+// Rotas de pagamento
+router.get('/pagamento/sucesso', async (req, res) => {
+    try {
+        const { payment_id, status, external_reference } = req.query;
+        
+        if (status === 'approved') {
+            // Atualizar o status da compra e adicionar o ID do pagamento
+            await db.query(
+                'UPDATE COMPRA SET STATUS = 1, ID_PAGAMENTO = ? WHERE ID_COMPRA = ?',
+                [payment_id, external_reference]
+            );
+
+            // Buscar os cursos da compra
+            const [cursosCompra] = await db.query(
+                'SELECT ID_CURSO FROM CURSOS_COMPRA WHERE ID_COMPRA = ?',
+                [external_reference]
+            );
+
+            // Adicionar os cursos à compra
+            for (const curso of cursosCompra) {
+                await db.query(
+                    'INSERT INTO CURSOS_COMPRA (ID_COMPRA, ID_CURSO) VALUES (?, ?)',
+                    [external_reference, curso.ID_CURSO]
+                );
+            }
+
+            // Limpar o carrinho
+            await db.query(
+                'DELETE FROM CARRINHO WHERE ID_USUARIO = ?',
+                [req.user.ID_USUARIO]
+            );
+        }
+
+        req.flash('success', 'Pagamento realizado com sucesso!');
+        res.redirect('/aluno/a-meuscursos');
+    } catch (err) {
+        console.error('Erro ao processar pagamento:', err);
+        req.flash('error', 'Erro ao processar pagamento');
+        res.redirect('/aluno/a-carrinho');
+    }
+});
+
+router.get('/pagamento/falha', async (req, res) => {
+    try {
+        const { external_reference } = req.query;
+        
+        // Atualizar o status da compra para falha
+        await db.query(
+            'UPDATE COMPRA SET STATUS = 2 WHERE ID_COMPRA = ?',
+            [external_reference]
+        );
+
+        req.flash('error', 'O pagamento não foi aprovado. Por favor, tente novamente.');
+        res.redirect('/aluno/a-carrinho');
+    } catch (err) {
+        console.error('Erro ao processar falha de pagamento:', err);
+        req.flash('error', 'Erro ao processar pagamento');
+        res.redirect('/aluno/a-carrinho');
+    }
+});
+
+router.get('/pagamento/pendente', async (req, res) => {
+    try {
+        const { external_reference } = req.query;
+        
+        // Atualizar o status da compra para pendente
+        await db.query(
+            'UPDATE COMPRA SET STATUS = 3 WHERE ID_COMPRA = ?',
+            [external_reference]
+        );
+
+        req.flash('info', 'Seu pagamento está sendo processado. Você receberá uma confirmação em breve.');
+        res.redirect('/aluno/a-meuscursos');
+    } catch (err) {
+        console.error('Erro ao processar pagamento pendente:', err);
+        req.flash('error', 'Erro ao processar pagamento');
+        res.redirect('/aluno/a-carrinho');
+    }
+});
+
+// Webhook do Mercado Pago
+router.post('/webhook/mercadopago', async (req, res) => {
+    try {
+        const { action, data } = req.body;
+
+        if (action === 'payment.updated' || action === 'payment.approved') {
+            const payment = new Payment(client);
+            const paymentData = await payment.get({ id: data.id });
+            const { external_reference, status } = paymentData;
+
+            if (status === 'approved') {
+                // Atualizar o status da compra
+                await db.query(
+                    'UPDATE COMPRA SET STATUS = 1, ID_PAGAMENTO = ? WHERE ID_COMPRA = ?',
+                    [data.id, external_reference]
+                );
+
+                // Buscar os cursos da compra
+                const [cursosCompra] = await db.query(
+                    'SELECT ID_CURSO FROM CURSOS_COMPRA WHERE ID_COMPRA = ?',
+                    [external_reference]
+                );
+
+                // Adicionar os cursos à compra
+                for (const curso of cursosCompra) {
+                    await db.query(
+                        'INSERT INTO CURSOS_COMPRA (ID_COMPRA, ID_CURSO) VALUES (?, ?)',
+                        [external_reference, curso.ID_CURSO]
+                    );
+                }
+
+                // Limpar o carrinho
+                const [compra] = await db.query(
+                    'SELECT ID_USUARIO FROM COMPRA WHERE ID_COMPRA = ?',
+                    [external_reference]
+                );
+
+                if (compra && compra.length > 0) {
+                    await db.query(
+                        'DELETE FROM CARRINHO WHERE ID_USUARIO = ?',
+                        [compra[0].ID_USUARIO]
+                    );
+                }
+            }
+        }
+
+        res.status(200).send('OK');
+    } catch (err) {
+        console.error('Erro no webhook:', err);
+        res.status(500).send('Erro ao processar webhook');
+    }
+});
 
 module.exports = router;

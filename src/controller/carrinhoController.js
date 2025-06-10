@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const { preference } = require('../config/mercadopago');
 
 const carrinhoController = {
     adicionarAoCarrinho: async (req, res) => {
@@ -267,6 +268,119 @@ const carrinhoController = {
             res.status(500).json({
                 success: false,
                 message: 'Erro ao finalizar compra'
+            });
+        }
+    },
+
+    criarPagamento: async (req, res) => {
+        if (!req.user || !req.user.ID_USUARIO) {
+            console.log('Erro de autenticação:', { user: req.user });
+            return res.status(401).json({
+                success: false,
+                message: 'Usuário não autenticado'
+            });
+        }
+
+        const userId = req.user.ID_USUARIO;
+        console.log('Iniciando criação de pagamento para usuário:', userId);
+
+        try {
+            // Buscar itens do carrinho
+            console.log('Buscando itens do carrinho...');
+            const [itensCarrinho] = await db.query(`
+                SELECT c.*, cur.PRECO, cur.TITULO 
+                FROM CARRINHO c
+                JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO
+                WHERE c.ID_USUARIO = ?
+            `, [userId]);
+
+            console.log('Itens do carrinho encontrados:', itensCarrinho);
+
+            if (!itensCarrinho || itensCarrinho.length === 0) {
+                console.log('Carrinho vazio para usuário:', userId);
+                return res.status(400).json({
+                    success: false,
+                    message: 'Carrinho vazio'
+                });
+            }
+
+            // Calcular valor total
+            const valorTotal = itensCarrinho.reduce((total, item) => total + parseFloat(item.PRECO), 0);
+            console.log('Valor total calculado:', valorTotal);
+
+            // Criar registro de compra pendente
+            console.log('Criando registro de compra pendente...');
+            const [resultCompra] = await db.query(
+                'INSERT INTO COMPRA (ID_USUARIO, FORMA_PAGAMENTO, DATA_COMPRA, STATUS, VALOR) VALUES (?, ?, NOW(), 0, ?)',
+                [userId, 'MERCADO_PAGO', valorTotal]
+            );
+
+            const compraId = resultCompra.insertId;
+            console.log('Compra pendente criada com ID:', compraId);
+
+            // Criar preferência de pagamento
+            console.log('Criando preferência de pagamento...');
+            const preferenceData = {
+                items: itensCarrinho.map(item => ({
+                    title: item.TITULO,
+                    unit_price: parseFloat(item.PRECO),
+                    quantity: 1,
+                    currency_id: 'BRL'
+                })),
+                back_urls: {
+                    success: `${process.env.BASE_URL}/aluno/pagamento/sucesso`,
+                    failure: `${process.env.BASE_URL}/aluno/pagamento/falha`,
+                    pending: `${process.env.BASE_URL}/aluno/pagamento/pendente`
+                },
+                auto_return: 'approved',
+                external_reference: compraId.toString(),
+                notification_url: `${process.env.BASE_URL}/aluno/webhook/mercadopago`
+            };
+
+            console.log('Dados da preferência:', preferenceData);
+
+            try {
+                const response = await preference.create({ body: preferenceData });
+                console.log('Resposta do Mercado Pago:', response);
+
+                // Retornar o link de pagamento
+                res.json({
+                    success: true,
+                    init_point: response.init_point
+                });
+            } catch (mpError) {
+                console.error('Erro específico do Mercado Pago:', {
+                    error: mpError,
+                    message: mpError.message,
+                    response: mpError.response?.data
+                });
+                throw mpError;
+            }
+
+        } catch (err) {
+            console.error('Erro detalhado ao criar pagamento:', {
+                error: err,
+                message: err.message,
+                stack: err.stack,
+                response: err.response?.data
+            });
+            
+            // Se houver uma compra pendente, marcar como falha
+            if (compraId) {
+                try {
+                    await db.query(
+                        'UPDATE COMPRA SET STATUS = 2 WHERE ID_COMPRA = ?',
+                        [compraId]
+                    );
+                } catch (updateError) {
+                    console.error('Erro ao atualizar status da compra:', updateError);
+                }
+            }
+
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao criar pagamento: ' + (err.message || 'Erro desconhecido')
+                message: 'Erro ao criar pagamento'
             });
         }
     }

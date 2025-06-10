@@ -1,4 +1,6 @@
-const env = require("dotenv").config();
+// Carregar variáveis de ambiente primeiro
+require('dotenv').config();
+
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
