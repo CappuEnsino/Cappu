@@ -5,20 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cappuensino - <%= curso.TITULO %></title>
     <link rel="stylesheet" href="/css/c-log.css" />
-    <link rel="stylesheet" href="/css/footer.css" />
+    <link rel="stylesheet" href="/css/header2.css" />
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <header class="header">
+    <header>
       <button onclick="history.back()" class="back-button">
-        <img src="/images/voltar.svg" alt="Voltar" />
+        <img src="../images/voltar.svg" alt="" />
       </button>
+      <p>Descrição do Curso</p>
       <section>
-        <img
-          src="/images/Logo (370 x 65 px).png"
-          alt="Logo Cappuensino"
-          class="logo"
-        />
+        <% if (user) { %>
+          <p><%= user.NOME_USU || 'Aluno' %></p>
+          <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+              <img id="header-profile-img" src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp || Date.now() %>" alt="imagem do perfil"
+              style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
+              onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
+              <section class="user-config" id="userConfig">
+                  <h2><%= user.NOME_USU || 'Aluno' %></h2>
+                  <ul>
+                      <li><a href="/aluno/a-perfil">MENU</a></li>
+                      <li><a href="/aluno/a-config">CONFIGURAÇÕES</a></li>
+                      <li><a href="/aluno/logout">SAIR</a></li>
+                  </ul>
+              </section>
+          </button>
+        <% } else { %>
+          <p>Aluno</p>
+          <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
+              <img id="header-profile-img" src="/images/perfil.svg" alt="imagem do perfil"
+              style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"/>
+              <section class="user-config" id="userConfig">
+                  <h2>Aluno</h2>
+                  <ul>
+                      <li><a href="/login">LOGIN</a></li>
+                  </ul>
+              </section>
+          </button>
+        <% } %>
       </section>
     </header>
 
@@ -88,7 +112,6 @@
         </section>
       </section>
     </main>
-
-    <%- include('../partials/footer') %>
+    <script src="/js/icon-menu.js"></script>
   </body>
 </html>

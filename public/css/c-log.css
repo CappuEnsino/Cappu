@@ -1,210 +1,256 @@
 @import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+:root {
+  --primary-color: #684A43;
+  --secondary-color: #664d3b;
+  --background-light: #fdfbf9;
+  --text-primary: #333;
+  --text-secondary: #666;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Fira Sans", sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Header */
 .header {
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    position: relative;
-    box-shadow: 0 4px 6px grey;
-    background-color: #fff;
-    width: 100%;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 100%;
+  z-index: 1000;
 }
 
 .back-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #664d3b;
-    font-size: 1.5rem;
-    padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
 }
 
 .logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #664d3b;
-    font-weight: bold;
-    font-size: 1.2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
-body {
-    font-family: "Fira Sans", sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #fdfbf9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
+/* Main Content */
 main {
-    display: flex;
-    flex-direction: row;
-    max-width: 1400px;
-    width: 95%;
-    margin: 40px auto;
-    gap: 80px;
-    justify-content: space-between;
-    padding: 20px;
+  display: flex;
+  flex-direction: row;
+  max-width: 1400px;
+  width: 95%;
+  margin: 100px auto 40px;
+  gap: 2rem;
+  justify-content: space-between;
+  padding: 1rem;
 }
 
+/* Left Section */
 .esquerda {
-    flex: 5;
-    text-align: left;
-    max-width: 55%;
-    padding: 30px;
+  flex: 5;
+  text-align: left;
+  max-width: 55%;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* Right Section */
 .direita {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 45%;
-    padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 45%;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* Typography */
 h1 {
-    font-size: 64px;
-    font-family: "Fira Sans", sans-serif;
-    color: #684A43;
-    margin-bottom: 20px;
-    word-break: keep-all;
-    white-space: nowrap;
+  font-size: 2.5rem;
+  font-family: "Fira Sans", sans-serif;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 h2 {
-    font-size: 24px;
-    font-family: "Fira Sans", sans-serif;
-    color: #684A43;
-    margin-bottom: 5px;
-    font-style: italic;
-    font-weight: 400;
+  font-size: 1.25rem;
+  font-family: "Fira Sans", sans-serif;
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+  font-style: italic;
+  font-weight: 400;
 }
 
 h3 {
-    font-size: 32px;
-    font-family: "Fira Sans", sans-serif;
-    color: #684A43;
-    margin-bottom: 15px;
-    text-align: center;
-    margin-top: 80px;
-    margin-left: 220px;
-    font-style: italic;
-    font-weight: 700;
+  font-size: 1.2rem;
+  font-family: "Fira Sans", sans-serif;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-style: italic;
+  font-weight: 700;
+  margin-top: 2rem;
 }
 
+/* Paragraphs */
 p.curso {
-    font-size: 20px;
-    margin-top: 55px;
-    opacity: 80%;
-    font-family: 'Fira Sans' sans-serif;
-    font-style: normal;
-    font-weight: 300;
-    word-break: keep-all;
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  line-height: 1.6;
 }
 
 p.estrelas {
-    font-size: 48px;
-    font-family: "Fira Sans", sans-serif;
-    color: #684A43;
-    margin-bottom: 15px;
-    font-weight: 700;
-    font-style: italic;
-    margin-right: 150px;
+  font-size: 2rem;
+  font-family: "Fira Sans", sans-serif;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Reviews */
+.reviews {
+  margin-top: 3rem;
 }
 
 p.ana, p.lucas {
-    font-size: 16px;
-    font-family: "Fira Sans", sans-serif;
-    color: black; 
-    line-height: 1.6;
-    margin-top: 20px;
-    opacity: 70%; 
-    word-break: keep-all;
-    width: 100%;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-top: 1.2rem;
+  opacity: 0.9;
 }
 
 .stars {
-    color: #684A43;
-    opacity: 1;
+  color: var(--primary-color);
+  opacity: 1;
 }
 
 .nome {
-    color: #684A43; /* Marrom */
-    font-weight: bold;
-    opacity: 100%; /* Opacidade total */
+  color: var(--primary-color);
+  font-weight: bold;
+  display: block;
+  margin-top: 0.5rem;
 }
 
+/* Call-to-action buttons */
 p.aprender {
-    margin-top: 25px;
-    display: inline-block;
-    background-color: #684A43;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 20px;
-} 
+  margin-top: 1.5rem;
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 30px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+p.aprender:hover {
+  transform: translateY(-2px);
+}
 
 .matricula {
-    margin-top: 120px;
-    display: block;
-    padding: 5px 30px;
-    background-color: #684A43;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    border-radius: 30px;
-    font-family: "Fira Sans", sans-serif;
-    font-weight: 800;
-    font-style: italic;
-    margin-left: 90px
+  margin-top: 2rem;
+  display: block;
+  padding: 0.8rem 2rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  border-radius: 30px;
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  transition: all 0.3s ease;
 }
 
+.matricula:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Course Image */
 .direita img {
-    width: 400px;
-    height: 260px;
-    margin-bottom: 30px;
+  width: 50%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-p.bold{
-    font-family: "Fira Sans", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-    font-size: 24px;
-    color: #684A43;
+/* Course Info */
+p.bold {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
 }
 
 .linha-info {
   display: flex;
-  gap: 7px;
-  margin-top: 10px;
-  margin-right: 170px
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: center;
 }
 
-p.reg{
-    font-family: "Fira Sans", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 20px;
-    color: #684A43;
+p.reg {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  color: var(--text-secondary);
 }
 
-/* Responsivo para telas até 1024px */
+/* Responsive Design */
+@media (max-width: 1200px) {
+  main {
+    gap: 2rem;
+  }
+  
+  .esquerda, .direita {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 1024px) {
     main {
       flex-direction: column;
