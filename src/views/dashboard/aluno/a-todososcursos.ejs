@@ -22,7 +22,10 @@
                                     <span class="subtitulo"><%= curso.TITULO %></span>
                                     <p><span>Professor:</span> <%= curso.NOME_PROFESSOR %></p>
                                     <p><span>Descrição:</span> <%= curso.DESCRICAO %></p>
-                                    <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
+                                    <div class="botoes-container">
+                                        <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
+                                        <button class="adicionar-carrinho" data-curso-id="<%= curso.ID_CURSO %>">Adicionar ao Carrinho</button>
+                                    </div>
                                 </section>
                             </section>
                         <% }); %>
@@ -34,6 +37,6 @@
         </section>
     </main>
     <script src="/js/icon-menu.js"></script>
-
+    <script src="/js/carrinho.js"></script>
 </body>
 </html>

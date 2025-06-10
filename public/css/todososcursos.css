@@ -525,7 +525,40 @@ h1 {
   margin-left: 12rem;
 }
 
+.botoes-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
 
+.adicionar-carrinho {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.adicionar-carrinho:hover {
+  background-color: #45a049;
+}
+
+.continuar-aula {
+  padding: 8px 15px;
+  background-color: #2196F3;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.continuar-aula:hover {
+  background-color: #1976D2;
+}
 
 @media (max-width: 1600px) {
   body {
