@@ -40,14 +40,40 @@ const carrinhoController = {
             res.status(500).json({ success: false, message: 'Erro ao obter quantidade de itens no carrinho' });
         }
     },
+    limparCarrinhoInvalidos: async (userId) => {
+        try {
+            await db.query(`
+                DELETE c FROM CARRINHO c
+                LEFT JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO
+                WHERE c.ID_USUARIO = ? AND (cur.TITULO IS NULL OR cur.PRECO <= 0)
+            `, [userId]);
+        } catch (err) {
+            console.error('Erro ao limpar carrinho inválido:', err);
+        }
+    },
     getCarrinho: async (req, res) => {
         if (!req.user || !req.user.ID_USUARIO) {
             req.flash('error', 'Usuário não autenticado');
             return res.redirect('/auth/cl-login');
         }
         try {
-            const [carrinho] = await db.query('SELECT c.*, cur.TITULO, cur.PRECO, cur.IMAGEM, u.NOME_USU as NOME_PROFESSOR FROM CARRINHO c JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO JOIN USUARIO u ON cur.ID_USUARIO = u.ID_USUARIO WHERE c.ID_USUARIO = ? ORDER BY c.DATA_ADICAO DESC', [req.user.ID_USUARIO]);
-            res.render('dashboard/aluno/a-carrinho', { user: req.user, title: 'Meu Carrinho', carrinho, timestamp: Date.now() });
+            await carrinhoController.limparCarrinhoInvalidos(req.user.ID_USUARIO);
+
+            const [carrinho] = await db.query(`
+                SELECT c.*, cur.TITULO, cur.PRECO, cur.IMAGEM, u.NOME_USU as NOME_PROFESSOR 
+                FROM CARRINHO c 
+                JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO 
+                JOIN USUARIO u ON cur.ID_USUARIO = u.ID_USUARIO 
+                WHERE c.ID_USUARIO = ? AND cur.TITULO IS NOT NULL AND cur.PRECO > 0
+                ORDER BY c.DATA_ADICAO DESC`, 
+                [req.user.ID_USUARIO]
+            );
+            res.render('dashboard/aluno/a-carrinho', { 
+                user: req.user, 
+                title: 'Meu Carrinho', 
+                carrinho, 
+                timestamp: Date.now() 
+            });
         } catch (err) {
             console.error('Erro ao buscar carrinho:', err);
             req.flash('error', 'Erro ao carregar carrinho');
@@ -72,34 +98,132 @@ const carrinhoController = {
         if (!req.user || !req.user.ID_USUARIO) {
             return res.status(401).json({ success: false, message: 'Usuário não autenticado' });
         }
+
         const userId = req.user.ID_USUARIO;
         const connection = await db.getConnection();
+
         try {
             await connection.beginTransaction();
-            const [itensCarrinho] = await connection.query('SELECT c.ID_CURSO, cur.PRECO, cur.TITULO FROM CARRINHO c JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO WHERE c.ID_USUARIO = ?', [userId]);
+
+            const [itensCarrinho] = await connection.query(`
+                SELECT c.ID_CURSO, cur.PRECO, cur.TITULO, u.EMAIL, u.NOME_USU 
+                FROM CARRINHO c 
+                JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO 
+                JOIN USUARIO u ON c.ID_USUARIO = u.ID_USUARIO 
+                WHERE c.ID_USUARIO = ? AND cur.TITULO IS NOT NULL AND cur.PRECO > 0`, 
+                [userId]
+            );
+
             if (!itensCarrinho || itensCarrinho.length === 0) {
                 await connection.rollback();
-                return res.status(400).json({ success: false, message: 'Seu carrinho está vazio.' });
+                return res.status(400).json({ success: false, message: 'Seu carrinho está vazio ou contém itens inválidos.' });
             }
-            const valorTotal = itensCarrinho.reduce((total, item) => total + parseFloat(item.PRECO), 0);
-            const [resultCompra] = await connection.query('INSERT INTO COMPRA (ID_USUARIO, FORMA_PAGAMENTO, DATA_COMPRA, STATUS, VALOR) VALUES (?, ?, NOW(), 0, ?)', [userId, 'MERCADO_PAGO', valorTotal]);
+
+            const valorTotal = itensCarrinho.reduce((total, item) => {
+                const preco = parseFloat(item.PRECO) || 0;
+                return total + preco;
+            }, 0);
+
+            if (isNaN(valorTotal) || valorTotal <= 0) {
+                await connection.rollback();
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Erro ao calcular o valor total da compra.' 
+                });
+            }
+
+            const [resultCompra] = await connection.query(
+                'INSERT INTO COMPRA (ID_USUARIO, FORMA_PAGAMENTO, DATA_COMPRA, STATUS, VALOR) VALUES (?, ?, NOW(), 0, ?)',
+                [userId, 'MERCADO_PAGO', valorTotal]
+            );
+
             const compraId = resultCompra.insertId;
-            const cursosCompraValues = itensCarrinho.map(item => [compraId, item.ID_CURSO]);
-            await connection.query('INSERT INTO CURSOS_COMPRA (ID_COMPRA, ID_CURSO) VALUES ?', [cursosCompraValues]);
-            const preferenceData = {
-                items: itensCarrinho.map(item => ({ title: item.TITULO, unit_price: parseFloat(item.PRECO), quantity: 1, currency_id: 'BRL' })),
-                back_urls: { success: `${process.env.BASE_URL}/dashboard/aluno/a-meuscursos`, failure: `${process.env.BASE_URL}/dashboard/aluno/carrinho`, pending: `${process.env.BASE_URL}/dashboard/aluno/a-meuscursos` },
-                external_reference: compraId.toString(),
-                notification_url: `${process.env.BASE_URL}/aluno/webhook/mercadopago?source_news=webhooks`,
-                payer: { email: `test_user_${Math.floor(Math.random() * 1000000)}@testuser.com` }
+
+            const items = itensCarrinho
+                .filter(item => item.TITULO && item.PRECO > 0)
+                .map(item => ({
+                    id: item.ID_CURSO.toString(),
+                    title: item.TITULO,
+                    unit_price: parseFloat(item.PRECO),
+                    quantity: 1,
+                    currency_id: 'BRL',
+                    description: `Curso: ${item.TITULO}`
+                }));
+
+            if (items.length === 0) {
+                await connection.rollback();
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Não foi possível processar os itens do carrinho.' 
+                });
+            }
+
+            const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+            const urls = {
+                success: new URL('/aluno/pagamento/sucesso', baseUrl).toString(),
+                failure: new URL('/aluno/pagamento/falha', baseUrl).toString(),
+                pending: new URL('/aluno/pagamento/pendente', baseUrl).toString(),
+                notification: new URL('/aluno/webhook/mercadopago', baseUrl).toString()
             };
-            const response = await preference.create({ body: preferenceData });
-            await connection.commit();
-            res.json({ success: true, init_point: response.init_point });
+
+            const preferenceData = {
+                items: items,
+                payer: {
+                    name: itensCarrinho[0].NOME_USU,
+                    email: itensCarrinho[0].EMAIL
+                },
+                back_urls: {
+                    success: urls.success,
+                    failure: urls.failure,
+                    pending: urls.pending
+                },
+                external_reference: compraId.toString(),
+                notification_url: urls.notification,
+                payment_methods: {
+                    excluded_payment_types: [],
+                    installments: 12,
+                    default_installments: 1
+                },
+                statement_descriptor: 'CAPPU ENSINO',
+                expires: true,
+                expiration_date_from: new Date().toISOString(),
+                expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+            };
+
+            console.log('Preference Data:', JSON.stringify(preferenceData, null, 2));
+
+            try {
+                const response = await preference.create({ body: preferenceData });
+                console.log('Mercado Pago Response:', JSON.stringify(response, null, 2));
+                
+                const cursosCompraValues = itensCarrinho.map(item => [compraId, item.ID_CURSO]);
+                await connection.query(
+                    'INSERT INTO CURSOS_COMPRA (ID_COMPRA, ID_CURSO) VALUES ?',
+                    [cursosCompraValues]
+                );
+
+                await connection.commit();
+
+                res.json({
+                    success: true,
+                    init_point: response.init_point,
+                    sandbox_init_point: response.sandbox_init_point,
+                    preference_id: response.id
+                });
+            } catch (mpError) {
+                console.error('Erro detalhado do Mercado Pago:', mpError);
+                await connection.rollback();
+                throw mpError;
+            }
+
         } catch (err) {
             await connection.rollback();
-            console.error('Erro detalhado ao criar pagamento:', err);
-            res.status(500).json({ success: false, message: 'Erro ao criar o link de pagamento. Tente novamente.', error: err.message });
+            console.error('Erro ao criar pagamento:', err);
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao criar pagamento',
+                error: err.message
+            });
         } finally {
             connection.release();
         }

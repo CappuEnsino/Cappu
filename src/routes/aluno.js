@@ -921,7 +921,6 @@ router.get('/api/carrinho/contador', carrinhoController.getContadorCarrinho);
 // Rotas do carrinho
 router.get('/carrinho', carrinhoController.getCarrinho);
 router.post('/api/carrinho/remover', carrinhoController.removerDoCarrinho);
-router.post('/api/carrinho/finalizar', carrinhoController.finalizarCompra);
 router.post('/api/carrinho/criar-pagamento', carrinhoController.criarPagamento);
 
 // Rotas de pagamento

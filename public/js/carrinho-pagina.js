@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const botoesRemover = document.querySelectorAll('.remover-curso');
-    const botaoFinalizar = document.getElementById('finalizarCompra');
     const contadorCarrinho = document.getElementById('carrinhoContador');
+    const walletContainer = document.getElementById('wallet_container');
 
     // Função para atualizar o contador do carrinho
     async function atualizarContadorCarrinho() {
@@ -23,35 +23,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('/aluno/api/carrinho/remover', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ cursoId })
             });
 
             const data = await response.json();
-
-            if (response.ok) {
-                // Remover o elemento do DOM
-                const cursoItem = document.querySelector(`[data-curso-id="${cursoId}"]`).closest('.curso-item');
-                cursoItem.remove();
-
-                // Atualizar o contador
-                await atualizarContadorCarrinho();
-
-                // Se não houver mais itens, recarregar a página para mostrar o carrinho vazio
-                const itensRestantes = document.querySelectorAll('.curso-item');
-                if (itensRestantes.length === 0) {
-                    window.location.reload();
-                }
-
-                // Atualizar o subtotal
-                atualizarSubtotal();
+            if (data.success) {
+                window.location.reload();
             } else {
-                throw new Error(data.message || 'Erro ao remover curso do carrinho');
+                alert(data.message || 'Erro ao remover item do carrinho');
             }
         } catch (erro) {
             console.error('Erro ao remover do carrinho:', erro);
-            alert(erro.message || 'Erro ao remover curso do carrinho');
+            alert('Erro ao remover item do carrinho');
         }
     }
 
@@ -81,20 +66,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Adicionar evento ao botão de finalizar compra
-    if (botaoFinalizar) {
-        botaoFinalizar.addEventListener('click', async function() {
+    // Inicializar o Checkout Pro se houver itens no carrinho
+    if (walletContainer && botoesRemover.length > 0) {
+        async function inicializarCheckoutPro() {
             try {
-                // Desabilitar o botão e mostrar loading
-                this.disabled = true;
-                this.innerHTML = 'Processando...';
-                
-                // Primeiro, criar o pagamento no Mercado Pago
+                // Mostrar loading
+                walletContainer.innerHTML = `
+                    <button class="btn-checkout" style="
+                        width: 100%;
+                        padding: 12px;
+                        background-color: #009ee3;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                    " disabled>
+                        <span class="loading-spinner" style="
+                            width: 20px;
+                            height: 20px;
+                            border: 2px solid #ffffff;
+                            border-radius: 50%;
+                            border-top-color: transparent;
+                            animation: spin 1s linear infinite;
+                        "></span>
+                        Processando...
+                    </button>
+                    <style>
+                        @keyframes spin {
+                            to { transform: rotate(360deg); }
+                        }
+                    </style>
+                `;
+
                 const response = await fetch('/aluno/api/carrinho/criar-pagamento', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'Content-Type': 'application/json'
                     }
                 });
 
@@ -102,26 +114,90 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        // Se não estiver autenticado, redirecionar para o login
                         window.location.href = '/auth/cl-login';
                         return;
                     }
                     throw new Error(data.message || 'Erro ao criar pagamento');
                 }
 
-                if (data.init_point) {
-                    // Redirecionar para a página de pagamento do Mercado Pago
-                    window.location.href = data.init_point;
+                if (data.preference_id) {
+                    // Criar botão de checkout
+                    walletContainer.innerHTML = `
+                        <button class="btn-checkout" onclick="window.location.href='${data.sandbox_init_point}'" style="
+                            width: 100%;
+                            padding: 12px;
+                            background-color: #009ee3;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                            transition: background-color 0.2s;
+                        ">
+                            <img src="https://http2.mlstatic.com/frontend-assets/mp-branding/assets/img/logo-mp.svg" 
+                                 alt="Mercado Pago" 
+                                 style="height: 24px;">
+                            Pagar com Mercado Pago
+                        </button>
+                        <style>
+                            .btn-checkout:hover {
+                                background-color: #007eb5;
+                            }
+                        </style>
+                    `;
                 } else {
-                    throw new Error('Link de pagamento não encontrado');
+                    throw new Error('ID da preferência não encontrado');
                 }
             } catch (erro) {
-                console.error('Erro ao criar pagamento:', erro);
-                alert(erro.message || 'Erro ao criar pagamento');
-                // Restaurar o botão
-                this.disabled = false;
-                this.innerHTML = 'Finalizar Compra';
+                console.error('Erro ao inicializar checkout:', erro);
+                let mensagemErro = 'Erro ao carregar o checkout. ';
+                
+                if (erro.message) {
+                    if (erro.message.includes('auto_return')) {
+                        mensagemErro += 'Erro de configuração do Mercado Pago. Por favor, contate o suporte.';
+                    } else if (erro.message.includes('401')) {
+                        mensagemErro += 'Sua sessão expirou. Por favor, faça login novamente.';
+                        setTimeout(() => window.location.href = '/auth/cl-login', 2000);
+                    } else if (erro.message.includes('carrinho está vazio')) {
+                        mensagemErro = 'Seu carrinho está vazio. Adicione cursos para continuar.';
+                    } else if (erro.message.includes('valor total')) {
+                        mensagemErro = 'Erro ao calcular o valor da compra. Por favor, tente novamente.';
+                    } else {
+                        mensagemErro += erro.message;
+                    }
+                }
+                
+                walletContainer.innerHTML = `
+                    <section class="erro-checkout" style="
+                        color: #dc3545;
+                        padding: 15px;
+                        text-align: center;
+                        border: 1px solid #dc3545;
+                        border-radius: 4px;
+                        margin: 10px 0;
+                        background-color: #fff;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    ">
+                        <p style="margin: 0 0 10px 0;">${mensagemErro}</p>
+                        <button onclick="window.location.reload()" style="
+                            background-color: #dc3545;
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                        ">
+                            Tentar Novamente
+                        </button>
+                    </section>
+                `;
             }
-        });
+        }
+
+        inicializarCheckoutPro();
     }
 }); 

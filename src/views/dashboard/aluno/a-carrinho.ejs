@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/header2.css">
     <link rel="stylesheet" href="/css/carrinho.css">
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <!-- SDK MercadoPago.js -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
 <body>
     <%- include('../../pages/partials/header') %>
@@ -56,9 +58,8 @@
                             <span>Subtotal:</span>
                             <span>R$ <%= total.toFixed(2) %></span>
                         </section>
-                        <button class="finalizar-compra" id="finalizarCompra">
-                            Finalizar Compra
-                        </button>
+                        <!-- Container para o botão do checkout pro -->
+                        <section id="wallet_container"></section>
                         <a href="/aluno/a-todososcursos" class="continuar-comprando">
                             Continuar Comprando
                         </a>
