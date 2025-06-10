@@ -60,7 +60,7 @@
         <section class="topic">
           <h2>NOME</h2>
           <h2>CATEGORIA</h2>
-          <h2>AVALIAÇÃO</h2>
+          <h2><!-- AVALIAÇÃO --></h2>
         </section>
   
         <% if (cursos && cursos.length > 0) { %>
@@ -70,7 +70,7 @@
                 <p><%= curso.TITULO %></p>
                 <section class="download-section">
                   <span><%= curso.CATEGORIA || '-' %></span>
-                  <span class="avaliacao"><%= curso.AVALIACAO || '-' %></span>
+                  <!-- <span class="avaliacao"><%= curso.AVALIACAO || '-' %></span> -->
                   <a href="/dashboard/professor/p_gere_curso/<%= curso.ID_CURSO %>" title="Editar">
                     <button type="button" class="btn-editar">Editar</button>
                   </a>

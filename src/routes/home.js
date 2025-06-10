@@ -164,7 +164,8 @@ router.get("/curso/:id", async (req, res) => {
       curso: cursoFormatado,
       modulos,
       cursoComprado,
-      user: req.user
+      user: req.user,
+      timestamp: Date.now()
     });
   } catch (error) {
     console.error('Erro detalhado ao carregar curso:', error);

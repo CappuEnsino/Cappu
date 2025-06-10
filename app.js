@@ -12,6 +12,7 @@ const app = express();
 
 // Configuração do banco com mysql2
 const db = require("./src/config/database");
+const closeIdleConnections = require("./src/middleware/database");
 
 // Inicializa estratégias do Passport
 require("./src/controller/passport");
@@ -26,6 +27,7 @@ app.use(express.static("./public"));
 // ======================
 // Middlewares
 // ======================
+app.use(closeIdleConnections);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

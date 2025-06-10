@@ -60,7 +60,7 @@ main {
   font-family: Fira Sans;
   font-weight: 400;
   font-style: italic;
-  font-size: 1.5rem;
+  font-size: 1rem;
   line-height: 7.2px;
   letter-spacing: 0%;
   color: #000000;
@@ -68,6 +68,33 @@ main {
   align-items: center;
   justify-content: space-between;
   width: 55%;
+}
+
+.btn-editar {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  font-family: Fira Sans;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border-radius: 5em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-editar:hover {
+  background-color: black;
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+  color: white;
+}
+
+.btn-editar:active {
+  transform: scale(0.9);
+  transition: transform 0.3s ease-in-out;
 }
 
 .cursos p {
