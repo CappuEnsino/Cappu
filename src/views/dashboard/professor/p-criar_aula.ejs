@@ -10,8 +10,7 @@
   </head>
   <body>
     <header>
-
-      <a href="/p-modulo"><img src="/images/voltar.svg" alt=""></a>
+      <a href="/dashboard/professor/p-modulo"><img src="/images/voltar.svg" alt="Voltar"></a>
       <p>CRIAR AULA</p>
       <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
@@ -22,9 +21,9 @@
             <section class="user-config" id="userConfig">
               <h2><%= user.NOME_USU || 'Professor' %></h2>
                 <ul>
-                    <li><a href="/professor/p-professor">MENU</a></li>
-                    <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
-                    <li><a href="/professor/logout">SAIR</a></li>
+                    <li><a href="/dashboard/professor/p-professor">MENU</a></li>
+                    <li><a href="/dashboard/professor/p-config">CONFIGURAÇÕES</a></li>
+                    <li><a href="/dashboard/professor/logout">SAIR</a></li>
                 </ul>
             </section>
         </button>
@@ -32,62 +31,44 @@
     </header>
 
     <section class="container">
-      <form
-        action="/dashboard/professor/p-criar_aula"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-        <input type="hidden" name="modulo_id" value="<%= moduloId %>" />
+      <form action="/dashboard/professor/p-criar_aula" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="modulo_id" value="<%= modulo ? modulo.ID_MODULO : '' %>" />
 
         <section class="left">
           <h1>DETALHES DA AULA</h1>
 
           <% if (typeof error !== 'undefined' && error) { %>
-          <section class="alert alert-danger">
-            <%= typeof error === 'string' ? error : 'Ocorreu um erro ao
-            processar a aula' %>
-          </section>
+            <section class="alert alert-danger">
+              <%= typeof error === 'string' ? error : 'Ocorreu um erro ao processar a aula' %>
+            </section>
           <% } %>
 
           <section class="form-group">
             <label for="titulo">TÍTULO DA AULA *</label>
-            <input
-              type="text"
-              id="titulo"
-              name="titulo"
-              class="form-control"
-              value="<%= typeof aula !== 'undefined' ? aula.TITULO : '' %>"
-              required
-              placeholder="Digite o título da aula"
-            />
+            <input type="text" id="titulo" name="titulo" class="form-control" 
+                   value="<%= typeof aula !== 'undefined' ? aula.TITULO : '' %>"
+                   required placeholder="Digite o título da aula" />
           </section>
 
           <section class="form-group">
             <label for="descricao">DESCRIÇÃO</label>
-            <textarea
-              id="descricao"
-              name="descricao"
-              class="form-control"
-              rows="4"
-              placeholder="Descreva o conteúdo desta aula"
-            >
-<%= typeof aula !== 'undefined' ? aula.DESCRICAO : '' %></textarea
-            >
+            <textarea id="descricao" name="descricao" class="form-control" rows="4" 
+                      placeholder="Descreva o conteúdo desta aula"><%= typeof aula !== 'undefined' ? aula.DESCRICAO : '' %></textarea>
           </section>
 
           <section class="form-group">
             <label>TIPO DE CONTEÚDO</label>
             <section class="radio-group">
               <label class="radio-label">
-                <input type="radio" name="tipo_conteudo" value="video" <%=
-                (typeof aula === 'undefined' || aula.TIPO_CONTEUDO === 'video')
-                ? 'checked' : '' %> onchange="toggleVideoFields()" >
+                <input type="radio" name="tipo_conteudo" value="video" 
+                       <%= (typeof aula === 'undefined' || aula.TIPO_CONTEUDO === 'video') ? 'checked' : '' %> 
+                       onchange="toggleVideoFields()" />
                 <span>Vídeo</span>
               </label>
               <label class="radio-label">
-                <input type="radio" name="tipo_conteudo" value="texto" <%=
-                (typeof aula !== 'undefined' && aula.TIPO_CONTEUDO === 'texto')
-                ? 'checked' : '' %> onchange="toggleVideoFields()" >
+                <input type="radio" name="tipo_conteudo" value="texto" 
+                       <%= (typeof aula !== 'undefined' && aula.TIPO_CONTEUDO === 'texto') ? 'checked' : '' %> 
+                       onchange="toggleVideoFields()" />
                 <span>Texto</span>
               </label>
             </section>
@@ -95,88 +76,61 @@
 
           <section class="form-group" id="videoUrlGroup">
             <label for="video_url">URL DO VÍDEO (Youtube/Vimeo)</label>
-            <input
-              type="url"
-              id="video_url"
-              name="video_url"
-              class="form-control"
-              value="<%= typeof aula !== 'undefined' ? aula.VIDEO_URL : '' %>"
-              placeholder="https://www.youtube.com/watch?v=..."
-            />
-            <small class="form-text text-muted">
-              Insira a URL completa do vídeo (Youtube ou Vimeo)
-            </small>
+            <input type="url" id="video_url" name="video_url" class="form-control"
+                   value="<%= typeof aula !== 'undefined' ? aula.VIDEO_URL : '' %>"
+                   placeholder="https://www.youtube.com/watch?v=..." />
+            <small class="form-text text-muted">Insira a URL completa do vídeo (Youtube ou Vimeo)</small>
           </section>
 
           <section class="form-group" id="videoUploadGroup">
             <label for="video_arquivo">OU ENVIE UM ARQUIVO DE VÍDEO</label>
             <section class="custom-file">
-              <input
-                type="file"
-                class="custom-file-input"
-                id="video_arquivo"
-                name="video_arquivo"
-                accept="video/*"
-              />
+              <input type="file" class="custom-file-input" id="video_arquivo" name="video_arquivo" accept="video/*" />
               <label class="custom-file-label" for="video_arquivo">
-                <%= (typeof aula !== 'undefined' && aula.ARQUIVO) ? aula.ARQUIVO
-                : 'Selecione um arquivo de vídeo' %>
+                <%= (typeof aula !== 'undefined' && aula.ARQUIVO) ? aula.ARQUIVO : 'Selecione um arquivo de vídeo' %>
               </label>
             </section>
-            <small class="form-text text-muted">
-              Formatos suportados: MP4, WebM, OGG (Máx. 500MB)
-            </small>
+            <small class="form-text text-muted">Formatos suportados: MP4, WebM, OGG (Máx. 500MB)</small>
           </section>
 
           <section class="form-group">
             <label for="duracao">DURAÇÃO (HH:MM:SS)</label>
-            <input
-              type="text"
-              id="duracao"
-              name="duracao"
-              class="form-control"
-              value="<%= typeof aula !== 'undefined' ? aula.DURACAO : '00:10:00' %>"
-              pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
-              placeholder="00:10:00"
-              required
-            />
-            <small class="form-text text-muted">
-              Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30 segundos)
-            </small>
+            <input type="text" id="duracao" name="duracao" class="form-control"
+                   value="<%= typeof aula !== 'undefined' ? aula.DURACAO : '00:10:00' %>"
+                   pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+                   placeholder="00:10:00" required />
+            <small class="form-text text-muted">Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30 segundos)</small>
           </section>
 
           <section class="form-group">
             <label for="ordem">ORDEM NO MÓDULO</label>
-            <input
-              type="number"
-              id="ordem"
-              name="ordem"
-              class="form-control"
-              min="1"
-              value="<%= typeof aula !== 'undefined' ? aula.ORDEM : (ordemAula || 1) %>"
-              required
-            />
-            <small class="form-text text-muted">
-              A ordem em que esta aula aparecerá no módulo
-            </small>
+            <input type="number" id="ordem" name="ordem" class="form-control" min="1"
+                   value="<%= typeof aula !== 'undefined' ? aula.ORDEM : 1 %>" required />
+            <small class="form-text text-muted">A ordem em que esta aula aparecerá no módulo</small>
           </section>
         </section>
 
         <section class="right">
           <h1>MATERIAIS</h1>
           <section class="materiais">
-            <section class="material">
-              <h3>material titulo</h3>
-              <p>material tipo</p>
-              <section class="acoes">
-                <a href="material url" target="_blank">
-                  <img src="/images/icon_pesquisa.png" alt="Visualizar" />
-                </a>
-                <a href="/dashboard/professor/material">
-                  <img src="/images/icon_delete.png" alt="Excluir" />
-                </a>
-              </section>
-            </section>
+            <% if (typeof materiais !== 'undefined' && materiais.length > 0) { %>
+              <% materiais.forEach(function(material) { %>
+                <section class="material">
+                  <h3><%= material.titulo %></h3>
+                  <p><%= material.tipo %></p>
+                  <section class="acoes">
+                    <a href="<%= material.url %>" target="_blank">
+                      <img src="/images/icon_pesquisa.png" alt="Visualizar" />
+                    </a>
+                    <a href="/dashboard/professor/material/delete/<%= material.id %>">
+                      <img src="/images/icon_delete.png" alt="Excluir" />
+                    </a>
+                  </section>
+                </section>
+              <% }); %>
+            <% } else { %>
+              <p>Nenhum material adicionado</p>
+            <% } %>
           </section>
           <section class="add-material">
             <a href="/dashboard/professor/material/new">
@@ -190,13 +144,10 @@
         </button>
       </form>
     </section>
-    <script src="../../js/icon-menu.js"></script>
+
     <script>
-      // Função para alternar entre campos de vídeo e texto
       function toggleVideoFields() {
-        const tipoConteudo = document.querySelector(
-          'input[name="tipo_conteudo"]:checked'
-        ).value;
+        const tipoConteudo = document.querySelector('input[name="tipo_conteudo"]:checked').value;
         const videoUrlGroup = document.getElementById("videoUrlGroup");
         const videoUploadGroup = document.getElementById("videoUploadGroup");
 
@@ -209,60 +160,42 @@
         }
       }
 
-      // Inicializar o estado dos campos
-      document.addEventListener("DOMContentLoaded", function () {
-        // Atualizar o label do arquivo selecionado
-        document
-          .getElementById("video_arquivo")
-          .addEventListener("change", function (e) {
-            const fileName = e.target.files[0]
-              ? e.target.files[0].name
-              : "Selecione um arquivo de vídeo";
-            const nextElement = e.target.nextElementSibling;
-            if (nextElement && nextElement.tagName === "LABEL") {
-              nextElement.textContent = fileName;
-            }
-          });
+      document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("video_arquivo").addEventListener("change", function(e) {
+          const fileName = e.target.files[0] ? e.target.files[0].name : "Selecione um arquivo de vídeo";
+          const nextElement = e.target.nextElementSibling;
+          if (nextElement && nextElement.tagName === "LABEL") {
+            nextElement.textContent = fileName;
+          }
+        });
 
-        // Inicializar o estado dos campos
         toggleVideoFields();
 
-        // Validar formulário antes de enviar
         const form = document.querySelector("form");
         if (form) {
-          form.addEventListener("submit", function (e) {
-            const tipoConteudo = document.querySelector(
-              'input[name="tipo_conteudo"]:checked'
-            ).value;
+          form.addEventListener("submit", function(e) {
+            const tipoConteudo = document.querySelector('input[name="tipo_conteudo"]:checked').value;
             const videoUrl = document.getElementById("video_url").value;
-            const videoArquivo =
-              document.getElementById("video_arquivo").files[0];
+            const videoArquivo = document.getElementById("video_arquivo").files[0];
 
             if (tipoConteudo === "video" && !videoUrl && !videoArquivo) {
               e.preventDefault();
-              alert(
-                "Por favor, insira uma URL de vídeo ou envie um arquivo de vídeo."
-              );
+              alert("Por favor, insira uma URL de vídeo ou envie um arquivo de vídeo.");
               return false;
             }
 
-            // Validar duração no formato HH:MM:SS
             const duracao = document.getElementById("duracao").value;
             const duracaoRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
             if (!duracaoRegex.test(duracao)) {
               e.preventDefault();
-              alert(
-                "Formato de duração inválido. Use o formato HH:MM:SS (ex: 00:15:30)"
-              );
+              alert("Formato de duração inválido. Use o formato HH:MM:SS (ex: 00:15:30)");
               return false;
             }
 
-            // Exibir indicador de carregamento
             const submitButton = form.querySelector('button[type="submit"]');
             if (submitButton) {
               submitButton.disabled = true;
-              submitButton.innerHTML =
-                'SALVANDO... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+              submitButton.innerHTML = 'SALVANDO... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
             }
 
             return true;
@@ -272,7 +205,6 @@
     </script>
 
     <style>
-      /* Estilos para os campos do formulário */
       .form-control {
         width: 100%;
         padding: 0.75rem;
@@ -393,6 +325,5 @@
     </style>
 
     <script src="/js/icon-menu.js"></script>
-    <script src="/js/aula.js"></script>
   </body>
 </html>

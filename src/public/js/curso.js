@@ -3,89 +3,85 @@ const CursoManager = {
   modulos: [],
 
   init() {
+    console.log("Inicializando CursoManager...");
     console.log("DEBUG - Dados recebidos do backend:", window.cursoModulos);
-    if (window.cursoModulos && Array.isArray(window.cursoModulos)) {
-      this.modulos = window.cursoModulos;
+
+    try {
+      if (window.cursoModulos && Array.isArray(window.cursoModulos)) {
+        this.modulos = window.cursoModulos;
+        console.log("Módulos carregados:", this.modulos);
+      } else {
+        console.warn("Nenhum módulo encontrado ou formato inválido");
+        this.modulos = [];
+      }
+
+      // Cria o modal
+      this.createModal();
+
+      // Configura o evento de submit do formulário de aula
+      const aulaForm = document.getElementById("aulaForm");
+      if (aulaForm) {
+        aulaForm.onsubmit = (e) => {
+          e.preventDefault();
+          this.saveAula();
+        };
+      }
+
+      // Configura o botão de adicionar módulo
+      const addModuloBtn = document.getElementById("addModuloBtn");
+      if (addModuloBtn) {
+        addModuloBtn.onclick = () => {
+          // Implementar lógica de adicionar módulo
+          console.log("Clique no botão de adicionar módulo");
+        };
+      }
+
+      console.log("CursoManager inicializado com sucesso");
+    } catch (error) {
+      console.error("Erro ao inicializar CursoManager:", error);
     }
-    this.createModal();
   },
 
   // Cria o modal dinamicamente
   createModal() {
+    console.log('Criando modal...');
+
     // Remove modal existente se houver
     const existingModal = document.getElementById("aulaModal");
-    if (existingModal) existingModal.remove();
+    if (existingModal) {
+      console.log('Modal existente encontrado, removendo...');
+      existingModal.remove();
+    }
 
     // Cria o modal
     const modal = document.createElement("section");
     modal.id = "aulaModal";
     modal.className = "modal";
-    modal.style.cssText = `
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 1000;
-    `;
 
     // Conteúdo do modal
     modal.innerHTML = `
-      <section class="modal-content" style="
-        background-color: #fff;
-        margin: 10% auto;
-        padding: 20px;
-        width: 80%;
-        max-width: 600px;
-        border-radius: 8px;
-        position: relative;
-      ">
-        <span class="close-button" style="
-          position: absolute;
-          right: 10px;
-          top: 10px;
-          font-size: 24px;
-          cursor: pointer;
-          color: #666;
-        ">&times;</span>
+      <section class="modal-content">
+        <button type="button" class="close-button" aria-label="Fechar">&times;</button>
         
         <h2 id="modalTitle" style="margin-bottom: 20px;">Adicionar Aula</h2>
         
-        <form id="aulaForm" style="display: flex; flex-direction: column; gap: 15px;">
+        <form id="aulaForm">
           <input type="hidden" id="moduloId" name="modulo_id">
           <input type="hidden" id="aulaId" name="aula_id">
           
           <section class="form-group">
             <label for="titulo">Título da Aula *</label>
-            <input type="text" id="titulo" name="titulo" required style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <input type="text" id="titulo" name="titulo" required>
           </section>
           
           <section class="form-group">
             <label for="descricao">Descrição *</label>
-            <textarea id="descricao" name="descricao" required style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              min-height: 100px;
-            "></textarea>
+            <textarea id="descricao" name="descricao" required></textarea>
           </section>
           
           <section class="form-group">
             <label for="tipo_conteudo">Tipo de Conteúdo</label>
-            <select id="tipo_conteudo" name="tipo_conteudo" onchange="CursoManager.toggleVideoFields()" style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <select id="tipo_conteudo" name="tipo_conteudo" onchange="CursoManager.toggleVideoFields()">
               <option value="video">Vídeo</option>
               <option value="texto">Texto</option>
             </select>
@@ -93,63 +89,25 @@ const CursoManager = {
           
           <section id="videoFields" class="form-group">
             <label for="video_url">URL do Vídeo</label>
-            <input type="url" id="video_url" name="video_url" style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <input type="url" id="video_url" name="video_url">
             
             <label for="video_arquivo" style="margin-top: 10px;">Ou envie um arquivo</label>
-            <input type="file" id="video_arquivo" name="video_arquivo" accept="video/*" style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <input type="file" id="video_arquivo" name="video_arquivo" accept="video/*">
           </section>
           
           <section class="form-group">
             <label for="duracao">Duração</label>
-            <input type="time" id="duracao" name="duracao" value="00:10:00" style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <input type="time" id="duracao" name="duracao" value="00:10:00">
           </section>
           
           <section class="form-group">
             <label for="ordem">Ordem</label>
-            <input type="number" id="ordem" name="ordem" min="1" value="1" style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            ">
+            <input type="number" id="ordem" name="ordem" min="1" value="1">
           </section>
           
-          <section class="form-actions" style="
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-          ">
-            <button type="button" onclick="CursoManager.closeModal()" style="
-              padding: 8px 16px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              background: #f8f9fa;
-              cursor: pointer;
-            ">Cancelar</button>
-            <button type="submit" style="
-              padding: 8px 16px;
-              border: none;
-              border-radius: 4px;
-              background: #007bff;
-              color: white;
-              cursor: pointer;
-            ">Salvar</button>
+          <section class="form-actions">
+            <button type="button" onclick="CursoManager.closeModal()">Cancelar</button>
+            <button type="submit">Salvar</button>
           </section>
         </form>
       </section>
@@ -157,39 +115,55 @@ const CursoManager = {
 
     // Adiciona o modal ao body
     document.body.appendChild(modal);
+    console.log('Modal criado e adicionado ao DOM');
 
-    // Adiciona eventos
-    const closeBtn = modal.querySelector(".close-button");
-    closeBtn.onclick = () => this.closeModal();
+    // Configura o evento de fechar
+    const closeButton = modal.querySelector(".close-button");
+    closeButton.onclick = () => this.closeModal();
 
-    const form = modal.querySelector("#aulaForm");
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      this.saveAula();
-    };
-
-    // Fecha o modal ao clicar fora
+    // Configura o evento de fechar ao clicar fora do modal
     modal.onclick = (e) => {
-      if (e.target === modal) this.closeModal();
+      if (e.target === modal) {
+        this.closeModal();
+      }
     };
+
+    console.log('Eventos do modal configurados');
   },
 
   // Abre o modal para adicionar/editar aula
   adicionarAula(moduloId, aulaId = null) {
+    console.log('Iniciando adicionarAula:', { moduloId, aulaId });
+
     const modal = document.getElementById("aulaModal");
     const form = document.getElementById("aulaForm");
     const title = document.getElementById("modalTitle");
 
+    if (!modal || !form || !title) {
+      console.error('Elementos do modal não encontrados:', { modal, form, title });
+      return;
+    }
+
+    console.log('Elementos do modal encontrados');
+
     // Limpa o formulário
     form.reset();
+    console.log('Formulário resetado');
 
     // Define o ID do módulo
-    document.getElementById("moduloId").value = moduloId;
+    const moduloIdInput = document.getElementById("moduloId");
+    if (!moduloIdInput) {
+      console.error('Input moduloId não encontrado');
+      return;
+    }
+    moduloIdInput.value = moduloId;
+    console.log('ID do módulo definido:', moduloId);
 
     if (aulaId) {
       // Modo edição
       title.textContent = "Editar Aula";
       document.getElementById("aulaId").value = aulaId;
+      console.log('Modo edição - buscando dados da aula:', aulaId);
 
       // Busca os dados da aula
       fetch(`/dashboard/professor/aula/${aulaId}`)
@@ -197,24 +171,26 @@ const CursoManager = {
         .then((aula) => {
           if (aula.success) {
             const data = aula.data;
+            console.log('Dados da aula recebidos:', data);
             form.titulo.value = data.TITULO || data.titulo || "";
             form.descricao.value = data.DESCRICAO || data.descricao || "";
-            form.tipo_conteudo.value =
-              data.TIPO_CONTEUDO || data.tipo_conteudo || "video";
+            form.tipo_conteudo.value = data.TIPO_CONTEUDO || data.tipo_conteudo || "video";
             form.video_url.value = data.VIDEO_URL || data.video_url || "";
             form.duracao.value = data.DURACAO || data.duracao || "00:10:00";
             form.ordem.value = data.ORDEM || data.ordem || 1;
             this.toggleVideoFields();
           } else {
+            console.error('Erro ao carregar dados da aula:', aula);
             this.showNotify("error", "Erro ao carregar dados da aula");
           }
         })
         .catch((error) => {
-          console.error("Erro:", error);
+          console.error("Erro ao carregar dados da aula:", error);
           this.showNotify("error", "Erro ao carregar dados da aula");
         });
     } else {
       // Modo criação
+      console.log('Modo criação - configurando valores padrão');
       title.textContent = "Adicionar Aula";
       document.getElementById("aulaId").value = "";
 
@@ -222,19 +198,25 @@ const CursoManager = {
       form.tipo_conteudo.value = "video";
       form.duracao.value = "00:10:00";
 
-      // Busca a próxima ordem disponível
-      fetch(`/dashboard/professor/modulo/${moduloId}/proxima-ordem`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            form.ordem.value = data.ordem;
-          }
-        })
-        .catch((error) => console.error("Erro ao buscar ordem:", error));
+      // Busca a próxima ordem disponível para o módulo
+      const modulo = this.modulos.find(m => m.ID_MODULO === parseInt(moduloId));
+      console.log('Módulo encontrado:', modulo);
+      const aulas = modulo ? modulo.aulas || [] : [];
+      const proximaOrdem = aulas.length > 0 ? Math.max(...aulas.map(a => a.ORDEM || a.ordem)) + 1 : 1;
+      form.ordem.value = proximaOrdem;
+      console.log('Próxima ordem definida:', proximaOrdem);
     }
 
     // Mostra o modal
     modal.style.display = "block";
+    console.log('Modal exibido');
+
+    // Configura o evento de submit do formulário
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      console.log('Submit do formulário interceptado');
+      this.saveAula();
+    };
   },
 
   // Fecha o modal
@@ -260,6 +242,16 @@ const CursoManager = {
     const aulaId = formData.get("aula_id");
     const moduloId = formData.get("modulo_id");
 
+    console.log('Salvando aula:', {
+      aulaId,
+      moduloId,
+      titulo: formData.get("titulo"),
+      descricao: formData.get("descricao"),
+      tipo_conteudo: formData.get("tipo_conteudo"),
+      duracao: formData.get("duracao"),
+      ordem: formData.get("ordem")
+    });
+
     // Validação básica
     if (!formData.get("titulo") || !formData.get("descricao")) {
       this.showNotify("error", "Preencha todos os campos obrigatórios");
@@ -272,28 +264,93 @@ const CursoManager = {
       : "/dashboard/professor/aula";
     const method = aulaId ? "PUT" : "POST";
 
+    console.log('Enviando requisição:', { url, method });
+
     // Envia a requisição
     fetch(url, {
       method: method,
       body: formData,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log('Status da resposta:', response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
+        console.log('Resposta do servidor:', data);
+
         if (data.success) {
           this.showNotify(
             "success",
             aulaId ? "Aula atualizada com sucesso!" : "Aula criada com sucesso!"
           );
-          this.closeModal();
-          // Recarrega a página para atualizar a lista
-          window.location.reload();
+
+          // Atualiza a lista de aulas do módulo
+          const moduloContainer = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+          console.log('Container do módulo:', moduloContainer);
+
+          if (moduloContainer) {
+            const aulasContainer = moduloContainer.querySelector(".modulo-aulas");
+            console.log('Container de aulas:', aulasContainer);
+            
+            if (aulaId) {
+              // Se for edição, atualiza a aula existente
+              const aulaElement = aulasContainer.querySelector(`[data-aula-id="${aulaId}"]`);
+              if (aulaElement) {
+                const novaAula = this.criarHtmlAula(data.data);
+                aulaElement.replaceWith(novaAula);
+              }
+            } else {
+              // Se for criação, adiciona a nova aula
+              // Remove a mensagem "Nenhuma aula neste módulo" se existir
+              const noAulasMsg = aulasContainer.querySelector("p");
+              if (noAulasMsg && noAulasMsg.textContent === "Nenhuma aula neste módulo") {
+                noAulasMsg.remove();
+              }
+
+              // Cria e adiciona o elemento da nova aula
+              const novaAula = this.criarHtmlAula(data.data);
+              console.log('Nova aula HTML:', novaAula);
+
+              // Adiciona a nova aula antes do botão de adicionar
+              const addButton = aulasContainer.querySelector(".add-aula-btn");
+              console.log('Botão de adicionar:', addButton);
+
+              if (addButton) {
+                console.log('Botão de adicionar encontrado, inserindo antes dele');
+                aulasContainer.insertBefore(novaAula, addButton);
+              } else {
+                console.log('Botão de adicionar não encontrado, adicionando ao final');
+                aulasContainer.appendChild(novaAula);
+              }
+
+              // Atualiza o array de módulos local
+              const moduloIndex = this.modulos.findIndex(m => m.ID_MODULO === parseInt(moduloId));
+              if (moduloIndex !== -1) {
+                if (!this.modulos[moduloIndex].aulas) {
+                  this.modulos[moduloIndex].aulas = [];
+                }
+                this.modulos[moduloIndex].aulas.push(data.data);
+                console.log('Módulos atualizados:', this.modulos);
+              }
+            }
+
+            // Fecha o modal após atualizar a interface
+            this.closeModal();
+          } else {
+            console.error('Módulo container não encontrado para ID:', moduloId);
+            // Recarrega a página como fallback
+            window.location.reload();
+          }
         } else {
           this.showNotify("error", data.message || "Erro ao salvar aula");
         }
       })
       .catch((error) => {
-        console.error("Erro:", error);
-        this.showNotify("error", "Erro ao salvar aula");
+        console.error("Erro ao salvar aula:", error);
+        this.showNotify("error", "Erro ao salvar aula: " + error.message);
       });
   },
 
@@ -407,6 +464,41 @@ const CursoManager = {
       notification.style.animation = "slideOut 0.5s ease-out";
       setTimeout(() => notification.remove(), 500);
     }, 3000);
+  },
+
+  // Cria o HTML para uma aula
+  criarHtmlAula(aula) {
+    console.log('Criando HTML para aula:', aula);
+
+    const section = document.createElement("section");
+    section.className = "aula-item";
+    section.setAttribute("data-aula-id", aula.ID_AULA || aula.id_aula);
+
+    const titulo = aula.TITULO || aula.titulo;
+    const descricao = aula.DESCRICAO || aula.descricao;
+    const duracao = aula.DURACAO || aula.duracao;
+    const tipoConteudo = aula.TIPO_CONTEUDO || aula.tipo_conteudo;
+    const idAula = aula.ID_AULA || aula.id_aula;
+
+    section.innerHTML = `
+      <section class="aula-header">
+        <section class="aula-title">${titulo}</section>
+        <section class="aula-actions">
+          <button type="button" class="btn" onclick="CursoManager.editarAula(${idAula})">Editar</button>
+          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(${idAula})">Excluir</button>
+        </section>
+      </section>
+      <section class="aula-info">
+        <section class="aula-desc">${descricao}</section>
+        <section class="aula-details">
+          <span class="aula-duracao">${duracao}</span>
+          <span class="aula-tipo">${tipoConteudo === 'video' ? 'Vídeo' : 'Texto'}</span>
+        </section>
+      </section>
+    `;
+
+    console.log('HTML gerado:', section.outerHTML);
+    return section;
   },
 };
 
