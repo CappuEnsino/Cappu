@@ -180,12 +180,6 @@ const CursoManager = {
     const closeBtn = modal.querySelector(".close-button");
     closeBtn.onclick = () => this.closeModal();
 
-    const form = modal.querySelector("#aulaForm");
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      this.saveAula(e);
-    };
-
     // Fecha o modal ao clicar fora
     modal.onclick = (e) => {
       if (e.target === modal) this.closeModal();
@@ -247,8 +241,7 @@ const CursoManager = {
           if (data.success) {
             form.ordem.value = data.ordem;
           }
-        })
-        .catch((error) => console.error("Erro ao buscar ordem:", error));
+        });
     }
 
     // Mostra o modal
@@ -294,13 +287,19 @@ const CursoManager = {
       : "/dashboard/professor/aula";
     const method = aulaId ? "PUT" : "POST";
 
+    // Converte FormData para objeto
+    const dadosAula = {};
+    formData.forEach((value, key) => {
+      dadosAula[key] = value;
+    });
+
     // Envia a requisição
     fetch(url, {
       method: method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(Object.fromEntries(formData)),
+      body: JSON.stringify(dadosAula),
     })
       .then((response) => {
         if (!response.ok) {
@@ -314,34 +313,67 @@ const CursoManager = {
             "success",
             aulaId ? "Aula atualizada com sucesso!" : "Aula criada com sucesso!"
           );
-          this.closeModal();
 
           // Atualiza a interface sem recarregar a página
           if (data.data) {
             const moduloContainer = document.querySelector(
               `[data-modulo-id="${moduloId}"]`
             );
+
             if (moduloContainer) {
               const aulasContainer =
                 moduloContainer.querySelector(".modulo-aulas");
-              const noAulasMsg = aulasContainer.querySelector("p");
+
+              if (!aulasContainer) {
+                console.error("Container de aulas não encontrado");
+                return;
+              }
 
               // Remove a mensagem "Nenhuma aula neste módulo" se existir
+              const noAulasMsg = aulasContainer.querySelector("p");
               if (
                 noAulasMsg &&
-                noAulasMsg.textContent === "Nenhuma aula neste módulo"
+                noAulasMsg.textContent.includes("Nenhuma aula")
               ) {
                 noAulasMsg.remove();
               }
 
-              // Adiciona a nova aula à lista
-              const aulaHtml = this.criarHtmlAula(data.data);
-              aulasContainer.insertBefore(
-                aulaHtml,
-                aulasContainer.querySelector("button")
-              );
+              if (aulaId) {
+                // Se for edição, atualiza a aula existente
+                const aulaExistente = aulasContainer.querySelector(
+                  `[data-aula-id="${aulaId}"]`
+                );
+                if (aulaExistente) {
+                  const novaAula = this.criarHtmlAula(data.data);
+                  aulaExistente.replaceWith(novaAula);
+                }
+              } else {
+                // Se for criação, adiciona a nova aula
+                const addButton = aulasContainer.querySelector("button");
+                const novaAula = this.criarHtmlAula(data.data);
+
+                if (addButton) {
+                  aulasContainer.insertBefore(novaAula, addButton);
+                } else {
+                  aulasContainer.appendChild(novaAula);
+                }
+
+                // Atualiza o array de módulos local
+                const moduloIndex = this.modulos.findIndex(
+                  (m) => m.ID_MODULO === moduloId
+                );
+                if (moduloIndex !== -1) {
+                  if (!this.modulos[moduloIndex].AULAS) {
+                    this.modulos[moduloIndex].AULAS = [];
+                  }
+                  this.modulos[moduloIndex].AULAS.push(data.data);
+                }
+              }
             }
           }
+
+          // Fecha o modal
+          this.closeModal();
         } else {
           this.showNotify("error", data.message || "Erro ao salvar aula");
         }
@@ -399,9 +431,9 @@ const CursoManager = {
   // Função para editar um módulo
   editarModulo(moduloId) {
     // Busca o módulo pelo ID
-    const modulo = this.modulos.find(m => m.ID_MODULO === moduloId);
+    const modulo = this.modulos.find((m) => m.ID_MODULO === moduloId);
     if (!modulo) {
-      this.showNotify('error', 'Módulo não encontrado!');
+      this.showNotify("error", "Módulo não encontrado!");
       return;
     }
 
@@ -411,12 +443,12 @@ const CursoManager = {
     const title = document.getElementById("modalModuloTitle");
 
     // Preenche os campos do modal com os dados do módulo
-    form.titulo.value = modulo.TITULO || '';
-    form.descricao.value = modulo.DESCRICAO || '';
-    document.getElementById('moduloId').value = modulo.ID_MODULO;
-    
+    form.titulo.value = modulo.TITULO || "";
+    form.descricao.value = modulo.DESCRICAO || "";
+    document.getElementById("moduloId").value = modulo.ID_MODULO;
+
     // Atualiza o título do modal para "Editar Módulo"
-    title.textContent = 'Editar Módulo';
+    title.textContent = "Editar Módulo";
 
     // Mostra o modal
     modal.style.display = "block";
@@ -425,52 +457,57 @@ const CursoManager = {
     form.onsubmit = async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      
+
       try {
         const response = await fetch(`/professor/modulo/${moduloId}`, {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            titulo: formData.get('titulo'),
-            descricao: formData.get('descricao')
-          })
+            titulo: formData.get("titulo"),
+            descricao: formData.get("descricao"),
+          }),
         });
 
         const result = await response.json();
-        
+
         if (result.success) {
           // Atualiza o módulo na lista local
           const moduloAtualizado = {
             ...modulo,
-            TITULO: formData.get('titulo'),
-            DESCRICAO: formData.get('descricao')
+            TITULO: formData.get("titulo"),
+            DESCRICAO: formData.get("descricao"),
           };
-          
+
           // Atualiza o módulo no array
-          const index = this.modulos.findIndex(m => m.ID_MODULO === moduloId);
+          const index = this.modulos.findIndex((m) => m.ID_MODULO === moduloId);
           if (index !== -1) {
             this.modulos[index] = moduloAtualizado;
           }
 
           // Atualiza o HTML do módulo
-          const moduloElement = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+          const moduloElement = document.querySelector(
+            `[data-modulo-id="${moduloId}"]`
+          );
           if (moduloElement) {
-            const titleElement = moduloElement.querySelector('.modulo-title');
+            const titleElement = moduloElement.querySelector(".modulo-title");
             if (titleElement) {
               titleElement.textContent = moduloAtualizado.TITULO;
             }
           }
 
-          this.showNotify('success', 'Módulo atualizado com sucesso!');
+          this.showNotify("success", "Módulo atualizado com sucesso!");
           this.fecharModalModulo();
         } else {
-          this.showNotify('error', result.message || 'Erro ao atualizar módulo');
+          this.showNotify(
+            "error",
+            result.message || "Erro ao atualizar módulo"
+          );
         }
       } catch (error) {
-        console.error('Erro ao atualizar módulo:', error);
-        this.showNotify('error', 'Erro ao atualizar módulo');
+        console.error("Erro ao atualizar módulo:", error);
+        this.showNotify("error", "Erro ao atualizar módulo");
       }
     };
   },
@@ -674,22 +711,24 @@ const CursoManager = {
     const form = document.getElementById("moduloForm");
     const formData = new FormData(form);
     const moduloId = formData.get("modulo_id");
-    
+
     // Dados do módulo
     const modulo = {
       titulo: formData.get("titulo"),
       descricao: formData.get("descricao"),
-      aulas: []
+      aulas: [],
     };
 
     // Se estamos na página de criar curso, apenas adiciona à lista de módulos
-    if (window.location.pathname.includes('p_criar_curso')) {
+    if (window.location.pathname.includes("p_criar_curso")) {
       // Se temos um ID, estamos editando
       if (moduloId !== "") {
         this.modulos[moduloId] = modulo;
-        
+
         // Atualiza o elemento existente
-        const moduloElement = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+        const moduloElement = document.querySelector(
+          `[data-modulo-id="${moduloId}"]`
+        );
         if (moduloElement) {
           const novoModuloElement = this.criarHtmlModulo(modulo);
           moduloElement.replaceWith(novoModuloElement);
@@ -697,7 +736,7 @@ const CursoManager = {
       } else {
         // Caso contrário, estamos adicionando um novo
         this.modulos.push(modulo);
-        
+
         // Atualiza a interface
         const modulosContainer = document.getElementById("modulosContainer");
         if (modulosContainer) {
@@ -706,20 +745,25 @@ const CursoManager = {
           modulosContainer.appendChild(moduloHtml);
         }
       }
-      
+
       // Atualiza o input hidden com os módulos
       const modulosInput = document.getElementById("modulosInput");
       if (modulosInput) {
         modulosInput.value = JSON.stringify(this.modulos);
       }
 
-      this.showNotify("success", "Módulo " + (moduloId !== "" ? "atualizado" : "adicionado") + " com sucesso!");
+      this.showNotify(
+        "success",
+        "Módulo " +
+          (moduloId !== "" ? "atualizado" : "adicionado") +
+          " com sucesso!"
+      );
       this.fecharModalModulo();
       return;
     }
 
     // Se não, faz a requisição para o backend
-    const urlParts = window.location.pathname.split('/');
+    const urlParts = window.location.pathname.split("/");
     const cursoId = urlParts[urlParts.length - 1];
 
     const data = {
@@ -745,12 +789,16 @@ const CursoManager = {
 
           // Adiciona o novo módulo à lista sem recarregar a página
           if (result.data) {
-            const modulosContainer = document.getElementById("modulosContainer");
+            const modulosContainer =
+              document.getElementById("modulosContainer");
             const moduloHtml = this.criarHtmlModulo(result.data);
 
             // Remove a mensagem "Nenhum módulo cadastrado" se existir
             const noModulesMsg = modulosContainer.querySelector("p");
-            if (noModulesMsg && noModulesMsg.textContent === "Nenhum módulo cadastrado") {
+            if (
+              noModulesMsg &&
+              noModulesMsg.textContent === "Nenhum módulo cadastrado"
+            ) {
               noModulesMsg.remove();
             }
 
@@ -771,32 +819,52 @@ const CursoManager = {
   criarHtmlModulo(modulo) {
     const section = document.createElement("section");
     section.className = "modulo-container";
-    section.setAttribute("data-modulo-id", modulo.ID_MODULO || '');
+    section.setAttribute("data-modulo-id", modulo.ID_MODULO || "");
 
     // Verifica se estamos na página de criar curso
-    const isCriarCurso = window.location.pathname.includes('p_criar_curso');
+    const isCriarCurso = window.location.pathname.includes("p_criar_curso");
 
     section.innerHTML = `
       <section class="modulo-header">
-        <section class="modulo-title">${modulo.TITULO || modulo.titulo}</section>
+        <section class="modulo-title">${
+          modulo.TITULO || modulo.titulo
+        }</section>
         <section class="modulo-actions">
-          ${isCriarCurso ? `
-            <button type="button" class="btn" onclick="CursoManager.editarModuloTemp(${this.modulos.length - 1})">Editar</button>
-            <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModuloTemp(${this.modulos.length - 1})">Excluir</button>
-          ` : `
+          ${
+            isCriarCurso
+              ? `
+            <button type="button" class="btn" onclick="CursoManager.editarModuloTemp(${
+              this.modulos.length - 1
+            })">Editar</button>
+            <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModuloTemp(${
+              this.modulos.length - 1
+            })">Excluir</button>
+          `
+              : `
             <button type="button" class="btn" onclick="CursoManager.editarModulo(${modulo.ID_MODULO})">Editar</button>
             <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(${modulo.ID_MODULO})">Excluir</button>
-          `}
+          `
+          }
         </section>
       </section>
       <section class="modulo-aulas">
-        ${isCriarCurso ? `
-          <p>Nenhuma aula neste módulo</p>
-          <button type="button" class="btn" onclick="CursoManager.adicionarAulaTemp(${this.modulos.length - 1})">Adicionar Aula</button>
-        ` : `
-          <p>Nenhuma aula neste módulo</p>
-          <button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>
-        `}
+        ${
+          (modulo.aulas && modulo.aulas.length > 0) ||
+          (modulo.AULAS && modulo.AULAS.length > 0)
+            ? `
+              ${(modulo.AULAS || modulo.aulas)
+                .map((aula) => this.criarHtmlAula(aula))
+                .join("")}
+            `
+            : `<p>Nenhuma aula neste módulo</p>`
+        }
+        ${
+          isCriarCurso
+            ? `<button type="button" class="btn" onclick="CursoManager.adicionarAulaTemp(${
+                this.modulos.length - 1
+              })">Adicionar Aula</button>`
+            : `<button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>`
+        }
       </section>
     `;
 
@@ -813,7 +881,7 @@ const CursoManager = {
     form.titulo.value = modulo.titulo;
     form.descricao.value = modulo.descricao;
     document.getElementById("moduloId").value = index;
-    
+
     title.textContent = "Editar Módulo";
     modal.style.display = "block";
   },
@@ -821,7 +889,7 @@ const CursoManager = {
   excluirModuloTemp(index) {
     if (confirm("Tem certeza que deseja excluir este módulo?")) {
       this.modulos.splice(index, 1);
-      
+
       // Atualiza o input hidden
       const modulosInput = document.getElementById("modulosInput");
       if (modulosInput) {
@@ -830,7 +898,9 @@ const CursoManager = {
 
       // Remove o elemento da interface
       const modulosContainer = document.getElementById("modulosContainer");
-      const moduloElement = modulosContainer.querySelector(`[data-modulo-id="${index}"]`);
+      const moduloElement = modulosContainer.querySelector(
+        `[data-modulo-id="${index}"]`
+      );
       if (moduloElement) {
         moduloElement.remove();
       }
@@ -872,7 +942,7 @@ const CursoManager = {
   salvarAulaTemp(moduloIndex) {
     const form = document.getElementById("aulaForm");
     const formData = new FormData(form);
-    
+
     // Cria o objeto da aula
     const aula = {
       titulo: formData.get("titulo"),
@@ -880,7 +950,9 @@ const CursoManager = {
       tipo_conteudo: formData.get("tipo_conteudo"),
       video_url: formData.get("video_url") || "",
       duracao: formData.get("duracao"),
-      ordem: parseInt(formData.get("ordem")) || (this.modulos[moduloIndex].aulas.length + 1)
+      ordem:
+        parseInt(formData.get("ordem")) ||
+        this.modulos[moduloIndex].aulas.length + 1,
     };
 
     // Adiciona a aula ao módulo
@@ -896,13 +968,18 @@ const CursoManager = {
     }
 
     // Atualiza a interface
-    const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+    const moduloContainer = document.querySelector(
+      `[data-modulo-id="${moduloIndex}"]`
+    );
     if (moduloContainer) {
       const aulasContainer = moduloContainer.querySelector(".modulo-aulas");
-      
+
       // Remove a mensagem "Nenhuma aula neste módulo" se existir
       const noAulasMsg = aulasContainer.querySelector("p");
-      if (noAulasMsg && noAulasMsg.textContent === "Nenhuma aula neste módulo") {
+      if (
+        noAulasMsg &&
+        noAulasMsg.textContent === "Nenhuma aula neste módulo"
+      ) {
         noAulasMsg.remove();
       }
 
@@ -913,8 +990,12 @@ const CursoManager = {
         <section class="aula-title">${aula.titulo}</section>
         <section class="aula-desc">${aula.descricao}</section>
         <section class="aula-actions">
-          <button type="button" class="btn" onclick="CursoManager.editarAulaTemp(${moduloIndex}, ${this.modulos[moduloIndex].aulas.length - 1})">Editar</button>
-          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAulaTemp(${moduloIndex}, ${this.modulos[moduloIndex].aulas.length - 1})">Excluir</button>
+          <button type="button" class="btn" onclick="CursoManager.editarAulaTemp(${moduloIndex}, ${
+        this.modulos[moduloIndex].aulas.length - 1
+      })">Editar</button>
+          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAulaTemp(${moduloIndex}, ${
+        this.modulos[moduloIndex].aulas.length - 1
+      })">Excluir</button>
         </section>
       `;
 
@@ -960,7 +1041,7 @@ const CursoManager = {
   atualizarAulaTemp(moduloIndex, aulaIndex) {
     const form = document.getElementById("aulaForm");
     const formData = new FormData(form);
-    
+
     // Atualiza os dados da aula
     const aula = {
       titulo: formData.get("titulo"),
@@ -968,7 +1049,7 @@ const CursoManager = {
       tipo_conteudo: formData.get("tipo_conteudo"),
       video_url: formData.get("video_url") || "",
       duracao: formData.get("duracao"),
-      ordem: parseInt(formData.get("ordem")) || (aulaIndex + 1)
+      ordem: parseInt(formData.get("ordem")) || aulaIndex + 1,
     };
 
     // Atualiza a aula no módulo
@@ -981,9 +1062,12 @@ const CursoManager = {
     }
 
     // Atualiza a interface
-    const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+    const moduloContainer = document.querySelector(
+      `[data-modulo-id="${moduloIndex}"]`
+    );
     if (moduloContainer) {
-      const aulaElement = moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
+      const aulaElement =
+        moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
       if (aulaElement) {
         aulaElement.querySelector(".aula-title").textContent = aula.titulo;
         aulaElement.querySelector(".aula-desc").textContent = aula.descricao;
@@ -1007,9 +1091,12 @@ const CursoManager = {
       }
 
       // Remove o elemento da interface
-      const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+      const moduloContainer = document.querySelector(
+        `[data-modulo-id="${moduloIndex}"]`
+      );
       if (moduloContainer) {
-        const aulaElement = moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
+        const aulaElement =
+          moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
         if (aulaElement) {
           aulaElement.remove();
         }
@@ -1019,7 +1106,10 @@ const CursoManager = {
         if (this.modulos[moduloIndex].aulas.length === 0) {
           const p = document.createElement("p");
           p.textContent = "Nenhuma aula neste módulo";
-          aulasContainer.insertBefore(p, aulasContainer.querySelector("button"));
+          aulasContainer.insertBefore(
+            p,
+            aulasContainer.querySelector("button")
+          );
         }
       }
 
@@ -1031,25 +1121,47 @@ const CursoManager = {
   criarHtmlAula(aula) {
     const section = document.createElement("section");
     section.className = "aula-item";
-    section.setAttribute("data-aula-id", aula.ID_AULA);
+    section.setAttribute("data-aula-id", aula.ID_AULA || aula.id_aula || "");
+
+    const titulo = aula.TITULO || aula.titulo;
+    const descricao = aula.DESCRICAO || aula.descricao;
+    const duracao = aula.DURACAO || aula.duracao;
+    const tipoConteudo = aula.TIPO_CONTEUDO || aula.tipo_conteudo;
+    const idAula = aula.ID_AULA || aula.id_aula;
 
     section.innerHTML = `
       <section class="aula-header">
-        <section class="aula-title">${aula.TITULO}</section>
+        <section class="aula-title">${titulo}</section>
         <section class="aula-actions">
-          <button type="button" class="btn" onclick="CursoManager.editarAula(${
-            aula.ID_AULA
-          })">Editar</button>
-          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(${
-            aula.ID_AULA
-          })">Excluir</button>
+          ${
+            idAula
+              ? `
+                <button type="button" class="btn" onclick="CursoManager.editarAula(${idAula})">Editar</button>
+                <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAula(${idAula})">Excluir</button>
+              `
+              : `
+                <button type="button" class="btn" onclick="CursoManager.editarAulaTemp(${
+                  this.modulos.length - 1
+                }, ${
+                  this.modulos[this.modulos.length - 1].aulas.length - 1
+                })">Editar</button>
+                <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAulaTemp(${
+                  this.modulos.length - 1
+                }, ${
+                  this.modulos[this.modulos.length - 1].aulas.length - 1
+                })">Excluir</button>
+              `
+          }
         </section>
       </section>
       <section class="aula-info">
-        <span class="aula-duracao">${aula.DURACAO}</span>
-        <span class="aula-tipo">${
-          aula.TIPO_CONTEUDO === "video" ? "Vídeo" : "Texto"
-        }</span>
+        <section class="aula-desc">${descricao}</section>
+        <section class="aula-details">
+          <span class="aula-duracao">${duracao}</span>
+          <span class="aula-tipo">${
+            tipoConteudo === "video" ? "Vídeo" : "Texto"
+          }</span>
+        </section>
       </section>
     `;
 
