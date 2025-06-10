@@ -2,11 +2,15 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const upload = require("../middleware/multer"); // Middleware para upload de arquivos
-const db = require('../config/database'); // Importação do banco de dados
-const carrinhoController = require('../controller/carrinhoController');
+const db = require('../config/database');
 const { client } = require('../config/mercadopago');
 const { Payment } = require('mercadopago');
+const upload = require("../middleware/multer");
+const carrinhoController = require('../controller/carrinhoController');
+
+// Rota para o Mercado Pago notificar sobre o status do pagamento
+// Esta rota precisa estar antes do middleware de autenticação
+router.post('/webhook/mercadopago', carrinhoController.handleWebhook);
 
 // Middleware para verificar se o usuário é aluno
 const isAluno = (req, res, next) => {
@@ -997,59 +1001,6 @@ router.get('/pagamento/pendente', async (req, res) => {
         console.error('Erro ao processar pagamento pendente:', err);
         req.flash('error', 'Erro ao processar pagamento');
         res.redirect('/aluno/a-carrinho');
-    }
-});
-
-// Webhook do Mercado Pago
-router.post('/webhook/mercadopago', async (req, res) => {
-    try {
-        const { action, data } = req.body;
-
-        if (action === 'payment.updated' || action === 'payment.approved') {
-            const payment = new Payment(client);
-            const paymentData = await payment.get({ id: data.id });
-            const { external_reference, status } = paymentData;
-
-            if (status === 'approved') {
-                // Atualizar o status da compra
-                await db.query(
-                    'UPDATE COMPRA SET STATUS = 1, ID_PAGAMENTO = ? WHERE ID_COMPRA = ?',
-                    [data.id, external_reference]
-                );
-
-                // Buscar os cursos da compra
-                const [cursosCompra] = await db.query(
-                    'SELECT ID_CURSO FROM CURSOS_COMPRA WHERE ID_COMPRA = ?',
-                    [external_reference]
-                );
-
-                // Adicionar os cursos à compra
-                for (const curso of cursosCompra) {
-                    await db.query(
-                        'INSERT INTO CURSOS_COMPRA (ID_COMPRA, ID_CURSO) VALUES (?, ?)',
-                        [external_reference, curso.ID_CURSO]
-                    );
-                }
-
-                // Limpar o carrinho
-                const [compra] = await db.query(
-                    'SELECT ID_USUARIO FROM COMPRA WHERE ID_COMPRA = ?',
-                    [external_reference]
-                );
-
-                if (compra && compra.length > 0) {
-                    await db.query(
-                        'DELETE FROM CARRINHO WHERE ID_USUARIO = ?',
-                        [compra[0].ID_USUARIO]
-                    );
-                }
-            }
-        }
-
-        res.status(200).send('OK');
-    } catch (err) {
-        console.error('Erro no webhook:', err);
-        res.status(500).send('Erro ao processar webhook');
     }
 });
 
