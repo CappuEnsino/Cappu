@@ -4,6 +4,10 @@
   </button>
   <input type="text" placeholder="Pequise por cursos..." id="pesquisa">
   <section>
+    <a href="/aluno/carrinho" class="carrinho-icon" aria-label="Ver carrinho">
+      <img src="/images/carrinho.svg" alt="ícone do carrinho" />
+      <span class="carrinho-contador" id="carrinhoContador">0</span>
+    </a>
     <p><%= user.NOME_USU || 'Aluno' %></p>
     <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
         <img src="/aluno/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil" style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;"

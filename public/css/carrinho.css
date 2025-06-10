@@ -1,0 +1,193 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.carrinho-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.lista-cursos {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.curso-item {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+.curso-item:last-child {
+    border-bottom: none;
+}
+
+.curso-item img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.curso-info h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.professor {
+    color: #666;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.preco {
+    color: #2ecc71;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.remover-curso {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remover-curso:hover {
+    background: #cc0000;
+}
+
+.resumo-compra {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+.resumo-compra h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.finalizar-compra {
+    width: 100%;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+.finalizar-compra:hover {
+    background: #27ae60;
+}
+
+.continuar-comprando {
+    display: block;
+    text-align: center;
+    color: #666;
+    text-decoration: none;
+    padding: 10px;
+    transition: color 0.3s;
+}
+
+.continuar-comprando:hover {
+    color: #333;
+}
+
+.carrinho-vazio {
+    text-align: center;
+    padding: 50px 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.carrinho-vazio img {
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+.carrinho-vazio h2 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.carrinho-vazio p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.btn-explorar {
+    display: inline-block;
+    background: #2ecc71;
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-explorar:hover {
+    background: #27ae60;
+}
+
+@media (max-width: 768px) {
+    .carrinho-content {
+        grid-template-columns: 1fr;
+    }
+
+    .curso-item {
+        grid-template-columns: 100px 1fr;
+        gap: 15px;
+    }
+
+    .curso-item img {
+        width: 100px;
+        height: 70px;
+    }
+
+    .remover-curso {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+} 

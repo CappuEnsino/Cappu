@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/header2.css">
+    <link rel="stylesheet" href="/css/carrinho.css">
+</head>
+<body>
+    <%- include('../../pages/partials/header') %>
+    
+    <main>
+        <section class="container">
+            <h1>Meu Carrinho</h1>
+
+            <% if (carrinho && carrinho.length > 0) { %>
+                <section class="carrinho-content">
+                    <section class="lista-cursos">
+                        <% let total = 0; %>
+                        <% carrinho.forEach(item => { %>
+                            <% total += parseFloat(item.PRECO); %>
+                            <article class="curso-item">
+                                <img src="/curso/imagem/<%= item.ID_CURSO %>" alt="<%= item.TITULO %>" 
+                                     onerror="this.src='/images/curso-padrao.jpg'">
+                                <section class="curso-info">
+                                    <h3><%= item.TITULO %></h3>
+                                    <p class="professor">Professor: <%= item.NOME_PROFESSOR %></p>
+                                    <p class="preco">R$ <%= parseFloat(item.PRECO).toFixed(2) %></p>
+                                </section>
+                                <button class="remover-curso" data-curso-id="<%= item.ID_CURSO %>">
+                                    Remover
+                                </button>
+                            </article>
+                        <% }); %>
+                    </section>
+
+                    <section class="resumo-compra">
+                        <h2>Resumo do Pedido</h2>
+                        <div class="subtotal">
+                            <span>Subtotal:</span>
+                            <span>R$ <%= total.toFixed(2) %></span>
+                        </div>
+                        <button class="finalizar-compra" id="finalizarCompra">
+                            Finalizar Compra
+                        </button>
+                        <a href="/aluno/a-todososcursos" class="continuar-comprando">
+                            Continuar Comprando
+                        </a>
+                    </section>
+                </section>
+            <% } else { %>
+                <section class="carrinho-vazio">
+                    <img src="/images/carrinho-vazio.svg" alt="Carrinho vazio">
+                    <h2>Seu carrinho está vazio</h2>
+                    <p>Adicione cursos ao seu carrinho para começar a aprender!</p>
+                    <a href="/aluno/a-todososcursos" class="btn-explorar">
+                        Explorar Cursos
+                    </a>
+                </section>
+            <% } %>
+        </section>
+    </main>
+
+    <script src="/js/carrinho-pagina.js"></script>
+</body>
+</html> 

@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const upload = require("../middleware/multer"); // Middleware para upload de arquivos
 const db = require('../config/database'); // Importação do banco de dados
+const carrinhoController = require('../controller/carrinhoController');
 
 // Middleware para verificar se o usuário é aluno
 const isAluno = (req, res, next) => {
@@ -849,5 +850,16 @@ router.get('/logout', (req, res, next) => {
       });
     });
 });
+
+// Rota para adicionar curso ao carrinho
+router.post('/api/carrinho/adicionar', carrinhoController.adicionarAoCarrinho);
+
+// Rota para obter contador do carrinho
+router.get('/api/carrinho/contador', carrinhoController.getContadorCarrinho);
+
+// Rotas do carrinho
+router.get('/carrinho', carrinhoController.getCarrinho);
+router.post('/api/carrinho/remover', carrinhoController.removerDoCarrinho);
+router.post('/api/carrinho/finalizar', carrinhoController.finalizarCompra);
 
 module.exports = router;
