@@ -39,11 +39,11 @@
                                     <span class="subtitulo"><%= curso.TITULO %></span>
                                     <p><span>Professor:</span> <%= curso.NOME_PROFESSOR %></p>
                                     <p><span>Descrição:</span> <%= curso.DESCRICAO %></p>
-                                    <div class="botoes-container">
+                                    <section class="botoes-container">
                                         <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
                                         <button class="adicionar-carrinho" data-curso-id="<%= curso.ID_CURSO %>">
                                         </button>
-                                    </div>
+                                    </section>
                                 </section>
                             </section>
                         <% }); %>
