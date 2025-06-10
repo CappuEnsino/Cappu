@@ -386,9 +386,81 @@ const CursoManager = {
 
   // Função para editar um módulo
   editarModulo(moduloId) {
-    // Implementar edição de módulo em modal similar
-    // Por enquanto mantém o redirecionamento
-    window.location.href = `/dashboard/professor/p-modulo?id=${moduloId}`;
+    // Busca o módulo pelo ID
+    const modulo = this.modulos.find(m => m.ID_MODULO === moduloId);
+    if (!modulo) {
+      this.showNotify('error', 'Módulo não encontrado!');
+      return;
+    }
+
+    // Abre o modal de módulo
+    const modal = document.getElementById("moduloModal");
+    const form = document.getElementById("moduloForm");
+    const title = document.getElementById("modalModuloTitle");
+
+    // Preenche os campos do modal com os dados do módulo
+    form.titulo.value = modulo.TITULO || '';
+    form.descricao.value = modulo.DESCRICAO || '';
+    document.getElementById('moduloId').value = modulo.ID_MODULO;
+    
+    // Atualiza o título do modal para "Editar Módulo"
+    title.textContent = 'Editar Módulo';
+
+    // Mostra o modal
+    modal.style.display = "block";
+
+    // Adiciona o handler de submit específico para edição
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch(`/professor/modulo/${moduloId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            titulo: formData.get('titulo'),
+            descricao: formData.get('descricao')
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          // Atualiza o módulo na lista local
+          const moduloAtualizado = {
+            ...modulo,
+            TITULO: formData.get('titulo'),
+            DESCRICAO: formData.get('descricao')
+          };
+          
+          // Atualiza o módulo no array
+          const index = this.modulos.findIndex(m => m.ID_MODULO === moduloId);
+          if (index !== -1) {
+            this.modulos[index] = moduloAtualizado;
+          }
+
+          // Atualiza o HTML do módulo
+          const moduloElement = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+          if (moduloElement) {
+            const titleElement = moduloElement.querySelector('.modulo-title');
+            if (titleElement) {
+              titleElement.textContent = moduloAtualizado.TITULO;
+            }
+          }
+
+          this.showNotify('success', 'Módulo atualizado com sucesso!');
+          this.fecharModalModulo();
+        } else {
+          this.showNotify('error', result.message || 'Erro ao atualizar módulo');
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar módulo:', error);
+        this.showNotify('error', 'Erro ao atualizar módulo');
+      }
+    };
   },
 
   // Função para excluir um módulo
@@ -590,7 +662,14 @@ const CursoManager = {
     const form = document.getElementById("moduloForm");
     const formData = new FormData(form);
     const moduloId = formData.get("modulo_id");
-    const cursoId = window.location.pathname.split("/").pop(); // Pega o ID do curso da URL
+    
+    // Fix: Get course ID from URL correctly
+    const urlParts = window.location.pathname.split('/');
+    const cursoId = urlParts[urlParts.length - 1];
+
+    // Add debug logging
+    console.log('URL Parts:', urlParts);
+    console.log('Curso ID:', cursoId);
 
     const data = {
       titulo: formData.get("titulo"),
@@ -598,12 +677,16 @@ const CursoManager = {
       cursoId: cursoId,
     };
 
-    const url = moduloId
-      ? `/dashboard/professor/modulo/${moduloId}`
-      : "/dashboard/professor/modulo";
+    // Add debug logging
+    console.log('Data being sent:', data);
+
+    const url = `/professor/modulo`;
+
+    // Add debug logging
+    console.log('Request URL:', url);
 
     fetch(url, {
-      method: moduloId ? "PUT" : "POST",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },

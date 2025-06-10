@@ -109,6 +109,9 @@
     </header>
 
     <main class="container">
+    <script>
+      window.cursoModulos = <%- JSON.stringify(modulos) %>;
+    </script>
       <section class="curso-header">
         <h1><%= curso.TITULO %></h1>
         <section class="curso-actions">
@@ -117,7 +120,7 @@
           </button>
         </section>
       </section>
-      <form id="formEditarCurso" action="/dashboard/professor/p_gere_curso_completo/<%= curso.ID_CURSO %>" method="POST">
+      <form id="formEditarCurso" action="/professor/p_gere_curso/<%= curso.ID_CURSO %>" method="POST" enctype="multipart/form-data">
         <section class="left">
           <h1>EDITAR CURSO</h1>
 
