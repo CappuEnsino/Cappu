@@ -353,10 +353,11 @@ h4 {
 
   .planos {
     margin-top: 4em;
+    width: 100%;
   }
 
   .planos h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .planos p {
@@ -364,15 +365,20 @@ h4 {
   }
 
   .cards {
-    gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 90%;
   }
 
   .descricao1 {
-    height: 28rem;
+    height: auto;
+    width: 100%;
   }
 
   .descricao2 {
-    height: 36rem;
+    height: auto;
+    width: 100%;
   }
 
   .nomeplano {

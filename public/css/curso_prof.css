@@ -325,3 +325,26 @@ main {
     align-items: center;
   }
 }
+
+@media (max-width: 800px){
+
+  
+  
+  main{
+    margin-top: 8rem;
+    width: 80%;
+  }
+
+  .meuscursos{
+    width: 100%;
+  }
+  .topic{
+    width: 10%;
+  }
+  .cursos{
+    width: 100%;
+  }
+  .vermais{
+    width: 100%;
+  }
+}

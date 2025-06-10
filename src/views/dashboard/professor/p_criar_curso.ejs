@@ -6,33 +6,49 @@
     <title>CRIAR CURSO</title>
     <link rel="stylesheet" href="/css/criar_curso.css" />
     <link rel="stylesheet" href="/css/header2.css" />
+    <link rel="stylesheet" type="text/css" href="/css/modal.css" />
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.css"
     />
-    <link rel="stylesheet" href="/css/modal.css">
   </head>
   <body>
     <header>
-      <a href="/professor/p-curso_prof"><img src="/images/voltar.svg" alt=""></a>
+      <a href="/professor/p-curso_prof"
+        ><img src="/images/voltar.svg" alt=""
+      /></a>
       <p>Criar Curso</p>
       <section>
         <p><%= user.NOME_USU || 'Professor' %></p>
-        <button class="user-icon" id="userIcon" aria-label="Abrir menu do usuário">
-            <img id="header-profile-img" src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>" alt="imagem do perfil"
-            style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc"
-            onerror="this.onerror=null; this.src='/images/perfil.svg';"/>
-            <section class="user-config" id="userConfig">
-                <h2><%= user.NOME_USU || 'Professor' %></h2>
-                <ul>
-                    <li><a href="/professor/p-professor">MENU</a></li>
-                    <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
-                    <li><a href="/professor/logout">SAIR</a></li>
-                </ul>
-            </section>
+        <button
+          class="user-icon"
+          id="userIcon"
+          aria-label="Abrir menu do usuário"
+        >
+          <img
+            id="header-profile-img"
+            src="/professor/foto-perfil/<%= user.ID_USUARIO %>?v=<%= timestamp %>"
+            alt="imagem do perfil"
+            style="
+              width: 48px;
+              height: 48px;
+              object-fit: cover;
+              border-radius: 50%;
+              border: 2px solid #ccc;
+            "
+            onerror="this.onerror=null; this.src='/images/perfil.svg';"
+          />
+          <section class="user-config" id="userConfig">
+            <h2><%= user.NOME_USU || 'Professor' %></h2>
+            <ul>
+              <li><a href="/professor/p-professor">MENU</a></li>
+              <li><a href="/professor/p-config">CONFIGURAÇÕES</a></li>
+              <li><a href="/professor/logout">SAIR</a></li>
+            </ul>
+          </section>
         </button>
-    </section>
+      </section>
     </header>
 
     <main class="container">
@@ -123,10 +139,10 @@
               name="imagem"
               accept="image/*"
               class="form-control"
-              style="display: none;"
+              style="display: none"
             />
-            <br>
-            <img id="preview" src="#" alt="Pré-visualização">
+            <br />
+            <img id="preview" src="#" alt="Pré-visualização" />
             <small class="form-text text-muted"
               >Formatos aceitos: JPG, PNG, GIF. Tamanho máximo: 5MB</small
             >
@@ -158,58 +174,138 @@
         <section class="modal-content">
           <section class="modal-header">
             <h5 class="modal-title" id="aulaModalLabel">Nova Aula</h5>
-            <button type="button" class="close-button" aria-label="Fechar">×</button>
+            <button type="button" class="close-button" aria-label="Fechar">
+              ×
+            </button>
           </section>
-          <form id="aulaForm" onsubmit="CursoManager.saveAulaFromModal(event);">
+          <form id="aulaForm">
+            <input type="hidden" id="moduloId" name="modulo_id" />
+            <input type="hidden" id="aulaId" name="aula_id" />
             <section class="modal-body">
               <section class="form-group">
-                <label for="titulo" class="form-label">Título da Aula <span class="required">*</span></label>
-                <input type="text" class="input-field" id="titulo" name="titulo" required />
+                <label for="titulo" class="form-label"
+                  >Título da Aula <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  class="input-field"
+                  id="titulo"
+                  name="titulo"
+                  required
+                />
               </section>
               <section class="form-group">
                 <label for="descricao" class="form-label">Descrição</label>
-                <textarea class="input-field" id="descricao" name="descricao" rows="3"></textarea>
+                <textarea
+                  class="input-field"
+                  id="descricao"
+                  name="descricao"
+                  rows="3"
+                ></textarea>
               </section>
               <section class="form-group">
-                <label for="tipo_conteudo" class="form-label">Tipo de Conteúdo</label>
-                <select class="input-field" id="tipo_conteudo" name="tipo_conteudo" onchange="CursoManager.toggleVideoFields()">
+                <label for="tipo_conteudo" class="form-label"
+                  >Tipo de Conteúdo</label
+                >
+                <select
+                  class="input-field"
+                  id="tipo_conteudo"
+                  name="tipo_conteudo"
+                  onchange="CursoManager.toggleVideoFields()"
+                >
                   <option value="video">Vídeo</option>
                   <option value="texto">Texto</option>
                 </select>
               </section>
               <section id="videoUrlGroup">
                 <section class="form-group">
-                  <label for="video_url" class="form-label">URL do Vídeo (Youtube/Vimeo)</label>
-                  <input type="url" class="input-field" id="video_url" name="video_url" placeholder="https://www.youtube.com/watch?v=..." />
-                  <section class="form-hint">Insira a URL completa do vídeo</section>
+                  <label for="video_url" class="form-label"
+                    >URL do Vídeo (Youtube/Vimeo)</label
+                  >
+                  <input
+                    type="url"
+                    class="input-field"
+                    id="video_url"
+                    name="video_url"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <section class="form-hint">
+                    Insira a URL completa do vídeo
+                  </section>
                 </section>
                 <section class="form-group">
-                  <label for="video_arquivo" class="custom-label">Ou envie um arquivo de vídeo</label>
-                  <input type="file" class="input-field" id="video_arquivo" name="video_arquivo" accept="video/*" style="display: none;" />
-                  <br>
-                  <video id="previewVideo" controls style="display: none;" class="video-preview"></video>
-                  <section class="form-hint">Formatos suportados: MP4, WebM, OGG (Máx. 500MB)</section>
+                  <label for="video_arquivo" class="custom-label"
+                    >Ou envie um arquivo de vídeo</label
+                  >
+                  <input
+                    type="file"
+                    class="input-field"
+                    id="video_arquivo"
+                    name="video_arquivo"
+                    accept="video/*"
+                    style="display: none"
+                  />
+                  <br />
+                  <video
+                    id="previewVideo"
+                    controls
+                    style="display: none"
+                    class="video-preview"
+                  ></video>
+                  <section class="form-hint">
+                    Formatos suportados: MP4, WebM, OGG (Máx. 500MB)
+                  </section>
                 </section>
               </section>
               <section class="form-row">
                 <section class="form-col">
                   <section class="form-group">
-                    <label for="duracao" class="form-label">Duração (HH:MM:SS) <span class="required">*</span></label>
-                    <input type="text" class="input-field" id="duracao" name="duracao" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]" placeholder="00:10:00" required />
-                    <section class="form-hint">Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30 segundos)</section>
+                    <label for="duracao" class="form-label"
+                      >Duração (HH:MM:SS) <span class="required">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="input-field"
+                      id="duracao"
+                      name="duracao"
+                      pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
+                      placeholder="00:10:00"
+                      required
+                    />
+                    <section class="form-hint">
+                      Formato: HH:MM:SS (ex: 00:15:30 para 15 minutos e 30
+                      segundos)
+                    </section>
                   </section>
                 </section>
                 <section class="form-col">
                   <section class="form-group">
-                    <label for="ordem" class="form-label">Ordem no Módulo <span class="required">*</span></label>
-                    <input type="number" class="input-field" id="ordem" name="ordem" min="1" required />
-                    <section class="form-hint">A ordem em que esta aula aparecerá no módulo</section>
+                    <label for="ordem" class="form-label"
+                      >Ordem no Módulo <span class="required">*</span></label
+                    >
+                    <input
+                      type="number"
+                      class="input-field"
+                      id="ordem"
+                      name="ordem"
+                      min="1"
+                      required
+                    />
+                    <section class="form-hint">
+                      A ordem em que esta aula aparecerá no módulo
+                    </section>
                   </section>
                 </section>
               </section>
             </section>
             <section class="modal-footer">
-              <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="CursoManager.closeModal()"
+              >
+                Cancelar
+              </button>
               <button type="submit" class="btn btn-primary">Salvar Aula</button>
             </section>
           </form>
@@ -217,12 +313,11 @@
       </section>
     </section>
     <script>
-      // Inicializa o CursoManager ao carregar a página
       document.addEventListener("DOMContentLoaded", function () {
         if (window.CursoManager) {
           CursoManager.init();
         }
-        // Ajusta o submit para enviar os módulos como JSON
+
         const form = document.getElementById("formCriarCurso");
         if (form) {
           form.onsubmit = function (e) {
@@ -232,42 +327,42 @@
             }
           };
         }
-      });
-    </script>
 
-    <script>
-      //Pré-visu da imagem
-      document.getElementById('imagem').addEventListener('change', function(event) {
-          const file = event.target.files[0];
-      
-          if (file) {
+        // Evento para preview da imagem do curso
+        const imagemInput = document.getElementById("imagem");
+        if (imagemInput) {
+          imagemInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
               const reader = new FileReader();
-      
-              reader.onload = function(e) {
-                  const preview = document.getElementById('preview');
+              reader.onload = function (e) {
+                const preview = document.getElementById("preview");
+                if (preview) {
                   preview.src = e.target.result;
-                  preview.style.display = 'block';
+                  preview.style.display = "block";
+                  preview.classList.add("show");
+                }
               };
-      
               reader.readAsDataURL(file);
-          }
-          const preview = document.getElementById('preview');
-          preview.src = e.target.result;
-          preview.classList.add('show');
-      });
-    </script>
-    <script>
-      //Pré-visu do vídeo
-      document.getElementById('inputVideo').addEventListener('change', function(event) {
-          const file = event.target.files[0];
-          const preview = document.getElementById('previewVideo');
-      
-          if (file) {
+            }
+          });
+        }
+
+        // Evento para preview do vídeo da aula
+        const videoInput = document.getElementById("video_arquivo");
+        if (videoInput) {
+          videoInput.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("previewVideo");
+            if (file && preview) {
               const url = URL.createObjectURL(file);
               preview.src = url;
-              preview.classList.add('show');
-          }
+              preview.style.display = "block";
+              preview.classList.add("show");
+            }
+          });
+        }
       });
-    </script>      
+    </script>
   </body>
 </html>

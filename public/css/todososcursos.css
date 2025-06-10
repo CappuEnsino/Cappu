@@ -843,6 +843,11 @@ h1 {
   .continuar-aula {
     width: 8rem;
     height: 1.4em;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    height: auto;
   }
 
   .continuar-aula a {

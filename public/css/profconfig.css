@@ -425,9 +425,15 @@ hr {
 
   .redefinir,
   .salvar {
-    font-size: 0.6em;
+    font-size: 0.5rem;
     width: 10em;
-    height: 1.75em;
+    height: 3em;
+  }
+
+  .salvar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   h3 {
