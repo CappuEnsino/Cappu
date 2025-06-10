@@ -5,8 +5,6 @@ const professorController = require("../controller/professorController");
 const db = require("../config/database");
 const multer = require("multer");
 
-
-
 // Dashboard do professor
 router.get("/p-professor", (req, res) => {
   res.render("dashboard/professor/p-professor", {
@@ -338,8 +336,11 @@ router.put("/aula/:id", upload.none(), async (req, res) => {
 // Rota para criar módulo via AJAX
 router.post("/modulo", async (req, res) => {
   try {
-    const { titulo, descricao } = req.body;
-    const cursoId = req.query.cursoId || req.body.cursoId;
+    const { titulo, descricao, cursoId } = req.body;
+    
+    // Add debug logging
+    console.log('Received request body:', req.body);
+    console.log('User ID:', req.user.ID_USUARIO);
 
     if (!titulo || !descricao) {
       return res.status(400).json({
@@ -355,11 +356,17 @@ router.post("/modulo", async (req, res) => {
       });
     }
 
+    // Add debug logging
+    console.log('Checking course ownership - Course ID:', cursoId, 'User ID:', req.user.ID_USUARIO);
+
     // Verificar se o curso pertence ao professor
     const [cursos] = await db.query(
       "SELECT * FROM CURSOS WHERE ID_CURSO = ? AND ID_USUARIO = ?",
       [cursoId, req.user.ID_USUARIO]
     );
+
+    // Add debug logging
+    console.log('Query result:', cursos);
 
     if (!cursos || cursos.length === 0) {
       return res.status(403).json({
@@ -512,5 +519,44 @@ router.get('/logout', (req, res, next) => {
 
 router.post("/salvar-dados-bancarios", professorController.salvarDadosBancarios);
 
+// Rota para atualizar módulo
+router.put("/modulo/:id", async (req, res) => {
+  try {
+    const moduloId = req.params.id;
+    const { titulo, descricao } = req.body;
+
+    // Verificar se o módulo pertence a um curso do professor
+    const [modulos] = await db.query(
+      `SELECT m.* FROM MODULO m 
+       JOIN CURSOS c ON m.ID_CURSO = c.ID_CURSO 
+       WHERE m.ID_MODULO = ? AND c.ID_USUARIO = ?`,
+      [moduloId, req.user.ID_USUARIO]
+    );
+
+    if (!modulos || modulos.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Módulo não encontrado ou você não tem permissão para editá-lo"
+      });
+    }
+
+    // Atualiza o módulo
+    await db.query(
+      "UPDATE MODULO SET TITULO = ?, DESCRICAO = ? WHERE ID_MODULO = ?",
+      [titulo, descricao, moduloId]
+    );
+
+    res.json({
+      success: true,
+      message: "Módulo atualizado com sucesso"
+    });
+  } catch (err) {
+    console.error("Erro ao atualizar módulo:", err);
+    res.status(500).json({
+      success: false,
+      message: "Erro ao atualizar módulo"
+    });
+  }
+});
 
 module.exports = router;

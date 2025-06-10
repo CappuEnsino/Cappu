@@ -3,6 +3,7 @@ const CursoManager = {
   modulos: [],
 
   init() {
+    console.log("DEBUG - Dados recebidos do backend:", window.cursoModulos);
     if (window.cursoModulos && Array.isArray(window.cursoModulos)) {
       this.modulos = window.cursoModulos;
     }
@@ -13,6 +14,15 @@ const CursoManager = {
     const addModuloBtn = document.getElementById("addModuloBtn");
     if (addModuloBtn) {
       addModuloBtn.addEventListener("click", () => this.abrirModalModulo());
+    }
+
+    // Adiciona evento de submit ao formulário de módulo
+    const moduloForm = document.getElementById("moduloForm");
+    if (moduloForm) {
+      moduloForm.onsubmit = (e) => {
+        e.preventDefault();
+        this.salvarModulo();
+      };
     }
   },
 
@@ -41,12 +51,14 @@ const CursoManager = {
     modal.innerHTML = `
       <section class="modal-content" style="
         background-color: #fff;
-        margin: 10% auto;
+        margin: 5% auto;
         padding: 20px;
         width: 80%;
         max-width: 600px;
         border-radius: 8px;
         position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
       ">
         <span class="close-button" style="
           position: absolute;
@@ -386,9 +398,81 @@ const CursoManager = {
 
   // Função para editar um módulo
   editarModulo(moduloId) {
-    // Implementar edição de módulo em modal similar
-    // Por enquanto mantém o redirecionamento
-    window.location.href = `/dashboard/professor/p-modulo?id=${moduloId}`;
+    // Busca o módulo pelo ID
+    const modulo = this.modulos.find(m => m.ID_MODULO === moduloId);
+    if (!modulo) {
+      this.showNotify('error', 'Módulo não encontrado!');
+      return;
+    }
+
+    // Abre o modal de módulo
+    const modal = document.getElementById("moduloModal");
+    const form = document.getElementById("moduloForm");
+    const title = document.getElementById("modalModuloTitle");
+
+    // Preenche os campos do modal com os dados do módulo
+    form.titulo.value = modulo.TITULO || '';
+    form.descricao.value = modulo.DESCRICAO || '';
+    document.getElementById('moduloId').value = modulo.ID_MODULO;
+    
+    // Atualiza o título do modal para "Editar Módulo"
+    title.textContent = 'Editar Módulo';
+
+    // Mostra o modal
+    modal.style.display = "block";
+
+    // Adiciona o handler de submit específico para edição
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch(`/professor/modulo/${moduloId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            titulo: formData.get('titulo'),
+            descricao: formData.get('descricao')
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          // Atualiza o módulo na lista local
+          const moduloAtualizado = {
+            ...modulo,
+            TITULO: formData.get('titulo'),
+            DESCRICAO: formData.get('descricao')
+          };
+          
+          // Atualiza o módulo no array
+          const index = this.modulos.findIndex(m => m.ID_MODULO === moduloId);
+          if (index !== -1) {
+            this.modulos[index] = moduloAtualizado;
+          }
+
+          // Atualiza o HTML do módulo
+          const moduloElement = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+          if (moduloElement) {
+            const titleElement = moduloElement.querySelector('.modulo-title');
+            if (titleElement) {
+              titleElement.textContent = moduloAtualizado.TITULO;
+            }
+          }
+
+          this.showNotify('success', 'Módulo atualizado com sucesso!');
+          this.fecharModalModulo();
+        } else {
+          this.showNotify('error', result.message || 'Erro ao atualizar módulo');
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar módulo:', error);
+        this.showNotify('error', 'Erro ao atualizar módulo');
+      }
+    };
   },
 
   // Função para excluir um módulo
@@ -590,7 +674,53 @@ const CursoManager = {
     const form = document.getElementById("moduloForm");
     const formData = new FormData(form);
     const moduloId = formData.get("modulo_id");
-    const cursoId = window.location.pathname.split("/").pop(); // Pega o ID do curso da URL
+    
+    // Dados do módulo
+    const modulo = {
+      titulo: formData.get("titulo"),
+      descricao: formData.get("descricao"),
+      aulas: []
+    };
+
+    // Se estamos na página de criar curso, apenas adiciona à lista de módulos
+    if (window.location.pathname.includes('p_criar_curso')) {
+      // Se temos um ID, estamos editando
+      if (moduloId !== "") {
+        this.modulos[moduloId] = modulo;
+        
+        // Atualiza o elemento existente
+        const moduloElement = document.querySelector(`[data-modulo-id="${moduloId}"]`);
+        if (moduloElement) {
+          const novoModuloElement = this.criarHtmlModulo(modulo);
+          moduloElement.replaceWith(novoModuloElement);
+        }
+      } else {
+        // Caso contrário, estamos adicionando um novo
+        this.modulos.push(modulo);
+        
+        // Atualiza a interface
+        const modulosContainer = document.getElementById("modulosContainer");
+        if (modulosContainer) {
+          const moduloHtml = this.criarHtmlModulo(modulo);
+          // Adiciona o novo módulo ao final do container
+          modulosContainer.appendChild(moduloHtml);
+        }
+      }
+      
+      // Atualiza o input hidden com os módulos
+      const modulosInput = document.getElementById("modulosInput");
+      if (modulosInput) {
+        modulosInput.value = JSON.stringify(this.modulos);
+      }
+
+      this.showNotify("success", "Módulo " + (moduloId !== "" ? "atualizado" : "adicionado") + " com sucesso!");
+      this.fecharModalModulo();
+      return;
+    }
+
+    // Se não, faz a requisição para o backend
+    const urlParts = window.location.pathname.split('/');
+    const cursoId = urlParts[urlParts.length - 1];
 
     const data = {
       titulo: formData.get("titulo"),
@@ -598,12 +728,10 @@ const CursoManager = {
       cursoId: cursoId,
     };
 
-    const url = moduloId
-      ? `/dashboard/professor/modulo/${moduloId}`
-      : "/dashboard/professor/modulo";
+    const url = `/professor/modulo`;
 
     fetch(url, {
-      method: moduloId ? "PUT" : "POST",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -617,22 +745,17 @@ const CursoManager = {
 
           // Adiciona o novo módulo à lista sem recarregar a página
           if (result.data) {
-            const modulosContainer =
-              document.getElementById("modulosContainer");
+            const modulosContainer = document.getElementById("modulosContainer");
             const moduloHtml = this.criarHtmlModulo(result.data);
 
             // Remove a mensagem "Nenhum módulo cadastrado" se existir
             const noModulesMsg = modulosContainer.querySelector("p");
-            if (
-              noModulesMsg &&
-              noModulesMsg.textContent === "Nenhum módulo cadastrado"
-            ) {
+            if (noModulesMsg && noModulesMsg.textContent === "Nenhum módulo cadastrado") {
               noModulesMsg.remove();
             }
 
-            // Adiciona o novo módulo antes do botão de adicionar
-            const addModuloBtn = document.getElementById("addModuloBtn");
-            modulosContainer.insertBefore(moduloHtml, addModuloBtn);
+            // Adiciona o novo módulo ao final do container
+            modulosContainer.appendChild(moduloHtml);
           }
         } else {
           this.showNotify("error", result.message || "Erro ao salvar módulo");
@@ -648,23 +771,260 @@ const CursoManager = {
   criarHtmlModulo(modulo) {
     const section = document.createElement("section");
     section.className = "modulo-container";
-    section.setAttribute("data-modulo-id", modulo.ID_MODULO);
+    section.setAttribute("data-modulo-id", modulo.ID_MODULO || '');
+
+    // Verifica se estamos na página de criar curso
+    const isCriarCurso = window.location.pathname.includes('p_criar_curso');
 
     section.innerHTML = `
       <section class="modulo-header">
-        <section class="modulo-title">${modulo.TITULO}</section>
+        <section class="modulo-title">${modulo.TITULO || modulo.titulo}</section>
         <section class="modulo-actions">
-          <button type="button" class="btn" onclick="CursoManager.editarModulo(${modulo.ID_MODULO})">Editar</button>
-          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(${modulo.ID_MODULO})">Excluir</button>
+          ${isCriarCurso ? `
+            <button type="button" class="btn" onclick="CursoManager.editarModuloTemp(${this.modulos.length - 1})">Editar</button>
+            <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModuloTemp(${this.modulos.length - 1})">Excluir</button>
+          ` : `
+            <button type="button" class="btn" onclick="CursoManager.editarModulo(${modulo.ID_MODULO})">Editar</button>
+            <button type="button" class="btn btn-danger" onclick="CursoManager.excluirModulo(${modulo.ID_MODULO})">Excluir</button>
+          `}
         </section>
       </section>
       <section class="modulo-aulas">
-        <p>Nenhuma aula neste módulo</p>
-        <button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>
+        ${isCriarCurso ? `
+          <p>Nenhuma aula neste módulo</p>
+          <button type="button" class="btn" onclick="CursoManager.adicionarAulaTemp(${this.modulos.length - 1})">Adicionar Aula</button>
+        ` : `
+          <p>Nenhuma aula neste módulo</p>
+          <button type="button" class="btn" onclick="CursoManager.adicionarAula(${modulo.ID_MODULO})">Adicionar Aula</button>
+        `}
       </section>
     `;
 
     return section;
+  },
+
+  // Funções temporárias para edição de módulos na página de criar curso
+  editarModuloTemp(index) {
+    const modulo = this.modulos[index];
+    const modal = document.getElementById("moduloModal");
+    const form = document.getElementById("moduloForm");
+    const title = document.getElementById("modalModuloTitle");
+
+    form.titulo.value = modulo.titulo;
+    form.descricao.value = modulo.descricao;
+    document.getElementById("moduloId").value = index;
+    
+    title.textContent = "Editar Módulo";
+    modal.style.display = "block";
+  },
+
+  excluirModuloTemp(index) {
+    if (confirm("Tem certeza que deseja excluir este módulo?")) {
+      this.modulos.splice(index, 1);
+      
+      // Atualiza o input hidden
+      const modulosInput = document.getElementById("modulosInput");
+      if (modulosInput) {
+        modulosInput.value = JSON.stringify(this.modulos);
+      }
+
+      // Remove o elemento da interface
+      const modulosContainer = document.getElementById("modulosContainer");
+      const moduloElement = modulosContainer.querySelector(`[data-modulo-id="${index}"]`);
+      if (moduloElement) {
+        moduloElement.remove();
+      }
+
+      this.showNotify("success", "Módulo removido com sucesso!");
+    }
+  },
+
+  adicionarAulaTemp(moduloIndex) {
+    const modal = document.getElementById("aulaModal");
+    const form = document.getElementById("aulaForm");
+    const title = document.getElementById("modalTitle");
+
+    // Limpa o formulário
+    form.reset();
+
+    // Define o índice do módulo
+    document.getElementById("moduloId").value = moduloIndex;
+
+    // Modo criação
+    title.textContent = "Adicionar Aula";
+    document.getElementById("aulaId").value = "";
+
+    // Define valores padrão
+    form.tipo_conteudo.value = "video";
+    form.duracao.value = "00:10:00";
+    form.ordem.value = this.modulos[moduloIndex].aulas.length + 1;
+
+    // Configura o evento de submit do formulário
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      this.salvarAulaTemp(moduloIndex);
+    };
+
+    // Mostra o modal
+    modal.style.display = "block";
+  },
+
+  salvarAulaTemp(moduloIndex) {
+    const form = document.getElementById("aulaForm");
+    const formData = new FormData(form);
+    
+    // Cria o objeto da aula
+    const aula = {
+      titulo: formData.get("titulo"),
+      descricao: formData.get("descricao"),
+      tipo_conteudo: formData.get("tipo_conteudo"),
+      video_url: formData.get("video_url") || "",
+      duracao: formData.get("duracao"),
+      ordem: parseInt(formData.get("ordem")) || (this.modulos[moduloIndex].aulas.length + 1)
+    };
+
+    // Adiciona a aula ao módulo
+    if (!this.modulos[moduloIndex].aulas) {
+      this.modulos[moduloIndex].aulas = [];
+    }
+    this.modulos[moduloIndex].aulas.push(aula);
+
+    // Atualiza o input hidden com os módulos
+    const modulosInput = document.getElementById("modulosInput");
+    if (modulosInput) {
+      modulosInput.value = JSON.stringify(this.modulos);
+    }
+
+    // Atualiza a interface
+    const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+    if (moduloContainer) {
+      const aulasContainer = moduloContainer.querySelector(".modulo-aulas");
+      
+      // Remove a mensagem "Nenhuma aula neste módulo" se existir
+      const noAulasMsg = aulasContainer.querySelector("p");
+      if (noAulasMsg && noAulasMsg.textContent === "Nenhuma aula neste módulo") {
+        noAulasMsg.remove();
+      }
+
+      // Cria o elemento HTML da aula
+      const aulaHtml = document.createElement("section");
+      aulaHtml.className = "aula-item";
+      aulaHtml.innerHTML = `
+        <section class="aula-title">${aula.titulo}</section>
+        <section class="aula-desc">${aula.descricao}</section>
+        <section class="aula-actions">
+          <button type="button" class="btn" onclick="CursoManager.editarAulaTemp(${moduloIndex}, ${this.modulos[moduloIndex].aulas.length - 1})">Editar</button>
+          <button type="button" class="btn btn-danger" onclick="CursoManager.excluirAulaTemp(${moduloIndex}, ${this.modulos[moduloIndex].aulas.length - 1})">Excluir</button>
+        </section>
+      `;
+
+      // Adiciona a aula antes do botão de adicionar
+      const addButton = aulasContainer.querySelector("button");
+      aulasContainer.insertBefore(aulaHtml, addButton);
+    }
+
+    // Fecha o modal e mostra mensagem de sucesso
+    this.closeModal();
+    this.showNotify("success", "Aula adicionada com sucesso!");
+  },
+
+  editarAulaTemp(moduloIndex, aulaIndex) {
+    const aula = this.modulos[moduloIndex].aulas[aulaIndex];
+    const modal = document.getElementById("aulaModal");
+    const form = document.getElementById("aulaForm");
+    const title = document.getElementById("modalTitle");
+
+    // Preenche o formulário com os dados da aula
+    form.titulo.value = aula.titulo;
+    form.descricao.value = aula.descricao;
+    form.tipo_conteudo.value = aula.tipo_conteudo;
+    form.video_url.value = aula.video_url || "";
+    form.duracao.value = aula.duracao;
+    form.ordem.value = aula.ordem;
+
+    // Define os IDs para identificar a aula na edição
+    document.getElementById("moduloId").value = moduloIndex;
+    document.getElementById("aulaId").value = aulaIndex;
+
+    // Configura o evento de submit do formulário
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      this.atualizarAulaTemp(moduloIndex, aulaIndex);
+    };
+
+    // Mostra o modal
+    title.textContent = "Editar Aula";
+    modal.style.display = "block";
+  },
+
+  atualizarAulaTemp(moduloIndex, aulaIndex) {
+    const form = document.getElementById("aulaForm");
+    const formData = new FormData(form);
+    
+    // Atualiza os dados da aula
+    const aula = {
+      titulo: formData.get("titulo"),
+      descricao: formData.get("descricao"),
+      tipo_conteudo: formData.get("tipo_conteudo"),
+      video_url: formData.get("video_url") || "",
+      duracao: formData.get("duracao"),
+      ordem: parseInt(formData.get("ordem")) || (aulaIndex + 1)
+    };
+
+    // Atualiza a aula no módulo
+    this.modulos[moduloIndex].aulas[aulaIndex] = aula;
+
+    // Atualiza o input hidden com os módulos
+    const modulosInput = document.getElementById("modulosInput");
+    if (modulosInput) {
+      modulosInput.value = JSON.stringify(this.modulos);
+    }
+
+    // Atualiza a interface
+    const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+    if (moduloContainer) {
+      const aulaElement = moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
+      if (aulaElement) {
+        aulaElement.querySelector(".aula-title").textContent = aula.titulo;
+        aulaElement.querySelector(".aula-desc").textContent = aula.descricao;
+      }
+    }
+
+    // Fecha o modal e mostra mensagem de sucesso
+    this.closeModal();
+    this.showNotify("success", "Aula atualizada com sucesso!");
+  },
+
+  excluirAulaTemp(moduloIndex, aulaIndex) {
+    if (confirm("Tem certeza que deseja excluir esta aula?")) {
+      // Remove a aula do array
+      this.modulos[moduloIndex].aulas.splice(aulaIndex, 1);
+
+      // Atualiza o input hidden com os módulos
+      const modulosInput = document.getElementById("modulosInput");
+      if (modulosInput) {
+        modulosInput.value = JSON.stringify(this.modulos);
+      }
+
+      // Remove o elemento da interface
+      const moduloContainer = document.querySelector(`[data-modulo-id="${moduloIndex}"]`);
+      if (moduloContainer) {
+        const aulaElement = moduloContainer.querySelectorAll(".aula-item")[aulaIndex];
+        if (aulaElement) {
+          aulaElement.remove();
+        }
+
+        // Se não houver mais aulas, mostra a mensagem "Nenhuma aula neste módulo"
+        const aulasContainer = moduloContainer.querySelector(".modulo-aulas");
+        if (this.modulos[moduloIndex].aulas.length === 0) {
+          const p = document.createElement("p");
+          p.textContent = "Nenhuma aula neste módulo";
+          aulasContainer.insertBefore(p, aulasContainer.querySelector("button"));
+        }
+      }
+
+      this.showNotify("success", "Aula removida com sucesso!");
+    }
   },
 
   // Cria o HTML para uma aula
