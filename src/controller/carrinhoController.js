@@ -282,6 +282,7 @@ const carrinhoController = {
         }
 
         const userId = req.user.ID_USUARIO;
+        let compraId = null; // Declarando compraId no escopo da função
         console.log('Iniciando criação de pagamento para usuário:', userId);
 
         try {
@@ -311,11 +312,11 @@ const carrinhoController = {
             // Criar registro de compra pendente
             console.log('Criando registro de compra pendente...');
             const [resultCompra] = await db.query(
-                'INSERT INTO COMPRA (ID_USUARIO, FORMA_PAGAMENTO, DATA_COMPRA, STATUS, VALOR) VALUES (?, ?, NOW(), 0, ?)',
+                'INSERT INTO COMPRA (ID_COMPRA, ID_USUARIO, FORMA_PAGAMENTO, DATA_COMPRA, STATUS, VALOR) VALUES (NULL, ?, ?, NOW(), 0, ?)',
                 [userId, 'MERCADO_PAGO', valorTotal]
             );
 
-            const compraId = resultCompra.insertId;
+            compraId = resultCompra.insertId;
             console.log('Compra pendente criada com ID:', compraId);
 
             // Criar preferência de pagamento
@@ -332,7 +333,6 @@ const carrinhoController = {
                     failure: `${process.env.BASE_URL}/aluno/pagamento/falha`,
                     pending: `${process.env.BASE_URL}/aluno/pagamento/pendente`
                 },
-                auto_return: 'approved',
                 external_reference: compraId.toString(),
                 notification_url: `${process.env.BASE_URL}/aluno/webhook/mercadopago`
             };
