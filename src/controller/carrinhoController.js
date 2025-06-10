@@ -380,7 +380,6 @@ const carrinhoController = {
             res.status(500).json({
                 success: false,
                 message: 'Erro ao criar pagamento: ' + (err.message || 'Erro desconhecido')
-                message: 'Erro ao criar pagamento'
             });
         }
     }
