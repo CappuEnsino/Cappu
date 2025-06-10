@@ -172,7 +172,7 @@ router.get("/a-meuscursos", async (req, res) => {
 
     // Buscar os cursos comprados pelo aluno
     const [cursosComprados] = await db.query(`
-      SELECT c.*, cur.TITULO, cur.DESCRICAO, cur.CATEGORIA, u.NOME_USU as NOME_PROFESSOR,
+      SELECT c.*, cur.TITULO, cur.DESCRICAO, u.NOME_USU as NOME_PROFESSOR,
              (SELECT COUNT(*) FROM PROGRESSO_AULA pa 
               JOIN AULA a ON pa.ID_AULA = a.ID_AULA 
               JOIN MODULO m ON a.ID_MODULO = m.ID_MODULO 
