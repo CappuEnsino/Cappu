@@ -685,11 +685,17 @@ router.get("/a-todososcursos", async (req, res) => {
   }
   try {
     const [cursosDB] = await db.query(`
-      SELECT c.ID_CURSO, c.TITULO, c.DESCRICAO, u.NOME_USU as NOME_PROFESSOR, c.PRECO, c.OBJETIVOS, c.DURACAO_TOTAL
+      SELECT c.ID_CURSO, c.TITULO, c.DESCRICAO, u.NOME_USU as NOME_PROFESSOR, c.PRECO, c.OBJETIVOS, c.DURACAO_TOTAL, c.IMAGEM
       FROM CURSOS c
       JOIN USUARIO u ON c.ID_USUARIO = u.ID_USUARIO
       WHERE u.TIPO_USUARIO = 'professor' 
     `); // Adicionei mais campos para exibição
+
+    // Formatar os cursos para garantir que a imagem esteja no formato correto
+    const cursosFormatados = cursosDB.map(curso => ({
+      ...curso,
+      IMAGEM: curso.IMAGEM ? Buffer.from(curso.IMAGEM) : null
+    }));
 
     res.render("dashboard/aluno/a-todososcursos", {
       user: req.user,

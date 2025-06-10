@@ -6,6 +6,7 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/header2.css">
     <link rel="stylesheet" href="/css/carrinho.css">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 </head>
 <body>
     <%- include('../../pages/partials/header') %>
@@ -21,8 +22,22 @@
                         <% carrinho.forEach(item => { %>
                             <% total += parseFloat(item.PRECO); %>
                             <article class="curso-item">
-                                <img src="/curso/imagem/<%= item.ID_CURSO %>" alt="<%= item.TITULO %>" 
-                                     onerror="this.src='/images/curso-padrao.jpg'">
+                                <% if (item.IMAGEM) { %>
+                                    <script>
+                                        console.log('Imagem do curso:', item.IMAGEM);
+                                    </script>
+                                    <img
+                                      src="data:image/jpeg;base64,<%= item.IMAGEM.toString('base64') %>"
+                                      alt="<%= item.TITULO %>"
+                                      style="width: 100%; height: auto;"
+                                    />
+                                  <% } else { %>
+                                    <img
+                                      src="/images/log.svg"
+                                      alt="<%= item.TITULO %>"
+                                      style="width: 100%; height: auto;"
+                                    />
+                                  <% } %>
                                 <section class="curso-info">
                                     <h3><%= item.TITULO %></h3>
                                     <p class="professor">Professor: <%= item.NOME_PROFESSOR %></p>

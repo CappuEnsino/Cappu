@@ -152,7 +152,7 @@ const carrinhoController = {
 
         try {
             const [carrinho] = await db.query(`
-                SELECT c.*, cur.TITULO, cur.PRECO, u.NOME_USU as NOME_PROFESSOR 
+                SELECT c.*, cur.TITULO, cur.PRECO, cur.IMAGEM, u.NOME_USU as NOME_PROFESSOR 
                 FROM CARRINHO c
                 JOIN CURSOS cur ON c.ID_CURSO = cur.ID_CURSO
                 JOIN USUARIO u ON cur.ID_USUARIO = u.ID_USUARIO

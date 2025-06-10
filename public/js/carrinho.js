@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Desabilitar o botão e mostrar loading
             this.disabled = true;
-            this.innerHTML = 'Adicionando...';
+            this.innerHTML = '...';
+            
+            // Adicionar classe de loading
+            this.classList.add('loading');
             
             try {
                 console.log('Enviando requisição para adicionar ao carrinho:', { cursoId });
@@ -46,14 +49,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const data = await response.json();
-                console.log('Resposta do servidor:', data);
-
+                
                 if (response.ok) {
-                    alert('Curso adicionado ao carrinho com sucesso!');
+                    // Remover classe de loading e adicionar classe de sucesso
+                    this.classList.remove('loading');
+                    this.classList.add('no-carrinho');
+                    
+                    // Limpar o conteúdo do botão
+                    this.innerHTML = '';
+                    
                     // Atualizar o contador do carrinho
                     await atualizarContadorCarrinho();
                     // Atualizar o botão
-                    this.innerHTML = 'No Carrinho';
                     this.classList.add('no-carrinho');
                 } else {
                     throw new Error(data.message || 'Erro ao adicionar curso ao carrinho');

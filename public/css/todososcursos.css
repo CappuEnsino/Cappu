@@ -19,6 +19,12 @@ body {
   font-family: 'Fira Sans', sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10%;
 }
 
 #acessar {
@@ -30,36 +36,42 @@ button {
   border: none;
 }
 
-.main {
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.main-content {
   width: 100%;
-  min-height: 100vh;
-  padding: 10% 1rem 1rem;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5em;
 }
 
 .container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 2.rem;
   font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: 2rem;
+  margin: 2rem 0;
   text-align: center;
 }
 
 .cursos-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 300px);
   gap: 2rem;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 0;
   justify-content: center;
 }
 
@@ -69,44 +81,6 @@ h2 {
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--hover-shadow);
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--hover-shadow);
-}
-
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
 }
 
 .card:hover {
@@ -130,8 +104,6 @@ h2::after {
   gap: 2rem;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 0;
   justify-content: center;
 }
 
@@ -180,31 +152,66 @@ h2::after {
 
 .descricao p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #666;
 }
 
 .descricao p span {
   font-weight: 600;
+  text-transform: capitalize;
   color: var(--text-color);
+  font-size: 1em;
+  font-style: italic;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.descricao span {
+  font-family: Fira Sans;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: black;
+  padding: 0.5em;
+  font-size: 1.2rem;
+  font-style: normal;
+  text-align: center;
 }
 
 .continuar-aula {
+  padding: 0.6em 3em;
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
   text-decoration: none;
   border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   align-self: flex-end;
   text-align: center;
 }
 
 .continuar-aula:hover {
-  background-color: #553d36;
-  transform: translateY(-2px);
+  background-color: black;
+  color: white;
+  transform: scale(1.1);
+}
+
+.continuar-aula:active {
+  transform: scale(0.9);
+}
+
+.continuar-aula a {
+  display: inline-flex;
+  text-decoration: none;
+  font-family: Fira Sans;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.25rem;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #ffffff;
 }
 
 /* Estilos para quando não há cursos */
@@ -213,56 +220,6 @@ h2::after {
   padding: 4rem 0;
   color: #666;
   font-size: 1.1rem;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
-
-  .subtitulo {
-    font-size: 1.1rem;
-  }
-
-  .descricao p {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 0.5rem;
-  }
-
-  h2 {
-    font-size: 1.8rem;
-  }
-
-  .cursos-container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .card {
-    padding: 0.75rem;
-  }
-
-  .subtitulo {
-    font-size: 1rem;
-  }
-
-  .descricao p {
-    font-size: 0.85rem;
-  }
 }
 
 .dias {
@@ -279,7 +236,7 @@ h2::after {
   font-family: Fira Sans;
   font-weight: 900;
   font-style: italic;
-  font-size: 4rem;
+  font-size: 2rem;
   line-height: 4rem;
   letter-spacing: 0%;
   color: #ffffff;
@@ -311,15 +268,6 @@ h2::after {
   flex-direction: column;
   gap: 1.75rem;
   justify-content: center;
-}
-
-.descricao span {
-  font-family: Fira Sans;
-  font-weight: 300;
-  font-size: 1.5rem;
-  letter-spacing: 0%;
-  text-align: center;
-  color: #000000;
 }
 
 .subtitulo {
@@ -386,28 +334,6 @@ h1 {
   font-size: 1.25rem;
   letter-spacing: 0%;
   color: #000000;
-}
-
-.continuar-aula {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--primary-color);
-  border-radius: 3rem;
-  width: 12rem;
-  height: 2em;
-}
-
-.continuar-aula a {
-  display: inline-flex;
-  text-decoration: none;
-  font-family: Fira Sans;
-  font-weight: 900;
-  font-style: italic;
-  font-size: 1.25rem;
-  letter-spacing: 0%;
-  text-align: center;
-  color: #ffffff;
 }
 
 .meus-cursos {
@@ -529,128 +455,73 @@ h1 {
   display: flex;
   gap: 10px;
   margin-top: 15px;
+  justify-content: space-between;
 }
 
 .adicionar-carrinho {
-  padding: 8px 15px;
-  background-color: #4CAF50;
-  color: white;
+  padding: 1.2em;
+  background-color: white;
+  color: black;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  background-image: url('/images/add-on-black.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.adicionar-carrinho.loading {
+  background-image: url('/images/loading.svg');
+  background-size: 60%;
+  background-position: center;
+  padding: 1.2em;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .adicionar-carrinho:hover {
-  background-color: #45a049;
-}
-
-.continuar-aula {
-  padding: 8px 15px;
-  background-color: #2196F3;
+  background-color: black;
   color: white;
-  text-decoration: none;
+  transform: scale(1.1);
+  background-image: url('/images/add-on.svg');
+}
+
+.no-carrinho {
+  padding: 1.2em;
+  background-color: white;
+  color: black;
+  border: none;
   border-radius: 4px;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  background-image: url('/images/adicionado.svg');
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: center;
 }
 
-.continuar-aula:hover {
-  background-color: #1976D2;
-}
-
-@media (max-width: 1600px) {
-  body {
-    width: 80%;
-  }
-
-  .container {
-    gap: 4rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  .card {
-    height: auto;
-    padding: 1.5rem;
-  }
-
-  .dias p {
-    font-size: 3.5rem;
-  }
-
-  .numero {
-    font-size: 5rem;
-  }
-
-  .primeira-letra {
-    font-size: 3.5rem;
-  }
-
-  .descricao span {
-    font-size: 1.25rem;
-  }
-
-  .subtitulo {
-    font-size: 1.25rem;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  .aula-number {
-    font-size: 1.1rem;
-  }
-
-  .conclusao-porcentagem {
-    font-size: 1.25rem;
-  }
-
-  .aula-progresso p {
-    font-size: 1.1rem;
-  }
-
-  .continuar-aula {
-    width: 11rem;
-    height: 1.8em;
-  }
-
-  .continuar-aula a {
-    font-size: 1.1rem;
-  }
-
-  .nome-curso {
-    font-size: 1.25rem;
-  }
-
-  .porcentagem {
-    font-size: 2rem;
-  }
-
-  .complete-title {
-    font-size: 1.25rem;
-  }
-
-  .certificado {
-    font-size: 1.25rem;
-  }
-
-  .complete-info {
-    font-size: 18px;
-  }
+.no-carrinho:hover {
+  transform: none;
+  background-image: url('/images/adicionado.svg');
+  background-color: white;
+  color: black;
 }
 
 @media (max-width: 1200px) {
-  body {
-    width: 90%;
-  }
-
   .container {
-    gap: 3rem;
+    width: 90%;
+    padding: 0;
   }
 
   h2 {
@@ -726,15 +597,15 @@ h1 {
   .complete-info {
     font-size: 1rem;
   }
+
+  .cursos-container {
+    grid-template-columns: repeat(2, 300px);
+  }
 }
 
 @media (max-width: 800px) {
-  body {
-    width: 95%;
-  }
-
   .container {
-    gap: 2rem;
+    width: 95%;
   }
 
   h2 {
@@ -823,6 +694,24 @@ h1 {
   .complete-info {
     font-size: 14px;
   }
+
+  .cursos-container {
+    grid-template-columns: repeat(2, 280px);
+  }
+  
+  .card {
+    width: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cursos-container {
+    grid-template-columns: 300px;
+  }
+  
+  .card {
+    width: 300px;
+  }
 }
 
 @media (max-width: 450px) {
@@ -841,11 +730,8 @@ h1 {
   }
 
   .container {
-    gap: 1rem;
-    width: 80%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    padding: 0 1rem;
   }
 
   h2 {
@@ -985,5 +871,9 @@ h1 {
 
   .nota-gambiarra {
     margin-left: 1rem;
+  }
+
+  .cursos-container {
+    grid-template-columns: 1fr;
   }
 }

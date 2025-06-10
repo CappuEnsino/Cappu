@@ -6,6 +6,7 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/todososcursos.css">
     <link rel="stylesheet" href="/css/header2.css"> 
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
 </head>
 <body>
     <%- include('../../pages/partials/header') %>
@@ -19,12 +20,29 @@
                         <% cursos.forEach(curso => { %>
                             <section class="card">
                                 <section class="descricao">
+                                    <% if (curso.IMAGEM) { %>
+                                        <script>
+                                            console.log('Imagem do curso:', curso.IMAGEM);
+                                        </script>
+                                        <img
+                                          src="data:image/jpeg;base64,<%= curso.IMAGEM.toString('base64') %>"
+                                          alt="<%= curso.TITULO %>"
+                                          style="width: 50%; height: auto; align-self: center;"
+                                        />
+                                      <% } else { %>
+                                        <img
+                                          src="/images/log.svg"
+                                          alt="<%= curso.TITULO %>"
+                                          style="width: 50%; height: auto; align-self: center;"
+                                        />
+                                      <% } %>
                                     <span class="subtitulo"><%= curso.TITULO %></span>
                                     <p><span>Professor:</span> <%= curso.NOME_PROFESSOR %></p>
                                     <p><span>Descrição:</span> <%= curso.DESCRICAO %></p>
                                     <div class="botoes-container">
                                         <a href="/curso/<%= curso.ID_CURSO %>" class="continuar-aula">Ver Curso</a>
-                                        <button class="adicionar-carrinho" data-curso-id="<%= curso.ID_CURSO %>">Adicionar ao Carrinho</button>
+                                        <button class="adicionar-carrinho" data-curso-id="<%= curso.ID_CURSO %>">
+                                        </button>
                                     </div>
                                 </section>
                             </section>
